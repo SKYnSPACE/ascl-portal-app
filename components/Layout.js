@@ -14,7 +14,7 @@ import LocalDatabase from '../components/LocalDatabase'
 const navigation = [
   { name: 'Home', href: '/', current: true },
   { name: 'Announcements', href: '/announcements', current: false },
-  { name: 'Projects', href: '/', current: false },
+  { name: 'Projects', href: '/projects', current: false },
   { name: 'Seminar', href: '/', current: false },
   { name: 'Chats', href: '/', current: false },
   { name: 'Polling', href: '/', current: false },
