@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { Fragment, useContext } from 'react'
 import { Menu, Popover, Transition } from '@headlessui/react'
 import {
@@ -10,14 +12,15 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import LocalDatabase from '../components/LocalDatabase'
 
 const navigation = [
-  { name: 'Home', href: '#', current: true },
-  { name: 'Announcements', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Seminar', href: '#', current: false },
-  { name: 'Chats', href: '#', current: false },
-  { name: 'Polling', href: '#', current: false },
-  { name: 'Handbook', href: '#', current: false },
-]
+  { name: 'Home', href: '/', current: true },
+  { name: 'Announcements', href: '/announcements', current: false },
+  { name: 'Projects', href: '/', current: false },
+  { name: 'Seminar', href: '/', current: false },
+  { name: 'Chats', href: '/', current: false },
+  { name: 'Polling', href: '/', current: false },
+  { name: 'Handbook', href: '/handbook', current: false },
+];
+
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
   { name: 'Settings', href: '#' },
@@ -43,7 +46,7 @@ export default function Layout({children}) {
         ```
       */}
       <div className="min-h-full">
-        <Popover as="header" className="bg-gradient-to-r from-[#2980b9] to-[#2980b9] pb-24">
+        <Popover as="header" className="bg-gradient-to-r from-[#2980b9] to-[#2980b9] pb-36">
           {({ open }) => (
             <>
               <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -90,7 +93,7 @@ export default function Layout({children}) {
                           {userNavigation.map((item) => (
                             <Menu.Item key={item.name}>
                               {({ active }) => (
-                                <a
+                                <Link
                                   href={item.href}
                                   className={classNames(
                                     active ? 'bg-gray-100' : '',
@@ -98,7 +101,7 @@ export default function Layout({children}) {
                                   )}
                                 >
                                   {item.name}
-                                </a>
+                                </Link>
                               )}
                             </Menu.Item>
                           ))}

@@ -63,7 +63,7 @@ const actions = [
 const recentRequests = [
   {
     name: 'Junwoo Park',
-    tag: 'seminar-221221-001',
+    tag: 'seminar-02-221221-001',
     imageUrl:
       'https://avatars.githubusercontent.com/u/25346867?v=4',
     href: '#',
@@ -93,17 +93,17 @@ const recentRequests = [
 const announcements = [
   {
     id: 1,
-    title: '22y 2s seminar on Dec 25th',
+    title: '22y 2nd Lab. seminar on Dec 25th',
     href: '#',
     preview:
-      'Fuck the christmas. We do the Lab. seminar.',
+      'Fuck the Christmas. We do the Lab. seminar.',
   },
   {
     id: 2,
     title: 'New password policy',
     href: '#',
     preview:
-      'Change your password now!',
+      'Change your password now with 2 digits!',
   },
   {
     id: 3,
