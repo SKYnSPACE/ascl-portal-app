@@ -13,6 +13,25 @@ const subNavigation = [
   { name: 'Business Trip', href: '#', icon: BriefcaseIcon, current: false },
 ]
 
+const faqs = [
+  {
+    //TODO: category:
+    question: '연구실을 들어오는 법?',
+    answer: '출입문으로 들어오시면 됩니다.',
+  },
+  {
+    question: '연구실을 빠져 나가는 법?',
+    answer:
+      '출입문으로 나가시면 됩니다.',
+  },
+  {
+    question: '연구실 출퇴근 시간은?',
+    answer:
+      '00시 출근, 23시 퇴근.',
+  },
+  // More questions...
+]
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
@@ -20,57 +39,138 @@ function classNames(...classes) {
 export default function Handbook() {
   return (
     <main className="relative -mt-32">
+
       <div className="mx-auto max-w-7xl px-4 mb-8 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold tracking-tight text-white">Handbook</h1>
       </div>
-        <div className="mx-auto max-w-screen-xl px-4 pb-6 sm:px-6 lg:px-8 lg:pb-16">
-          <div className="overflow-hidden rounded-lg bg-white shadow">
-            <div className="divide-y divide-gray-200 lg:grid lg:grid-cols-12 lg:divide-y-0 lg:divide-x">
-              <aside className="py-6 lg:col-span-3">
-                <nav className="space-y-1">
-                  {subNavigation.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className={classNames(
-                        item.current
-                          ? 'bg-sky-50 border-sky-500 text-sky-700 hover:bg-sky-50 hover:text-sky-700'
-                          : 'border-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-900',
-                        'group border-l-4 px-3 py-2 flex items-center text-sm font-medium'
-                      )}
-                      aria-current={item.current ? 'page' : undefined}
-                    >
-                      <item.icon
-                        className={classNames(
-                          item.current
-                            ? 'text-sky-500 group-hover:text-sky-500'
-                            : 'text-gray-400 group-hover:text-gray-500',
-                          'flex-shrink-0 -ml-1 mr-3 h-6 w-6'
-                        )}
-                        aria-hidden="true"
-                      />
-                      <span className="truncate">{item.name}</span>
-                    </a>
-                  ))}
-                </nav>
-              </aside>
 
-              <form className="divide-y divide-gray-200 lg:col-span-9" action="#" method="POST">
-                {/* Profile section */}
-                <div className="py-6 px-4 sm:p-6 lg:pb-8">
+      <div className="mx-auto max-w-screen-xl px-4 pb-6 sm:px-6 lg:px-8 lg:pb-16">
+
+
+        <div className="space-y-6 sm:px-6 lg:col-span-9 lg:px-0">
+          <section aria-labelledby="lab-life">
+            <div className="bg-white shadow sm:overflow-hidden sm:rounded-md">
+              <div className="mx-auto max-w-7xl py-16 px-4 sm:px-6 lg:py-20 lg:px-8">
+                <div className="py-6 px-4 sm:p-6 lg:grid lg:grid-cols-3 lg:gap-8">
                   <div>
-                    <h2 className="text-lg font-medium leading-6 text-gray-900">Life in ASCL</h2>
-                    <p className="mt-1 text-sm text-gray-500">
-                      Will be updated soon.
+                    <h2 className="text-3xl font-bold tracking-tight text-gray-900">Life in ASCL</h2>
+                    <p className="mt-4 text-lg text-gray-500">
+                      Can’t find the answer you’re looking for? Reach out to our Lab. manager{' '}
+                      <a href="#" className="font-medium text-blue-600 hover:text-indigox-500">
+                        Lamsu Kim
+                      </a>{' '}
+                      for the help.
                     </p>
                   </div>
-
-                  
+                  <div className="mt-12 lg:col-span-2 lg:mt-0">
+                    <dl className="space-y-12">
+                      {faqs.map((faq) => (
+                        <div key={faq.question}>
+                          <dt className="text-lg font-medium leading-6 text-gray-900">{faq.question}</dt>
+                          <dd className="mt-2 text-base text-gray-500">{faq.answer}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
                 </div>
-              </form>
+
+              </div>
             </div>
-          </div>
+          </section>
+
+          <section aria-labelledby="lab-life">
+            <div className="bg-white shadow sm:overflow-hidden sm:rounded-md">
+              <div className="mx-auto max-w-7xl py-16 px-4 sm:px-6 lg:py-20 lg:px-8">
+                <div className="py-6 px-4 sm:p-6 lg:grid lg:grid-cols-3 lg:gap-8">
+                  <div>
+                    <h2 className="text-3xl font-bold tracking-tight text-gray-900">About Lab. Seminar</h2>
+                    <p className="mt-4 text-lg text-gray-500">
+                      Can’t find the answer you’re looking for? Reach out to our Lab. manager{' '}
+                      <a href="#" className="font-medium text-blue-600 hover:text-indigox-500">
+                        Lamsu Kim
+                      </a>{' '}
+                      for the help.
+                    </p>
+                  </div>
+                  <div className="mt-12 lg:col-span-2 lg:mt-0">
+                    <dl className="space-y-12">
+                      {faqs.map((faq) => (
+                        <div key={faq.question}>
+                          <dt className="text-lg font-medium leading-6 text-gray-900">{faq.question}</dt>
+                          <dd className="mt-2 text-base text-gray-500">{faq.answer}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+          <section aria-labelledby="lab-life">
+            <div className="bg-white shadow sm:overflow-hidden sm:rounded-md">
+              <div className="mx-auto max-w-7xl py-16 px-4 sm:px-6 lg:py-20 lg:px-8">
+                <div className="py-6 px-4 sm:p-6 lg:grid lg:grid-cols-3 lg:gap-8">
+                  <div>
+                    <h2 className="text-3xl font-bold tracking-tight text-gray-900">About purchasing</h2>
+                    <p className="mt-4 text-lg text-gray-500">
+                      Can’t find the answer you’re looking for? Reach out to our account manager{' '}
+                      <a href="#" className="font-medium text-blue-600 hover:text-indigox-500">
+                        Mingi Mun
+                      </a>{' '}
+                      for the help.
+                    </p>
+                  </div>
+                  <div className="mt-12 lg:col-span-2 lg:mt-0">
+                    <dl className="space-y-12">
+                      {faqs.map((faq) => (
+                        <div key={faq.question}>
+                          <dt className="text-lg font-medium leading-6 text-gray-900">{faq.question}</dt>
+                          <dd className="mt-2 text-base text-gray-500">{faq.answer}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+          <section aria-labelledby="lab-life">
+            <div className="bg-white shadow sm:overflow-hidden sm:rounded-md">
+              <div className="mx-auto max-w-7xl py-16 px-4 sm:px-6 lg:py-20 lg:px-8">
+                <div className="py-6 px-4 sm:p-6 lg:grid lg:grid-cols-3 lg:gap-8">
+                  <div>
+                    <h2 className="text-3xl font-bold tracking-tight text-gray-900">About business trip</h2>
+                    <p className="mt-4 text-lg text-gray-500">
+                      Can’t find the answer you’re looking for? Reach out to our account manager{' '}
+                      <a href="#" className="font-medium text-blue-600 hover:text-indigox-500">
+                        Mingi Mun
+                      </a>{' '}
+                      for the help.
+                    </p>
+                  </div>
+                  <div className="mt-12 lg:col-span-2 lg:mt-0">
+                    <dl className="space-y-12">
+                      {faqs.map((faq) => (
+                        <div key={faq.question}>
+                          <dt className="text-lg font-medium leading-6 text-gray-900">{faq.question}</dt>
+                          <dd className="mt-2 text-base text-gray-500">{faq.answer}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
         </div>
-      </main>
+
+      </div>
+
+    </main >
   )
 }

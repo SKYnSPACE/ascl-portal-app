@@ -13,11 +13,10 @@ import LocalDatabase from '../components/LocalDatabase'
 
 const navigation = [
   { name: 'Home', href: '/', current: true },
-  { name: 'Announcements', href: '/announcements', current: false },
+  { name: 'Workspace', href: '/workspace', current: false },
   { name: 'Projects', href: '/projects', current: false },
   { name: 'Seminar', href: '/', current: false },
   { name: 'Chats', href: '/', current: false },
-  { name: 'Polling', href: '/', current: false },
   { name: 'Handbook', href: '/handbook', current: false },
 ];
 
@@ -120,7 +119,7 @@ export default function Layout({children}) {
                               key={item.name}
                               href={item.href}
                               className={classNames(
-                                item.current ? 'text-white' : 'text-cyan-100',
+                                item.current ? 'text-white' : 'text-cyan-200',
                                 'text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10'
                               )}
                               aria-current={item.current ? 'page' : undefined}
