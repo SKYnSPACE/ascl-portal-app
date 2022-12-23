@@ -4,8 +4,9 @@ import { Menu, Transition } from '@headlessui/react'
 import {
   BriefcaseIcon,
   CalendarDaysIcon,
+  ClipboardDocumentListIcon,
   CreditCardIcon,
-  PresentationChartBarIcon,
+  UsersIcon,
 } from '@heroicons/react/24/outline'
 
 import {
@@ -93,8 +94,10 @@ const selectedDay = days.find((day) => day.isSelected)
 
 const subNavigation = [
   { name: 'Lab. Calendar', href: '#', icon: CalendarDaysIcon, current: true },
+  { name: 'Attendance', href: '#', icon: UsersIcon, current: false },
   { name: 'Purchasing', href: '#', icon: CreditCardIcon, current: false },
   { name: 'Business Trip', href: '#', icon: BriefcaseIcon, current: false },
+  { name: 'Ledger', href: '#', icon: ClipboardDocumentListIcon, current: false },
 ]
 
 function classNames(...classes) {

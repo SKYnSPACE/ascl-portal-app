@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 
 import {
+  ArrowRightOnRectangleIcon,
   BanknotesIcon,
   BriefcaseIcon,
-  ClipboardDocumentListIcon,
   CreditCardIcon,
   MegaphoneIcon,
   PaperAirplaneIcon,
@@ -20,13 +20,15 @@ const actions = [
   {
     icon: MegaphoneIcon,
     name: 'Post an announcement',
+    detail: '연구실 주요 일정 등 공지사항',
     href: '#',
     iconForeground: 'text-teal-700',
     iconBackground: 'bg-teal-50',
   },
   {
-    icon: ClipboardDocumentListIcon,
-    name: 'Make a survey',
+    icon: ArrowRightOnRectangleIcon,
+    name: 'Carry-out report',
+    detail: '실험실 물품 반출/반납 대장',
     href: '#',
     iconForeground: 'text-purple-700',
     iconBackground: 'bg-purple-50',
@@ -34,6 +36,7 @@ const actions = [
   {
     icon: CreditCardIcon,
     name: 'Credit-card Use',
+    detail: '법인카드 사용을 위한 일정 문의',
     href: '#',
     iconForeground: 'text-sky-700',
     iconBackground: 'bg-sky-50',
@@ -41,6 +44,7 @@ const actions = [
   {
     icon: BanknotesIcon,
     name: 'Purchase Request',
+    detail: '공동구매를 위한 물품 기록',
     href: '#',
     iconForeground: 'text-yellow-700',
     iconBackground: 'bg-yellow-50',
@@ -48,13 +52,15 @@ const actions = [
   {
     icon: BriefcaseIcon,
     name: 'Business Trip',
+    detail: 'Request account information for a business trip.',
     href: '#',
     iconForeground: 'text-rose-700',
     iconBackground: 'bg-rose-50',
   },
   {
     icon: PaperAirplaneIcon,
-    name: 'Request for Vacation ',
+    name: 'Stepping Out',
+    detail: 'Report for a temporary absence from a office, vacation, etc.',
     href: '#',
     iconForeground: 'text-indigo-700',
     iconBackground: 'bg-indigo-50',
@@ -206,7 +212,7 @@ export default function Home() {
                             </a>
                           </h3>
                           <p className="mt-2 text-sm text-gray-500">
-                            //Under construction//
+                            {action.detail}
                           </p>
                         </div>
                         <span

@@ -15,9 +15,9 @@ const navigation = [
   { name: 'Home', href: '/', current: true },
   { name: 'Workspace', href: '/workspace', current: false },
   { name: 'Projects', href: '/projects', current: false },
-  { name: 'Seminar', href: '/', current: false },
-  { name: 'Chats', href: '/', current: false },
+  { name: 'Seminar', href: '/seminar', current: false },
   { name: 'Handbook', href: '/handbook', current: false },
+  // { name: 'Chats', href: '/', current: false },
 ];
 
 const userNavigation = [

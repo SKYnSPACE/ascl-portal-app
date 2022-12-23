@@ -107,7 +107,7 @@ export default function Handbook() {
                     다목적 호버바이크 개발
                   </h2>
                   <p className="mt-1 text-sm text-gray-500">
-                    장광우, 안형주, 과제의, 참여자, 이름을, 여기에, 적어요.
+                    장광우*, 안형주, 과제의, 참여자, 이름을, 여기에, 적어요.
                   </p>
                 </div>
 
@@ -124,6 +124,8 @@ export default function Handbook() {
 
                   <div className="col-span-4 sm:col-span-2">
                     <p>과제의 진행현황이나 특이사항을 공유해요. (채팅방?)</p>
+                    <p>TODO: 과제 리스트 추가/제거</p>
+                    <p>FORM 형식으로 변경</p>
                   </div>
 
                 </div>
@@ -152,7 +154,7 @@ export default function Handbook() {
                     내가 참여중인 다른 이상한 과제
                   </h2>
                   <p className="mt-1 text-sm text-gray-500">
-                    홍경우, 박준우, 과제의, 참여자, 이름을, 여기에, 적어요.
+                    홍경우*, 박준우, 과제의, 참여자, 이름을, 여기에, 적어요.
                   </p>
                 </div>
 
