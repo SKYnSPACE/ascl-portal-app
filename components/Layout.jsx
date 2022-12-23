@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import { Fragment, useContext } from 'react'
 import { Menu, Popover, Transition } from '@headlessui/react'
@@ -9,7 +10,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 
-import LocalDatabase from '../components/LocalDatabase'
+import LocalDatabase from './LocalDatabase'
 
 const navigation = [
   { name: 'Home', href: '/', current: true },
@@ -32,6 +33,7 @@ function classNames(...classes) {
 }
 
 export default function Layout({children}) {
+  const router = useRouter();
   const user = useContext(LocalDatabase).user;
 
   return (
@@ -119,7 +121,7 @@ export default function Layout({children}) {
                               key={item.name}
                               href={item.href}
                               className={classNames(
-                                item.current ? 'text-white' : 'text-cyan-200',
+                                item.href === router.pathname ? 'text-white' : 'text-cyan-300',
                                 'text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10'
                               )}
                               aria-current={item.current ? 'page' : undefined}

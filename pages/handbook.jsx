@@ -28,7 +28,7 @@ const faqs = [
     category: 'life',
     question: '휴가(연차)는 어떻게 사용할 수 있나요?',
     answer: (
-      <ol class="list-outside list-decimal">
+      <ol className="list-outside list-decimal">
         <li>연차를 쓸때는 연차 사용 최소 2주전 먼저 자신과 함께 일하는 연구실 동료들에게 연차 사용 한다는 사실을 알린뒤 과제 및 업무 조율이 가능한지 확인합니다.</li>
         <li>이후 동료들과의 업무 조율이 끝났다면 교수님께 연차 사용 1주일 전 연차 사용 메일을 보내면 됩니다!</li>
         <li>연차일에 쉽니다!</li>
@@ -55,7 +55,7 @@ const faqs = [
     answer: (
       <>
       랩 세미나 준비는 연구실 총무의 지도 하에 석사과정 학생들이 진행합니다.
-      <ol class="list-outside list-decimal">
+      <ol className="list-outside list-decimal">
         <li>랩세미나 공지</li>
         <p>내용작성.</p>
         <li>발표장소(강의실/세미나실) 예약</li>
@@ -76,11 +76,11 @@ const faqs = [
     category: 'purchase',
     question: '연구에 필요한 물품을 구입하기 위한 절차는?',
     answer: (
-      <ol class="list-outside list-decimal">
+      <ol className="list-outside list-decimal">
         <li>계정 문의</li>
         <p>내용작성.</p>
         <li>결제 진행</li>
-        <ul class="list-inside list-none">
+        <ul className="list-inside list-none">
           <li>직접구매 &gt; 아래의 직접구매 방법을 참조.</li>
           <li>구매요청 &gt; 아래의 구매요청 방법을 참조.</li>
         </ul>
@@ -98,7 +98,7 @@ const faqs = [
     category: 'purchase',
     question: '구매요청 방법',
     answer: (
-      <ul class="list-inside list-disc">
+      <ul className="list-inside list-disc">
         <li>KAIST Portal(ERP)에 접속</li>
         <li>비용/구매</li>
         <li>구매요청</li>
@@ -111,9 +111,9 @@ const faqs = [
     category: 'business-trip',
     question: '출장신청 절차는 어떻게 되나요?',
     answer: (
-      <ol class="list-outside list-decimal">
+      <ol className="list-outside list-decimal">
         <li>출장 신청</li>
-        <ul class="list-inside list-none">
+        <ul className="list-inside list-none">
           <li>process 1</li>
           <li>process 2</li>
           <li>process 3</li>
