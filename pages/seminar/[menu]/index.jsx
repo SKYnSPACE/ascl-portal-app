@@ -1,4 +1,7 @@
-import { Schedule } from '../components/Schedule'
+import { useRouter } from 'next/router';
+
+import Page404 from '../../../components/Page404';
+import { Schedule } from '../../../components/Seminar/Schedule'
 
 import {
   ArchiveBoxArrowDownIcon,
@@ -8,17 +11,35 @@ import {
 } from '@heroicons/react/24/outline'
 
 const subNavigation = [
-  { name: 'Schedule', href: '#', icon: CalendarDaysIcon, current: true },
-  { name: 'Progress', href: '#', icon: ClipboardDocumentCheckIcon, current: false },
-  { name: 'Submission', href: '#', icon: ArchiveBoxArrowDownIcon, current: false },
-  { name: 'Peer review', href: '#', icon: ChatBubbleLeftRightIcon, current: false },
+  { name: 'Schedule', href: '/seminar/schedule', icon: CalendarDaysIcon },
+  { name: 'Progress', href: '/seminar/progress', icon: ClipboardDocumentCheckIcon },
+  { name: 'Submission', href: '/seminar/submission', icon: ArchiveBoxArrowDownIcon },
+  { name: 'Peer review', href: '/seminar/review', icon: ChatBubbleLeftRightIcon },
 ]
+
+function Menu() {
+  const router = useRouter();
+  const menu = router.query.menu;
+
+  switch (menu) {
+    case 'schedule':
+      return <Schedule />;
+
+    // case 'attendance':
+    //   return <Attendance />;
+
+    default:
+      return <Page404 />;
+  }
+}
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function Seminar() {
+  const router = useRouter();
+
   return (
     <>
       {/* <main className="relative -mt-32">
@@ -49,16 +70,16 @@ export default function Seminar() {
                       key={item.name}
                       href={item.href}
                       className={classNames(
-                        item.current
+                        item.href === router.asPath
                           ? 'bg-sky-50 border-sky-500 text-sky-700 hover:bg-sky-50 hover:text-sky-700'
                           : 'border-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-900',
                         'group border-l-4 px-3 py-2 flex items-center text-sm font-medium'
                       )}
-                      aria-current={item.current ? 'page' : undefined}
+                      aria-current={item.href === router.asPath ? 'page' : undefined}
                     >
                       <item.icon
                         className={classNames(
-                          item.current
+                          item.href === router.asPath
                             ? 'text-sky-500 group-hover:text-sky-500'
                             : 'text-gray-400 group-hover:text-gray-500',
                           'flex-shrink-0 -ml-1 mr-3 h-6 w-6'
@@ -72,9 +93,13 @@ export default function Seminar() {
               </aside>
 
 
-              <div className="mx-auto max-w-screen-xl px-4 pb-6 lg:px-8 lg:pb-16 lg:col-span-9 sm:px-6">
-          <Schedule />
-        </div>
+              {/* <div className="mx-auto max-w-screen-xl px-4 pb-6 lg:px-8 lg:pb-16 lg:col-span-9 sm:px-6"> */}
+              <div className="divide-y divide-gray-200 lg:col-span-9" action="#" method="POST">
+                <div className="py-6 px-4 sm:p-6 lg:pb-8">
+                  <Menu />
+                </div>
+              </div>
+              {/* </div> */}
 
 
             </div>

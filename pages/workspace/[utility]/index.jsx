@@ -1,4 +1,8 @@
-import Calendar from '../components/Calendar';
+import { useRouter } from 'next/router';
+
+import Page404 from '../../../components/Page404';
+import Calendar from '../../../components/Workspace/Calendar';
+import Attendance from '../../../components/Workspace/Attendance';
 
 import {
   BriefcaseIcon,
@@ -11,18 +15,36 @@ import {
 
 
 const subNavigation = [
-  { name: 'Lab. Calendar', href: '#', icon: CalendarDaysIcon, current: true },
-  { name: 'Attendance', href: '#', icon: UsersIcon, current: false },
-  { name: 'Purchasing', href: '#', icon: CreditCardIcon, current: false },
-  { name: 'Business Trip', href: '#', icon: BriefcaseIcon, current: false },
-  { name: 'Ledger', href: '#', icon: ClipboardDocumentListIcon, current: false },
+  { name: 'Lab. Calendar', href: '/workspace/calendar', icon: CalendarDaysIcon },
+  { name: 'Attendance', href: '/workspace/attendance', icon: UsersIcon },
+  { name: 'Purchasing', href: '/workspace/purchasing', icon: CreditCardIcon },
+  { name: 'Business Trip', href: '/workspace/trip', icon: BriefcaseIcon },
+  { name: 'Ledger', href: '/workspace/ledger', icon: ClipboardDocumentListIcon },
 ]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+function Utility() {
+  const router = useRouter();
+  const utility = router.query.utility;
+
+  switch (utility) {
+    case 'calendar':
+      return <Calendar />;
+
+    // case 'attendance':
+    //   return <Attendance />;
+
+    default:
+      return <Page404 />;
+  }
+}
+
 export default function Workspace() {
+  const router = useRouter();
+
   return (
     <main className="relative -mt-32">
       <div className="mx-auto max-w-7xl px-4 mb-8 sm:px-6 lg:px-8">
@@ -38,16 +60,16 @@ export default function Workspace() {
                     key={item.name}
                     href={item.href}
                     className={classNames(
-                      item.current
+                      item.href === router.asPath
                         ? 'bg-sky-50 border-sky-500 text-sky-700 hover:bg-sky-50 hover:text-sky-700'
                         : 'border-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-900',
                       'group border-l-4 px-3 py-2 flex items-center text-sm font-medium'
                     )}
-                    aria-current={item.current ? 'page' : undefined}
+                    aria-current={item.href === router.asPath ? 'page' : undefined}
                   >
                     <item.icon
                       className={classNames(
-                        item.current
+                        item.href === router.asPath
                           ? 'text-sky-500 group-hover:text-sky-500'
                           : 'text-gray-400 group-hover:text-gray-500',
                         'flex-shrink-0 -ml-1 mr-3 h-6 w-6'
@@ -60,25 +82,23 @@ export default function Workspace() {
               </nav>
             </aside>
 
+
+            {/* Actual page section */}
             <form className="divide-y divide-gray-200 lg:col-span-9" action="#" method="POST">
-              {/* Profile section */}
+
               <div className="py-6 px-4 sm:p-6 lg:pb-8">
-                <div>
-                  <h2 className="text-lg font-medium leading-6 text-gray-900">Lab. Calendar</h2>
-                  <p className="mt-1 text-sm text-gray-500">
-                    Will be updated soon.
-                    <br />
-                    Announcements, Vacations,
-                  </p>
-                </div>
 
 
-<Calendar />
-                
+                <Utility />
+
 
 
               </div>
             </form>
+
+
+
+
           </div>
         </div>
       </div>

@@ -95,6 +95,16 @@ export default function Calendar() {
 
 
     <div className="lg:flex lg:h-full lg:flex-col">
+      {/* //TODO: REMOVE following div section */}
+      <div>
+        <h2 className="text-lg font-medium leading-6 text-gray-900">Lab. Calendar</h2>
+        <p className="mt-1 text-sm text-gray-500">
+          Will be updated soon.
+          <br />
+          Lab Announcements, Seminars, Meetings, etc.
+        </p>
+      </div>
+
       <header className="flex items-center justify-between border-b border-gray-200 py-4 px-6 lg:flex-none">
         <h1 className="text-lg font-semibold text-gray-900">
           <time dateTime="2022-01">January 2022</time>

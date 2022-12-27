@@ -291,7 +291,7 @@ function ScheduleStatic() {
 
 export function Schedule() {
   return (
-    <section id="schedule" aria-label="Schedule" className="py-4 sm:py-12">
+    <section id="schedule" aria-label="Schedule" className="py-2">
       <div className="relative z-10">
         <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-4xl lg:pr-24">
           <h2 className="font-display text-3xl font-medium tracking-tighter text-gray-900 sm:text-3xl">
