@@ -2,12 +2,14 @@ import { useRouter } from 'next/router';
 
 import Page404 from '../../../components/Page404';
 import { Schedule } from '../../../components/Seminar/Schedule'
+import Progress from '../../../components/Seminar/Progress'
 
 import {
   ArchiveBoxArrowDownIcon,
   CalendarDaysIcon,
   ChatBubbleLeftRightIcon,
   ClipboardDocumentCheckIcon,
+  CogIcon,
 } from '@heroicons/react/24/outline'
 
 const subNavigation = [
@@ -15,6 +17,7 @@ const subNavigation = [
   { name: 'Progress', href: '/seminar/progress', icon: ClipboardDocumentCheckIcon },
   { name: 'Submission', href: '/seminar/submission', icon: ArchiveBoxArrowDownIcon },
   { name: 'Peer review', href: '/seminar/review', icon: ChatBubbleLeftRightIcon },
+  { name: 'Settings', href: '/seminar/settings', icon: CogIcon },
 ]
 
 function Menu() {
@@ -24,6 +27,8 @@ function Menu() {
   switch (menu) {
     case 'schedule':
       return <Schedule />;
+    case 'progress':
+      return <Progress />;
 
     // case 'attendance':
     //   return <Attendance />;
