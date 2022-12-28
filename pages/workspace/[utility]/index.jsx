@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import Page404 from '../../../components/Page404';
 import Calendar from '../../../components/Workspace/Calendar';
 import Attendance from '../../../components/Workspace/Attendance';
+import BusinessTrip from '../../../components/Workspace/BusinessTrip';
+import Ledger from '../../../components/Workspace/Ledger';
 
 import {
   BriefcaseIcon,
@@ -11,6 +13,7 @@ import {
   CreditCardIcon,
   UsersIcon,
 } from '@heroicons/react/24/outline'
+import Purchasing from '../../../components/Workspace/Purchasing';
 
 
 
@@ -34,8 +37,17 @@ function Utility() {
     case 'calendar':
       return <Calendar />;
 
-    // case 'attendance':
-    //   return <Attendance />;
+    case 'attendance':
+      return <Attendance />;
+
+    case 'purchasing':
+      return <Purchasing />;
+
+    case 'trip':
+      return <BusinessTrip />;
+
+    case 'ledger':
+      return <Ledger />;
 
     default:
       return <Page404 />;

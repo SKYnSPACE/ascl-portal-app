@@ -56,7 +56,7 @@ export default function Layout({children}) {
                   
                   {/* Logo */}
                   <div className="absolute left-0 flex-shrink-0 py-5 lg:static">
-                    <a href="#">
+                    <a href="/">
                       <span className="sr-only">Your Company</span>
                       <img
                         className="h-8 w-auto"
