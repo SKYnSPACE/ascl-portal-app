@@ -51,6 +51,16 @@ const people = [
     imageUrl:
       'http://ascl.kaist.ac.kr/files/attach/images/210/366/5e49f293963950ca36ccf58c70cb4796.jpg',
   },
+  {
+    name: 'Taeho Kim',
+    status: 'Vacation',
+    office: '기2000',
+    currentLocation: '',
+    email: 'thkim@kaist.ac.kr',
+    telephone: '+82-',
+    imageUrl:
+      'http://ascl.kaist.ac.kr/files/attach/images/210/366/5e49f293963950ca36ccf58c70cb4796.jpg',
+  },
 
 ]
 
@@ -66,6 +76,8 @@ function getStatusColor(status) {
     case 'On business':
       return 'bg-green-100 text-green-800';
     case 'Personal affairs':
+      return 'bg-orange-100 text-orange-800';
+    case 'Vacation':
       return 'bg-yellow-100 text-yellow-800';
     case 'Absent':
       return 'bg-red-100 text-red-800';

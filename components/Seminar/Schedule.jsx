@@ -294,15 +294,19 @@ export function Schedule() {
     <section id="schedule" aria-label="Schedule" className="py-2">
       <div className="relative z-10">
         <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-4xl lg:pr-24">
-          <h2 className="font-display text-3xl font-medium tracking-tighter text-gray-900 sm:text-3xl">
-            2022학년도 겨울 랩세미나
+        <h3 className="font-display text-xl text-center font-medium tracking-tighter text-sky-600 sm:text-xl">
+        2022 - Winter
+        </h3>
+          <h2 className="font-display text-3xl text-center font-medium tracking-tighter text-gray-800 sm:text-3xl">
+            Lab. Seminar Schedule
           </h2>
-          <p className="mt-4 font-display text-lg tracking-tight text-gray-700">
-            발표 순서는 발표자료 준비가 완료된 사람들부터 선착순으로 할당됩니다. 발표 순서 조정이 필요한 경우 발표자와 직접 협의하시거나, 총무에게 연락하시기 바랍니다.
+          <p className="mt-2 font-display text-m tracking-tight text-gray-600">
+            발표 순서는 발표자료 준비가 완료된 사람들부터 선착순으로 할당됩니다. 발표 순서 조정이 필요한 경우 발표자와 직접 협의하시거나, 총무에게 연락하시기 바랍니다. 
+            <br /> TODO: 각 항목을 클릭하여 초록확인, 발표자료 다운로드, 리뷰어들의 코멘트 등을 확인할 수 있도록 합니다.
           </p>
         </div>
       </div>
-      <div className="relative mt-8 sm:mt-12">
+      <div className="relative mt-8 sm:mt-8">
 
         <div className="relative">
           <ScheduleTabbed />

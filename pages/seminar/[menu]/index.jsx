@@ -1,8 +1,10 @@
 import { useRouter } from 'next/router';
 
 import Page404 from '../../../components/Page404';
-import { Schedule } from '../../../components/Seminar/Schedule'
-import Progress from '../../../components/Seminar/Progress'
+import { Schedule } from '../../../components/Seminar/Schedule';
+import Progress from '../../../components/Seminar/Progress';
+import Submission from '../../../components/Seminar/Submission';
+import Review from '../../../components/Seminar/Review';
 
 import {
   ArchiveBoxArrowDownIcon,
@@ -11,6 +13,7 @@ import {
   ClipboardDocumentCheckIcon,
   CogIcon,
 } from '@heroicons/react/24/outline'
+
 
 const subNavigation = [
   { name: 'Schedule', href: '/seminar/schedule', icon: CalendarDaysIcon },
@@ -29,10 +32,10 @@ function Menu() {
       return <Schedule />;
     case 'progress':
       return <Progress />;
-
-    // case 'attendance':
-    //   return <Attendance />;
-
+    case 'submission':
+      return <Submission />;
+    case 'review':
+      return <Review />;
     default:
       return <Page404 />;
   }
