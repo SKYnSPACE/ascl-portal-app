@@ -190,7 +190,7 @@ function ScheduleTabbed() {
               key={day.dateTime}
               className={classNames(
                 'relative w-3/4 flex-none pr-4 sm:w-auto sm:pr-0',
-                dayIndex !== selectedIndex && 'opacity-70'
+                dayIndex !== selectedIndex && 'opacity-50'
               )}
             >
               <DaySummary
@@ -241,7 +241,7 @@ function TimeSlots({ day, className }) {
       role="list"
       className={classNames(
         className,
-        'space-y-8 bg-white/60 py-14 px-10 text-center shadow-xl shadow-blue-900/30 backdrop-blur'
+        'space-y-8 bg-white/60 py-14 px-10 text-center shadow-lg shadow-blue-900/30 backdrop-blur border border-gray-300'
       )}
     >
       {day.timeSlots.map((timeSlot, timeSlotIndex) => (
