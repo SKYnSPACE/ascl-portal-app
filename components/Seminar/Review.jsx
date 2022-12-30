@@ -21,12 +21,14 @@ const items = [
       {
         name: 'Seongheon Lee',
         title: 'Dynamic modeling and control of mechanical systems using machine learning approaches and their applications to a quadrotor UAV',
+        semester: '2022-F',
         tags: 'UAV, AI, quadrotor, modeling, control',
         requestedDate: '2022-12-29 23:00',
       },
       {
         name: 'Hyochoong Bang',
         title: '프로젝트 담당자 할당 및 바람직한 랩 생활을 위한 조언',
+        semester: '2022-F',
         tags: 'ASCL',
         requestedDate: '2022-12-29 23:00',
       },
@@ -36,27 +38,27 @@ const items = [
     category: 'accepted',
     descriptions: 'Please write a review for the presentation!',
     list: [
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...1', },
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...2', },
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...3', },
+      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...1', semester: '2022-F',},
+      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...2', semester: '2022-F',},
+      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...3', semester: '2022-F',},
     ],
   },
   {
     category: 'finished',
     descriptions: 'Thanks for your efforts :)',
     list: [
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...1', },
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...2', },
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...3', },
+      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...1', semester: '2022-F',},
+      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...2', semester: '2022-F',},
+      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...3', semester: '2022-F',},
     ],
   },
   {
     category: 'declined',
     descriptions: 'List of declined presentations.',
     list: [
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...1', },
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...2', },
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...3', },
+      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...1', semester: '2022-F',},
+      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...2', semester: '2022-F',},
+      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...3', semester: '2022-F',},
     ],
   },
 ]
@@ -188,7 +190,7 @@ export default function Review() {
                 }}>
                   <div className="px-4 py-4 sm:px-6">
                     <div className="flex items-center justify-between">
-                      <p className="truncate text-sm font-medium text-sky-600">{presentation.title}</p>
+                      <p className="truncate text-sm font-medium text-sky-600">[{presentation.semester}] {presentation.title}</p>
                       <div className="ml-2 flex flex-shrink-0">
                         <p className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
                           {/* {presentation.name} */}

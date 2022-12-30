@@ -1,4 +1,8 @@
-import { StarIcon } from '@heroicons/react/20/solid'
+// import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+// import { MuiChipsInput } from 'mui-chips-input';
+
+import { StarIcon } from '@heroicons/react/20/solid';
 
 const reviewers = [
   {
@@ -78,8 +82,21 @@ function classNames(...classes) {
 }
 
 export default function Submission() {
+  const { register, watch, handleSubmit } = useForm();
+
+  // const [tags, setTags] = useState([]);
+  // const handleTagsChange = (newTags) => {setTags(newTags)};
+  // console.log(watch().abstract.length)
+
+  const onValid = (data) => {
+    console.log("Form validity check completed");
+  }
+  const onInvalid = (errors) => {
+    console.log(errors);
+  }
+
   return (
-    <form className="space-y-8 divide-y divide-gray-200">
+    <form onSubmit={handleSubmit(onValid, onInvalid)} className="space-y-8 divide-y divide-gray-200">
       <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
         <div className="space-y-6 sm:space-y-5">
           <div>
@@ -100,10 +117,18 @@ export default function Submission() {
                     2022-02-001
                   </span>
                   <input
-                    type="text"
-                    name="title"
+                    {...register("title", {
+                      required: "Title is required.",
+                      maxLength: {
+                        message: "Maximum length of the title is 100.",
+                        value: 100
+                      }
+                    })
+                  }
                     id="title"
-                    autoComplete="title"
+                    name="title"
+                    type="text"
+                    // required
                     className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                   />
                 </div>
@@ -112,13 +137,22 @@ export default function Submission() {
 
             <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
               <label htmlFor="abstract" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                Abstract
+                Abstract ({watch().abstract.length}/500)
               </label>
               <div className="mt-1 sm:col-span-2 sm:mt-0">
                 <textarea
+                  {...register("abstract", {
+                    required: "Abstract is required.",
+                    maxLength: {
+                      message: "Maximum length of the abstract is 500.",
+                      value: 500
+                    }
+                    })
+                  }
                   id="abstract"
                   name="abstract"
-                  rows={3}
+                  rows={7}
+                  // required
                   className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                   defaultValue={''}
                 />
@@ -132,14 +166,16 @@ export default function Submission() {
               </label>
               <div className="mt-1 sm:col-span-2 sm:mt-0">
                 <select
+                  {...register("category")}
                   id="category"
                   name="category"
                   autoComplete="category-name"
                   className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:max-w-xs sm:text-sm"
                 >
-                  <option>Aircraft</option>
-                  <option>Satellite</option>
-                  <option>Etc.</option>
+                  <option value="none">None</option>
+                  <option value="aircraft">Aircraft</option>
+                  <option value="satellite">Satellite</option>
+
                 </select>
               </div>
             </div>
@@ -150,12 +186,15 @@ export default function Submission() {
               </label>
               <div className="mt-1 sm:col-span-2 sm:mt-0">
                 <input
-                  type="text"
-                  name="tags"
+                  {...register("tags")}
                   id="tags"
-                  autoComplete="tags"
+                  name="tags"
+                  type="text"
                   className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                 />
+                <p className="mt-2 text-sm text-gray-500">ONLY USE lowercase UNLESS IT IS AN ACRONYM. Use comma(,) to separate tags.</p>
+
+                {/* <MuiChipsInput size="small" value={tags} onChange={handleTagsChange} helperText={tags.length > 0 ? "Double click to edit a tag":""}/> */}
               </div>
             </div>
 
@@ -182,11 +221,15 @@ export default function Submission() {
                     </svg>
                     <div className="flex text-sm text-gray-600">
                       <label
-                        htmlFor="file-upload"
+                        htmlFor="draft"
                         className="relative cursor-pointer rounded-md bg-white font-medium text-sky-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-sky-500 focus-within:ring-offset-2 hover:text-sky-500"
                       >
                         <span>Upload a file</span>
-                        <input id="file-upload" name="file-upload" type="file" className="sr-only" />
+                        <input
+                          {...register("draft")}
+                          id="draft"
+                          name="draft"
+                          type="file" className="sr-only" />
                       </label>
                       <p className="pl-1">or drag and drop</p>
                     </div>
@@ -202,7 +245,7 @@ export default function Submission() {
           <div>
             <h3 className="text-lg font-medium leading-6 text-gray-900">Reviews</h3>
             <p className="mt-1 max-w-2xl text-sm text-gray-500">Ask for a review and check the responses. (accepted &lt;- pending -&gt; rejected)
-            <br /> You need at least one review to proceed, can have 3 reviewers max, and can send 4 requests at a time.</p>
+              <br /> You need at least one review to proceed, can have 3 reviewers max, and can send 4 requests at a time.</p>
           </div>
 
           <div className="space-y-6 sm:space-y-5">
@@ -446,7 +489,7 @@ export default function Submission() {
             </p>
           </div>
           <div className="space-y-6 divide-y divide-gray-200 sm:space-y-5">
-            
+
           </div>
         </div>
 
