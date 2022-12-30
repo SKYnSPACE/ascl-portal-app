@@ -137,7 +137,7 @@ export default function Submission() {
 
             <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
               <label htmlFor="abstract" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                Abstract ({watch().abstract.length}/500)
+                Abstract {!watch().abstract ? <span>(0/500)</span> : <span>({watch().abstract.length}/500)</span>}
               </label>
               <div className="mt-1 sm:col-span-2 sm:mt-0">
                 <textarea
