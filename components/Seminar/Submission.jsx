@@ -114,7 +114,7 @@ export default function Submission() {
               <div className="mt-1 sm:col-span-2 sm:mt-0">
                 <div className="flex max-w-lg rounded-md shadow-sm">
                   <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">
-                    2022-02-001
+                    2022-02-034141
                   </span>
                   <input
                     {...register("title", {
@@ -137,7 +137,8 @@ export default function Submission() {
 
             <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
               <label htmlFor="abstract" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                Abstract {!watch().abstract ? <span>(0/500)</span> : <span>({watch().abstract.length}/500)</span>}
+                Abstract <span>({watch("abstract")?.length}/500)</span>
+                
               </label>
               <div className="mt-1 sm:col-span-2 sm:mt-0">
                 <textarea
@@ -279,7 +280,7 @@ export default function Submission() {
                         <td
                           className={classNames(
                             planIdx === 0 ? '' : 'border-t border-transparent',
-                            'relative py-4 pl-4 sm:pl-6 pr-3 text-sm'
+                            'relative py-1 pl-4 sm:pl-6 pr-3 text-sm'
                           )}
                         >
                           <div className="font-medium text-gray-900">
@@ -301,7 +302,7 @@ export default function Submission() {
                         <td
                           className={classNames(
                             planIdx === 0 ? '' : 'border-t border-gray-200',
-                            'hidden px-3 py-3.5 text-sm text-gray-500 lg:table-cell'
+                            'hidden px-3 py-1 text-sm text-gray-500 lg:table-cell'
                           )}
                         >
                           {reviewer.researchField}
@@ -310,7 +311,7 @@ export default function Submission() {
                         <td
                           className={classNames(
                             planIdx === 0 ? '' : 'border-t border-gray-200',
-                            'px-3 py-3.5 text-sm text-gray-500 text-center'
+                            'px-3 py-1 text-sm text-gray-500 text-center'
                           )}
                         >
                           <div className="sm:hidden">{reviewer.handlingRequests}/{reviewer.id == 0 ? <span>&infin;</span> : 4}</div>
@@ -320,7 +321,7 @@ export default function Submission() {
                         <td
                           className={classNames(
                             planIdx === 0 ? '' : 'border-t border-transparent',
-                            'relative py-3.5 pl-3 pr-4 sm:pr-6 text-right text-sm font-medium'
+                            'relative py-1 pl-3 pr-4 sm:pr-6 text-right text-sm font-medium'
                           )}
                         >
                           <button
