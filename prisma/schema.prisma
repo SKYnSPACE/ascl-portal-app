@@ -15,7 +15,7 @@ model User {
   id          Int       @id @default(autoincrement())
   userNumber  Int       @unique
   email       String    @unique
-  phone       Int       @unique
+  phone       String       @unique
   name        String
   avatar      String?
   status	    String?
@@ -30,9 +30,11 @@ model User {
 model Token {
   id          Int       @id @default(autoincrement())
   payload     String
-  user        User      @relation(fields:[userId],references: [id])
-  @@index([userId])
+  
+  user        User      @relation(fields:[userId], references:[id], onDelete: Cascade)
   userId      Int
+  @@index([userId])
+
   createdAt	  DateTime  @default(now())
   updatedAt	  DateTime  @updatedAt
 }

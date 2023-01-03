@@ -8,9 +8,12 @@ import {
   SquaresPlusIcon,
 } from '@heroicons/react/24/outline'
 
+import useMutation from "../libs/frontend/useMutation"
 
 export default function Enter() {
   const { register, handleSubmit, setError } = useForm();
+  const [enter, {loading, data, error}] = useMutation("/api/users/enter");
+
   const onValid = (data) => {
     console.log("Do something when the form is valid.");
     console.log(data);

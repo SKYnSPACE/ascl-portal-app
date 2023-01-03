@@ -15,12 +15,15 @@
     "@prisma/client": "^4.8.0",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/line-clamp": "^0.4.2",
+    "iron-session": "^6.3.1",
     "mui-chips-input": "^1.3.2",
     "next": "13.0.7",
+    "nodemailer": "^6.8.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-google-charts": "^4.0.0",
-    "react-hook-form": "^7.41.2"
+    "react-hook-form": "^7.41.2",
+    "swr": "^2.0.0"
   },
   "devDependencies": {
     "@types/node": "18.11.18",
