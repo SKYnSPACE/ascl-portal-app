@@ -1,5 +1,7 @@
 import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/20/solid'
 
+import { classNames } from '../../libs/frontend/utils'
+
 const people = [
   {
     name: 'Hyochoong Bang',
@@ -63,11 +65,6 @@ const people = [
   },
 
 ]
-
-function classNames(...classes) {
-  console.log(...classes)
-  return classes.filter(Boolean).join(' ')
-}
 
 function getStatusColor(status) {
   switch (status) {

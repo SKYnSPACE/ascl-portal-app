@@ -1,6 +1,7 @@
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 
+import { classNames } from '../../libs/frontend/utils'
 
 import {
   ChevronDownIcon,
@@ -85,10 +86,6 @@ const days = [
   { date: '2022-02-06', events: [] },
 ]
 const selectedDay = days.find((day) => day.isSelected)
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
 
 export default function Calendar() {
   return (

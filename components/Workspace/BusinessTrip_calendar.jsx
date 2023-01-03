@@ -8,6 +8,8 @@ import {
 } from '@heroicons/react/20/solid'
 import { Menu, Transition } from '@headlessui/react'
 
+import { classNames } from '../../libs/frontend/utils'
+
 const meetings = [
   {
     id: 1,
@@ -65,10 +67,6 @@ const days = [
   { date: '2022-02-05' },
   { date: '2022-02-06' },
 ]
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
 
 export default function BusinessTrip() {
   return (

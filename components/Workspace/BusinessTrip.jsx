@@ -1,5 +1,7 @@
 import { Fragment } from 'react'
 
+import { classNames } from '../../libs/frontend/utils'
+
 const lists = [
   {
     name: 'Pending',
@@ -17,10 +19,6 @@ const lists = [
   },
   // More people...
 ]
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
 
 export default function BusinessTrip() {
   return (

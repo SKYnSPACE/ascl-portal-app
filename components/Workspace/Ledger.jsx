@@ -1,5 +1,7 @@
 import { Fragment } from 'react'
 
+import { classNames } from '../../libs/frontend/utils'
+
 const items = [
   {
     category: '공용',
@@ -29,10 +31,6 @@ const items = [
     ],
   },
 ]
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
 
 export default function Ledger() {
   return (

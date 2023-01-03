@@ -14,6 +14,7 @@ import {
   CogIcon,
 } from '@heroicons/react/24/outline'
 
+import { classNames } from '../../libs/frontend/utils'
 
 const subNavigation = [
   { name: 'Schedule', href: '/seminar/schedule', icon: CalendarDaysIcon },
@@ -39,10 +40,6 @@ function Menu() {
     default:
       return <Page404 />;
   }
-}
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
 }
 
 export default function Seminar() {

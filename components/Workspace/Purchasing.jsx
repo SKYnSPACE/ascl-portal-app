@@ -1,5 +1,7 @@
 import { Fragment } from 'react'
 
+import { classNames } from '../../libs/frontend/utils'
+
 const purchases = [
   {
     category: 'Pending', //계정문의 대기중
@@ -23,10 +25,6 @@ const purchases = [
     ],
   },
 ]
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
 
 export default function Purchasing() {
   return (
