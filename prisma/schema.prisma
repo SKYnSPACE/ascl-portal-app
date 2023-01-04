@@ -20,7 +20,7 @@ model User {
   avatar      String?
   status	    String?
   team	      String?
-  position	  String?
+  role	      Int?
   createdAt	  DateTime  @default(now())
   updatedAt	  DateTime  @updatedAt
   // seminars	SEMINAR[]
@@ -29,7 +29,7 @@ model User {
 
 model Token {
   id          Int       @id @default(autoincrement())
-  payload     String
+  payload     String    @unique
   
   user        User      @relation(fields:[userId], references:[id], onDelete: Cascade)
   userId      Int

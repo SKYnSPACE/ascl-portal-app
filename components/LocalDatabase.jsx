@@ -6,12 +6,19 @@ const LocalDatabaseProvider = ({children}) => {
 
   const [user, setUser] = useState(
     {
-    name: 'Seongheon Lee',
-    email: 'skynspace@kaist.ac.kr',
-    role: 'Senior Researcher',
-    imageUrl:
-      'https://avatars.githubusercontent.com/u/21105393?v=4',
+      // isSignedIn: false,
+      name: null,
+      email: null,
+      role: null,
+      avatar: null,
     }
+    // {
+    // name: 'Seongheon Lee',
+    // email: 'skynspace@kaist.ac.kr',
+    // role: 'Senior Researcher',
+    // avatar:
+    //   'https://avatars.githubusercontent.com/u/21105393?v=4',
+    // }
   );
 
   const data = {user,};

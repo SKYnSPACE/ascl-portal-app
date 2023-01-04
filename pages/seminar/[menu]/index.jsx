@@ -14,7 +14,7 @@ import {
   CogIcon,
 } from '@heroicons/react/24/outline'
 
-import { classNames } from '../../libs/frontend/utils'
+import { classNames } from '../../../libs/frontend/utils'
 
 const subNavigation = [
   { name: 'Schedule', href: '/seminar/schedule', icon: CalendarDaysIcon },

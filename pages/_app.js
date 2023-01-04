@@ -6,9 +6,7 @@ import { LocalDatabaseProvider } from '../components/LocalDatabase';
 export default function App({ Component, pageProps }) {
   return (
     <LocalDatabaseProvider>
-      <SWRConfig
-        value={{fetcher: (url) => fetch(url).then((response) => response.json()),}}
-      >
+      <SWRConfig value={{fetcher: (url) => fetch(url).then((response) => response.json()) }}>
         <Layout>
           <Component {...pageProps} />
         </Layout>

@@ -10,7 +10,7 @@ declare module "iron-session" {
 }
 
 const cookieConfig: IronSessionOptions = {
-  cookieName: "carrotsession",
+  cookieName: "ascl-portal-session",
   password: process.env.COOKIE_PASSWORD,
   cookieOptions: {
     secure: process.env.NODE_ENV === "production",

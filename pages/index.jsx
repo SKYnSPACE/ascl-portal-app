@@ -1,4 +1,5 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import useUser from '../libs/frontend/useUser';
 
 import {
   ArrowRightOnRectangleIcon,
@@ -137,14 +138,41 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+function getRole(role) {
+  switch (role) {
+    case 1: return 'Part-time Researcher';
+    case 2: return 'Full-time Researcher';
+    case 3: return 'Account manager';
+    case 4: return 'Team leader';
+    case 5: return 'Lab. Manager';
+    case 6: return 'Secretary';
+    case 7: return 'Professor';
+    case 100: return 'Administrator';
+    case 0:
+    default:
+      return 'Guest';
+  }
+}
 export default function Home() {
-  const user = useContext(LocalDatabase).user;
+  const localDatabase = useContext(LocalDatabase);
+  // const user = useContext(LocalDatabase).user;
+  const { user } = useUser();
+  // console.log(user)
 
   const [isModalOpen, setIsModalOpen] = useState(0)
   // const closeAnnouncementModal = () => { setIsAnnouncementModalOpen(false) }
 
+  useEffect(()=>{
+    localDatabase.setUser(    {
+    name: user?.name,
+    email: user?.email,
+    role: user?.role,
+    avatar: user?.avatar,
+  })},[user])
+
   return (
     <>
+    {user?.name? 
       <main className="-mt-24 pb-8">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
           <h1 className="sr-only">Profile</h1>
@@ -162,12 +190,12 @@ export default function Home() {
                     <div className="sm:flex sm:items-center sm:justify-between">
                       <div className="sm:flex sm:space-x-5">
                         <div className="flex-shrink-0">
-                          <img className="mx-auto h-20 w-20 rounded-full" src={user.imageUrl} alt="" />
+                          <img className="mx-auto h-20 w-20 rounded-full" src={user?.avatar} alt="" />
                         </div>
                         <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
                           <p className="text-sm font-medium text-gray-600">Welcome back,</p>
-                          <p className="text-xl font-bold text-gray-900 sm:text-2xl">{user.name}</p>
-                          <p className="text-sm font-medium text-gray-600">{user.role}</p>
+                          <p className="text-xl font-bold text-gray-900 sm:text-2xl">{user?.name}</p>
+                          <p className="text-sm font-medium text-gray-600">{getRole(user?.role)}</p>
                         </div>
                       </div>
                       <div className="mt-5 flex justify-center sm:mt-0">
@@ -348,7 +376,7 @@ export default function Home() {
         <SteppingoutModal props={{ action: actions[5], isModalOpen, setIsModalOpen }} />
 
 
-      </main>
+      </main> : <></>}
     </>
   )
 }

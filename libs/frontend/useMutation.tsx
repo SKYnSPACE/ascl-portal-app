@@ -7,6 +7,7 @@ interface UseMutationState<T> {
 }
 type UseMutationResult<T> = [(data: any) => void, UseMutationState<T>];
 
+/** Invoke POST method with states.*/
 export default function useMutation<T = any>(
   url: string
 ): UseMutationResult<T> {

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-import { Fragment, useContext } from 'react'
+import { Fragment, useContext, useEffect } from 'react'
 import { Menu, Popover, Transition } from '@headlessui/react'
 import {
   Bars3Icon,
@@ -10,6 +10,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 
+import useUser from '../libs/frontend/useUser';
 import LocalDatabase from './LocalDatabase'
 
 const navigation = [
@@ -24,9 +25,8 @@ const navigation = [
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
   { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Sign out', href: '/signout' },
 ]
-
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -34,9 +34,22 @@ function classNames(...classes) {
 
 export default function Layout({children}) {
   const router = useRouter();
+  // const localDatabase = useContext(LocalDatabase);
   const user = useContext(LocalDatabase).user;
+  // const { user } = useUser();
+  // const user = null;
+
+  //   useEffect(()=>{localDatabase.setUser(    {
+  //   isSignedIn: true,
+  //   name: user?.name,
+  //   email: user?.email,
+  //   role: user?.role,
+  //   avatar: user?.avatar,
+  // })},[user])
+  
 
   return (
+     
     <>
       {/*
         This example requires updating your template:
@@ -67,6 +80,7 @@ export default function Layout({children}) {
                   </div>
 
                   {/* Right section on desktop */}
+                  {user?.name? 
                   <div className="hidden lg:ml-4 lg:flex lg:items-center lg:py-5 lg:pr-0.5">
                     <button
                       type="button"
@@ -81,7 +95,7 @@ export default function Layout({children}) {
                       <div>
                         <Menu.Button className="flex rounded-full bg-white text-sm ring-2 ring-white ring-opacity-20 focus:outline-none focus:ring-opacity-100">
                           <span className="sr-only">Open user menu</span>
-                          <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
+                          <img className="h-8 w-8 rounded-full" src={user?.avatar} alt="" />
                         </Menu.Button>
                       </div>
                       <Transition
@@ -109,7 +123,7 @@ export default function Layout({children}) {
                         </Menu.Items>
                       </Transition>
                     </Menu>
-                  </div>
+                  </div> : <></>}
 
                   <div className="w-full py-5 lg:border-t lg:border-white lg:border-opacity-20">
                     <div className="lg:grid lg:grid-cols-3 lg:items-center lg:gap-8">
@@ -117,7 +131,7 @@ export default function Layout({children}) {
                       <div className="hidden lg:col-span-2 lg:block">
                         <nav className="flex space-x-4">
                           {navigation.map((item) => (
-                            <a
+                            <Link
                               key={item.name}
                               href={item.href}
                               className={classNames(
@@ -127,7 +141,7 @@ export default function Layout({children}) {
                               aria-current={item.current ? 'page' : undefined}
                             >
                               {item.name}
-                            </a>
+                            </Link>
                           ))}
                         </nav>
                       </div>
@@ -215,24 +229,24 @@ export default function Layout({children}) {
                           </div>
                           <div className="mt-3 space-y-1 px-2">
                             {navigation.map((item) => (
-                              <a
+                              <Link
                                 key={item.name}
                                 href={item.href}
                                 className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800"
                               >
                                 {item.name}
-                              </a>
+                              </Link>
                             ))}
                           </div>
                         </div>
                         <div className="pt-4 pb-2">
                           <div className="flex items-center px-5">
                             <div className="flex-shrink-0">
-                              <img className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                              <img className="h-10 w-10 rounded-full" src={user?.avatar} alt="" />
                             </div>
                             <div className="ml-3 min-w-0 flex-1">
-                              <div className="truncate text-base font-medium text-gray-800">{user.name}</div>
-                              <div className="truncate text-sm font-medium text-gray-500">{user.email}</div>
+                              <div className="truncate text-base font-medium text-gray-800">{user?.name}</div>
+                              <div className="truncate text-sm font-medium text-gray-500">{user?.email}</div>
                             </div>
                             <button
                               type="button"
