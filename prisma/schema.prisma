@@ -15,7 +15,7 @@ model User {
   id          Int       @id @default(autoincrement())
   userNumber  Int       @unique
   email       String    @unique
-  phone       String       @unique
+  phone       String    @unique
   name        String
   avatar      String?
   status	    String?
@@ -23,8 +23,14 @@ model User {
   role	      Int?
   createdAt	  DateTime  @default(now())
   updatedAt	  DateTime  @updatedAt
-  // seminars	SEMINAR[]
-  tokens	    Token[]
+
+  tokens	          Token[]
+  presentedSeminars	Seminar[]  @relation(name:"presentedSeminar")
+  writtenReviews	  Review[]   @relation(name:"writtenReview")
+
+  requests          Request[]
+  // writtenReviews Review[]
+  // receivedReviews Review[]
 }
 
 model Token {
@@ -37,4 +43,80 @@ model Token {
 
   createdAt	  DateTime  @default(now())
   updatedAt	  DateTime  @updatedAt
+}
+
+model Semester{
+  id Int @id @default(autoincrement())
+  year Int
+  season Int
+
+  postDocCount  Int
+  partTimeCount Int
+  fullTimeCount Int
+  seminars Seminar[]
+}
+
+model Seminar {
+  id            Int       @id @default(autoincrement())
+  alias         String    @unique //2022-F-34141
+  createdAt	    DateTime  @default(now())
+  updatedAt	    DateTime  @updatedAt
+
+  semester      Semester  @relation(fields:[semesterId], references:[id], onDelete: Cascade)
+  semesterId    Int
+  @@index([semesterId])
+
+  presentedBy   User      @relation(name:"presentedSeminar", fields:[presentedById], references:[id], onDelete: Cascade)
+  presentedById Int
+  @@index([presentedById])
+  // Many-to-Many NOT SUPPORTED IN MYSQL. Bypassing through Review model
+  // reviewedBy User[] @relation(name:"reviewedSeminar", fields:[reviewedById], references:[id], onDelete: Cascade)
+  // reviewedById Int
+  // @@index([reviewedById])
+
+
+  title         String
+  abstract      String
+  category      String
+  tags          String  //(TODO: Array.)
+  progress      Int     //(Enum. No submission, Draft submission, Reviewed, Full submission)
+  draftFile     String
+  finalFile     String
+
+  reviews Review[]
+}
+
+model Review{
+  id          Int       @id @default(autoincrement())
+  createdAt	  DateTime  @default(now())
+  updatedAt	  DateTime  @updatedAt
+
+  reviewFor   Seminar   @relation(fields:[seminarId], references:[id], onDelete: Cascade)
+  seminarId   Int
+  @@index([seminarId])
+ 
+  review      String
+
+  writtenBy   User      @relation(name:"writtenReview", fields:[writtenById], references:[id], onDelete:Cascade)
+  writtenById Int
+  @@index([writtenById])
+}
+
+
+model Request{
+  id          Int       @id @default(autoincrement())
+  createdAt	  DateTime  @default(now())
+  updatedAt	  DateTime  @updatedAt
+
+  requestedBy User      @relation(fields:[userId], references:[id], onDelete: Cascade)
+  userId      Int
+  @@index([userId])
+
+  kind        Int //(Enum. announcement, carry-out, credit-card, purchase, business-trip, review)
+  payload     Int //id of requesting item. (e.g. seminar id)
+
+  due         DateTime
+  status      Int //(Enum. Pending, Accepted(Processing), Delayed, Rejected)
+  // 세미나 관련 request 및 status는 모두 유지
+  // 나머지의 경우 처리 완료되면 레코드 삭제.
 }
