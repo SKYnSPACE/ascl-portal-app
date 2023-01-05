@@ -53,7 +53,11 @@ model Semester{
   postDocCount  Int
   partTimeCount Int
   fullTimeCount Int
-  seminars Seminar[]
+
+  seminars      Seminar[]
+  seminarSlots  Seminarslot[]
+
+  settings      Settings[]
 }
 
 model Seminar {
@@ -83,7 +87,23 @@ model Seminar {
   draftFile     String
   finalFile     String
 
+  slot          Seminarslot?
+
   reviews Review[]
+}
+
+model Seminarslot{
+  id            Int @id @default(autoincrement())
+
+  dateTime	    DateTime  
+
+  semester Semester @relation(fields:[semesterId], references:[id], onDelete: Cascade)
+  semesterId Int
+  @@index([semesterId])
+
+  seminar Seminar? @relation(fields:[seminarId], references:[id])
+  seminarId Int? @unique
+  @@index([seminarId])
 }
 
 model Review{
@@ -119,4 +139,13 @@ model Request{
   status      Int //(Enum. Pending, Accepted(Processing), Delayed, Rejected)
   // 세미나 관련 request 및 status는 모두 유지
   // 나머지의 경우 처리 완료되면 레코드 삭제.
+}
+
+model Settings{
+  id          Int       @id @default(autoincrement())
+
+  currentSemester Semester  @relation(fields:[currentSemesterId], references:[id], onDelete: Cascade)
+  currentSemesterId    Int
+  @@index([currentSemesterId])
+  
 }

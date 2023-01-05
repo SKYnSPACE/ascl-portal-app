@@ -11,6 +11,8 @@ import {
   CalendarDaysIcon,
   ClipboardDocumentListIcon,
   CreditCardIcon,
+  IdentificationIcon,
+  PresentationChartLineIcon,
   UsersIcon,
 } from '@heroicons/react/24/outline'
 import Purchasing from '../../../components/Workspace/Purchasing';
@@ -23,6 +25,8 @@ const subNavigation = [
   { name: 'Purchasing', href: '/workspace/purchasing', icon: CreditCardIcon },
   { name: 'Business Trip', href: '/workspace/trip', icon: BriefcaseIcon },
   { name: 'Ledger', href: '/workspace/ledger', icon: ClipboardDocumentListIcon },
+  { name: 'Conferences', href: '/workspace/conferences', icon: PresentationChartLineIcon },
+  { name: 'Contacts', href: '/workspace/contacts', icon: IdentificationIcon },
 ]
 
 function classNames(...classes) {
