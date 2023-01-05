@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import {
   LockClosedIcon,
   BriefcaseIcon,
   CreditCardIcon,
+  ExclamationCircleIcon,
   PresentationChartBarIcon,
   SquaresPlusIcon,
 } from '@heroicons/react/24/outline'
@@ -13,6 +14,28 @@ import useMutation from "../libs/frontend/useMutation"
 import { classNames } from "../libs/frontend/utils"
 import { useRouter } from "next/router";
 
+import CustomModal from "../components/Modals/CustomModal";
+
+const popups = [
+  {
+    id: 0,
+    icon: ExclamationCircleIcon,
+    title: 'ERROR',
+    detail: <p>Server is not responding correctly. <br/> This may due to the incorrect user account. Ask the administrator if the problem continues.</p>,
+    href: '#',
+    iconForeground: 'text-red-700',
+    iconBackground: 'bg-red-50',
+  },
+  {
+    id: 1,
+    icon: ExclamationCircleIcon,
+    title: 'ERROR',
+    detail: <p>Server is not responding correctly. <br/> This may due to the incorrect OTP. Ask the administrator if the problem continues.</p>,
+    href: '#',
+    iconForeground: 'text-red-700',
+    iconBackground: 'bg-red-50',
+  },
+];
 
 export default function Enter() {
   const { register, handleSubmit, setError } = useForm();
@@ -22,6 +45,9 @@ export default function Enter() {
   const [tokenConfirm, { loading: tokenLoading, data: tokenData, error: tokenError }] = useMutation("/api/users/confirm");
 
   // const [logout, {loading: logoutLoading, data:logoutData, error: logoutError}] = useMutation("/api/users/logout");
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isOtpErrorModalOpen, setIsOtpErrorModalOpen] = useState(false)
 
   const onEmailFormValid = (validForm) => {
     console.log("Valid form given. Generating Token, fetching user data from DB and sending Email.");
@@ -64,12 +90,30 @@ export default function Enter() {
     }
   }, [tokenData, router]);
 
+  useEffect(()=>{
+    if(error || data?.error)
+    {
+      console.log(error, data?.error);
+      setIsModalOpen(true);
+    }
+  },[data,error])
+
+  useEffect(()=>{
+    if(tokenError || tokenData?.error)
+    {
+      console.log(tokenError, tokenData?.error);
+      setIsOtpErrorModalOpen(true);
+    }
+  },[tokenData,tokenError])
+
   // useEffect(()=>{
   //   console.log(error)
   // }, [error]);
   // useEffect(()=>{
   //   console.log(tokenError)
   // }, [tokenError]);
+
+  
 
   return (
     <main className="relative -mt-32">
@@ -227,6 +271,9 @@ export default function Enter() {
         </div>
 
       </div>
+
+      <CustomModal props={{ popup: popups[0], isModalOpen, setIsModalOpen }} />
+      <CustomModal props={{ popup: popups[1], isModalOpen: isOtpErrorModalOpen, setIsModalOpen: setIsOtpErrorModalOpen }} />
 
 
     </main >

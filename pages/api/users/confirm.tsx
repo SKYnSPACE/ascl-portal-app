@@ -15,7 +15,10 @@ async function handler(
     },
   });
 
-  if (!foundToken) return res.status(404).end();
+  if (!foundToken)
+  {
+    return res.status(404).json({ ok: false, error: "Wrong token given." });
+  }
   req.session.user = {
     id: foundToken.userId,
   };

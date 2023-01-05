@@ -172,16 +172,7 @@ export default function Home() {
   })},[user])
 
   return (
-    <SWRConfig
-      value={{
-        fallback: {
-          "/api/users/me": {
-            ok: true,
-            user: localDatabase?.user,
-          },
-        },
-      }}
-    >
+    <>
     {user?.name? 
       <main className="-mt-24 pb-8">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -386,7 +377,8 @@ export default function Home() {
         <SteppingoutModal props={{ action: actions[5], isModalOpen, setIsModalOpen }} />
 
 
-      </main> : <></>}
-    </SWRConfig>
+      </main>
+       : <>Session expired.<br />Refresh the page to sign in.</>}
+    </>
   )
 }

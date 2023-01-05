@@ -32,7 +32,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Layout({children}) {
+export default function Layout({ children }) {
   const router = useRouter();
   // const localDatabase = useContext(LocalDatabase);
   const user = useContext(LocalDatabase).user;
@@ -46,10 +46,10 @@ export default function Layout({children}) {
   //   role: user?.role,
   //   avatar: user?.avatar,
   // })},[user])
-  
+
 
   return (
-     
+
     <>
       {/*
         This example requires updating your template:
@@ -65,8 +65,8 @@ export default function Layout({children}) {
             <>
               <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
                 <div className="relative flex flex-wrap items-center justify-center lg:justify-between">
-                  
-                  
+
+
                   {/* Logo */}
                   <div className="absolute left-0 flex-shrink-0 py-5 lg:static">
                     <a href="/">
@@ -80,50 +80,50 @@ export default function Layout({children}) {
                   </div>
 
                   {/* Right section on desktop */}
-                  {user?.name? 
-                  <div className="hidden lg:ml-4 lg:flex lg:items-center lg:py-5 lg:pr-0.5">
-                    <button
-                      type="button"
-                      className="flex-shrink-0 rounded-full p-1 text-cyan-200 hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
-                    >
-                      <span className="sr-only">View notifications</span>
-                      <BellIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
-
-                    {/* Profile dropdown */}
-                    <Menu as="div" className="relative ml-4 flex-shrink-0">
-                      <div>
-                        <Menu.Button className="flex rounded-full bg-white text-sm ring-2 ring-white ring-opacity-20 focus:outline-none focus:ring-opacity-100">
-                          <span className="sr-only">Open user menu</span>
-                          <img className="h-8 w-8 rounded-full" src={user?.avatar} alt="" />
-                        </Menu.Button>
-                      </div>
-                      <Transition
-                        as={Fragment}
-                        leave="transition ease-in duration-75"
-                        leaveFrom="transform opacity-100 scale-100"
-                        leaveTo="transform opacity-0 scale-95"
+                  {user?.name ?
+                    <div className="hidden lg:ml-4 lg:flex lg:items-center lg:py-5 lg:pr-0.5">
+                      <button
+                        type="button"
+                        className="flex-shrink-0 rounded-full p-1 text-cyan-200 hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
                       >
-                        <Menu.Items className="absolute -right-2 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                          {userNavigation.map((item) => (
-                            <Menu.Item key={item.name}>
-                              {({ active }) => (
-                                <Link
-                                  href={item.href}
-                                  className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
-                                  )}
-                                >
-                                  {item.name}
-                                </Link>
-                              )}
-                            </Menu.Item>
-                          ))}
-                        </Menu.Items>
-                      </Transition>
-                    </Menu>
-                  </div> : <></>}
+                        <span className="sr-only">View notifications</span>
+                        <BellIcon className="h-6 w-6" aria-hidden="true" />
+                      </button>
+
+                      {/* Profile dropdown */}
+                      <Menu as="div" className="relative ml-4 flex-shrink-0">
+                        <div>
+                          <Menu.Button className="flex rounded-full bg-white text-sm ring-2 ring-white ring-opacity-20 focus:outline-none focus:ring-opacity-100">
+                            <span className="sr-only">Open user menu</span>
+                            <img className="h-8 w-8 rounded-full" src={user?.avatar} alt="" />
+                          </Menu.Button>
+                        </div>
+                        <Transition
+                          as={Fragment}
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <Menu.Items className="absolute -right-2 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            {userNavigation.map((item) => (
+                              <Menu.Item key={item.name}>
+                                {({ active }) => (
+                                  <Link
+                                    href={item.href}
+                                    className={classNames(
+                                      active ? 'bg-gray-100' : '',
+                                      'block px-4 py-2 text-sm text-gray-700'
+                                    )}
+                                  >
+                                    {item.name}
+                                  </Link>
+                                )}
+                              </Menu.Item>
+                            ))}
+                          </Menu.Items>
+                        </Transition>
+                      </Menu>
+                    </div> : <></>}
 
                   <div className="w-full py-5 lg:border-t lg:border-white lg:border-opacity-20">
                     <div className="lg:grid lg:grid-cols-3 lg:items-center lg:gap-8">
@@ -239,35 +239,39 @@ export default function Layout({children}) {
                             ))}
                           </div>
                         </div>
-                        <div className="pt-4 pb-2">
-                          <div className="flex items-center px-5">
-                            <div className="flex-shrink-0">
-                              <img className="h-10 w-10 rounded-full" src={user?.avatar} alt="" />
-                            </div>
-                            <div className="ml-3 min-w-0 flex-1">
-                              <div className="truncate text-base font-medium text-gray-800">{user?.name}</div>
-                              <div className="truncate text-sm font-medium text-gray-500">{user?.email}</div>
-                            </div>
-                            <button
-                              type="button"
-                              className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
-                            >
-                              <span className="sr-only">View notifications</span>
-                              <BellIcon className="h-6 w-6" aria-hidden="true" />
-                            </button>
-                          </div>
-                          <div className="mt-3 space-y-1 px-2">
-                            {userNavigation.map((item) => (
-                              <a
-                                key={item.name}
-                                href={item.href}
-                                className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800"
+
+                        {/* USER MENU */}
+                        {user?.name ?
+                          <div className="pt-4 pb-2">
+                            <div className="flex items-center px-5">
+                              <div className="flex-shrink-0">
+                                <img className="h-10 w-10 rounded-full" src={user.avatar} alt="" />
+                              </div>
+                              <div className="ml-3 min-w-0 flex-1">
+                                <div className="truncate text-base font-medium text-gray-800">{user.name}</div>
+                                <div className="truncate text-sm font-medium text-gray-500">{user.email}</div>
+                              </div>
+                              <button
+                                type="button"
+                                className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2"
                               >
-                                {item.name}
-                              </a>
-                            ))}
-                          </div>
-                        </div>
+                                <span className="sr-only">View notifications</span>
+                                <BellIcon className="h-6 w-6" aria-hidden="true" />
+                              </button>
+                            </div>
+                            <div className="mt-3 space-y-1 px-2">
+                              {userNavigation.map((item) => (
+                                <a
+                                  key={item.name}
+                                  href={item.href}
+                                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800"
+                                >
+                                  {item.name}
+                                </a>
+                              ))}
+                            </div>
+                          </div> : <></>}
+
                       </div>
                     </Popover.Panel>
                   </Transition.Child>
@@ -276,8 +280,8 @@ export default function Layout({children}) {
             </>
           )}
         </Popover>
-        
-<div>{children}</div>
+
+        <div>{children}</div>
 
         <footer>
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
