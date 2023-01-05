@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import useUser from '../libs/frontend/useUser';
+import { SWRConfig } from "swr";
 
 import {
   ArrowRightOnRectangleIcon,
@@ -171,7 +172,16 @@ export default function Home() {
   })},[user])
 
   return (
-    <>
+    <SWRConfig
+      value={{
+        fallback: {
+          "/api/users/me": {
+            ok: true,
+            user: localDatabase?.user,
+          },
+        },
+      }}
+    >
     {user?.name? 
       <main className="-mt-24 pb-8">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -377,6 +387,6 @@ export default function Home() {
 
 
       </main> : <></>}
-    </>
+    </SWRConfig>
   )
 }
