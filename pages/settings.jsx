@@ -6,18 +6,22 @@ import { classNames } from '../libs/frontend/utils'
 import {
   AcademicCapIcon,
   CalendarDaysIcon,
+  CheckCircleIcon,
   ClipboardDocumentListIcon,
   CreditCardIcon,
+  ExclamationCircleIcon,
   IdentificationIcon,
   PresentationChartLineIcon,
   UsersIcon,
 } from '@heroicons/react/24/outline'
 import CreateUserModal from '../components/Settings/Modals/CreateUserModal'
+import MessageModal from '../components/Modals/MessageModal'
+import Notification from '../components/Notification'
 
 const settings = [
   {
     category: 'User', items:
-      [{ id: 1, name: 'Create User', href: '#', detail: '신규 유저를 생성합니다. 별표 항목은 필수 입력사항입니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600', icon: UsersIcon},
+      [{ id: 1, name: 'Create User', href: '#', detail: '신규 유저를 생성합니다. 필수 항목들만 입력하며, 나머지 항목(권한, 팀설정, ...)들은 편집화면을 통해 설정합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600', icon: UsersIcon},
       { id: 2, name: 'Edit', href: '#', detail: '기존 유저를 편집합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon: UsersIcon },]
   },
   {
@@ -33,8 +37,31 @@ const settings = [
   },
 ]
 
+const popups = [
+  {
+    id: 1,
+    icon: CheckCircleIcon,
+    title: 'Done!',
+    detail: <p>New user created.</p>,
+    href: '#',
+    iconForeground: 'text-green-700',
+    iconBackground: 'bg-green-50',
+  },
+  {
+    id: 2,
+    icon: ExclamationCircleIcon,
+    title: 'ERROR',
+    detail: <p>Server is not responding correctly. <br/> This may due to the incorrect OTP. Ask the administrator if the problem continues.</p>,
+    href: '#',
+    iconForeground: 'text-red-700',
+    iconBackground: 'bg-red-50',
+  },
+];
+
 export default function Settings() {
-  const [isModalOpen, setIsModalOpen] = useState(0)
+  const [isModalOpen, setIsModalOpen] = useState(0);
+  const [isNotify, setIsNotify] = useState(true);
+  const [message, setMessage] = useState({ type: 'success', title: 'Confirmed!', details: 'Test message initiated.', });
 
   return (
     <main className="relative -mt-32">
@@ -107,7 +134,10 @@ export default function Settings() {
       </div>
 
 
-<CreateUserModal props={{ action: settings[0].items[0], isModalOpen, setIsModalOpen }}/>
+<CreateUserModal props={{ action: settings[0].items[0], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }}/>
+
+{/* <MessageModal props={{ popup: popups[0], isModalOpen, setIsModalOpen }} /> */}
+<Notification props={{message, isNotify, setIsNotify}}/>
 
     </main>
   )

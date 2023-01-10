@@ -23,6 +23,8 @@
     "react-dom": "18.2.0",
     "react-google-charts": "^4.0.0",
     "react-hook-form": "^7.41.2",
+    "react-number-format": "^5.1.2",
+    "react-phone-number-input": "^3.2.16",
     "swr": "^2.0.0"
   },
   "devDependencies": {

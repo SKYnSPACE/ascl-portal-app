@@ -13,11 +13,11 @@ export function middleware(req){
   // Custom redirection.
   // console.log(url)
   switch(url.pathname) {
-    case '/workspace':
+    case '/workspace/[utility]':
       url.pathname = '/workspace/calendar';
       return NextResponse.redirect(url);
 
-    case '/seminar':
+    case '/seminar/[menu]':
       url.pathname = '/seminar/schedule';
       return NextResponse.redirect(url);
   }

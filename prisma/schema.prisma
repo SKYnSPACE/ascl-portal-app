@@ -21,14 +21,15 @@ model User {
   status	    String?
   team	      String?
   role	      Int?
+  duties	    Int?      // 0b00000000
   createdAt	  DateTime  @default(now())
   updatedAt	  DateTime  @updatedAt
-
-  tokens	          Token[]
   presentedSeminars	Seminar[]  @relation(name:"presentedSeminar")
   writtenReviews	  Review[]   @relation(name:"writtenReview")
 
   requests          Request[]
+
+  tokens	          Token[]
   // writtenReviews Review[]
   // receivedReviews Review[]
 }
@@ -62,7 +63,7 @@ model Semester{
 
 model Seminar {
   id            Int       @id @default(autoincrement())
-  alias         String    @unique //2022-F-34141
+  alias         String    @unique //2022-F-34141-[slot ID]
   createdAt	    DateTime  @default(now())
   updatedAt	    DateTime  @updatedAt
 
@@ -80,7 +81,7 @@ model Seminar {
 
 
   title         String
-  abstract      String
+  abstract      String  @db.Text
   category      String
   tags          String  //(TODO: Array.)
   progress      Int     //(Enum. No submission, Draft submission, Reviewed, Full submission)

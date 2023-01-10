@@ -1,13 +1,13 @@
 import { Dialog } from "@headlessui/react";
 
-import { ExclamationCircleIcon, } from '@heroicons/react/24/outline';
+import { CheckCircleIcon, ExclamationCircleIcon, } from '@heroicons/react/24/outline';
 
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function CustomModal({props}) {
+export default function MessageModal({props}) {
   const {popup, isModalOpen, setIsModalOpen} = {...props};
 
   return (

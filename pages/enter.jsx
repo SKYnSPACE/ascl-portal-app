@@ -14,7 +14,7 @@ import useMutation from "../libs/frontend/useMutation"
 import { classNames } from "../libs/frontend/utils"
 import { useRouter } from "next/router";
 
-import CustomModal from "../components/Modals/CustomModal";
+import MessageModal from "../components/Modals/MessageModal";
 
 const popups = [
   {
@@ -272,8 +272,8 @@ export default function Enter() {
 
       </div>
 
-      <CustomModal props={{ popup: popups[0], isModalOpen, setIsModalOpen }} />
-      <CustomModal props={{ popup: popups[1], isModalOpen: isOtpErrorModalOpen, setIsModalOpen: setIsOtpErrorModalOpen }} />
+      <MessageModal props={{ popup: popups[0], isModalOpen, setIsModalOpen }} />
+      <MessageModal props={{ popup: popups[1], isModalOpen: isOtpErrorModalOpen, setIsModalOpen: setIsOtpErrorModalOpen }} />
 
 
     </main >

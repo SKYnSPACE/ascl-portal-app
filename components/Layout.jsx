@@ -15,9 +15,9 @@ import LocalDatabase from './LocalDatabase'
 
 const navigation = [
   { name: 'Home', href: '/', current: true },
-  { name: 'Workspace', href: '/workspace', current: false },
+  { name: 'Workspace', href: '/workspace/[utility]', current: false },
   { name: 'Projects', href: '/projects', current: false },
-  { name: 'Seminar', href: '/seminar', current: false },
+  { name: 'Seminar', href: '/seminar/[menu]', current: false },
   { name: 'Handbook', href: '/handbook', current: false },
   // { name: 'Chats', href: '/', current: false },
 ];
@@ -145,6 +145,7 @@ export default function Layout({ children }) {
                           ))}
                         </nav>
                       </div>
+                      {/* <p>{router.pathname}</p> */}
                       <div className="px-12 lg:px-0">
                         {/* Search */}
                         <div className="mx-auto w-full max-w-xs lg:max-w-md">
