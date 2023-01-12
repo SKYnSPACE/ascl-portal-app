@@ -20,8 +20,8 @@ model User {
   avatar      String?
   status	    String?
   team	      String?
-  role	      Int?
-  duties	    Int?      // 0b00000000
+  position	  Int?      @default(0)
+  duties	    Int?      @default(0)// 0b00000000
   createdAt	  DateTime  @default(now())
   updatedAt	  DateTime  @updatedAt
   presentedSeminars	Seminar[]  @relation(name:"presentedSeminar")

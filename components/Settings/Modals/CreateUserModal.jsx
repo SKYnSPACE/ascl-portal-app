@@ -10,18 +10,13 @@ import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outl
 
 import useMutation from "../../../libs/frontend/useMutation";
 import { useState, useEffect } from "react";
-import CustomModal from "../../Modals/MessageModal";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
+import { classNames } from '../../../libs/frontend/utils'
 
 export default function CreateUserModal({ props }) {
   const { action, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage } = { ...props };
-  const [isResultModalOpen, setIsResultModalOpen] = useState(false)
 
   const { register, control, handleSubmit, setError, reset } = useForm();
-  // const { registerPhone, handlePhoneSubmit } = useForm();
   const [createUser, { loading, data, error }] = useMutation("/api/settings/user/create");
 
   const onValid = (validForm) => {
@@ -34,12 +29,13 @@ export default function CreateUserModal({ props }) {
   useEffect(() => {
     if (data?.ok) {
       setMessage(
-        { type: 'success', title: 'Successfully Saved!', details: 'New user created.', }
+        { type: 'success', title: 'Successfully Saved!', details: 'New user created. Wait for the page reload.', }
       )
       setIsNotify(true);
       reset();
       setIsModalOpen(false);
     }
+
     if (data?.error) {
       switch (data.error?.code) {
         case 'P1017':
@@ -47,6 +43,7 @@ export default function CreateUserModal({ props }) {
           setMessage(
             { type: 'fail', title: 'Connection Lost.', details: "Database Server does not respond.", }
           )
+          setIsNotify(true);
         case 'P2002':
           console.log("Existing User.");
           setMessage(
@@ -57,6 +54,7 @@ export default function CreateUserModal({ props }) {
           console.log("ERROR CODE", data.error);
       }
     }
+
   }, [data])
 
   // useEffect(()=>{
@@ -65,9 +63,9 @@ export default function CreateUserModal({ props }) {
   //     console.log("ERROR!")
   //   }
   // },[data])
-  useEffect(() => {
-    console.log("ERROR!!", error);
-  }, [error])
+  // useEffect(() => {
+  //   console.log("ERROR!!", error);
+  // }, [error])
 
   return (
     <Dialog
@@ -207,7 +205,7 @@ export default function CreateUserModal({ props }) {
             </div> : <></>}
             <div className="mt-5 sm:mt-6">
               <button
-                className="group relative mx-1 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#2980b9] text-base font-medium text-white hover:bg-[#aacae6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2980b9] sm:text-sm"
+                className="group relative mx-1 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#2980b9] font-medium text-white hover:bg-[#aacae6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2980b9] text-sm"
                 disabled={loading}
                 type="submit"
               >
@@ -220,7 +218,7 @@ export default function CreateUserModal({ props }) {
                   : <span>Confirm</span>}
               </button>
               <button
-                className="mx-1 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2980b9]   sm:text-sm"
+                className="mx-1 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2980b9] text-sm"
                 onClick={(e) => {
                   reset();
                   setIsModalOpen(false);

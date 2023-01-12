@@ -1,8 +1,8 @@
 import { useState } from 'react'
+import useSWR from "swr";
+
+
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
-
-import { classNames } from '../libs/frontend/utils'
-
 import {
   AcademicCapIcon,
   CalendarDaysIcon,
@@ -14,20 +14,25 @@ import {
   PresentationChartLineIcon,
   UsersIcon,
 } from '@heroicons/react/24/outline'
+
+import { classNames } from '../libs/frontend/utils'
+
 import CreateUserModal from '../components/Settings/Modals/CreateUserModal'
-import MessageModal from '../components/Modals/MessageModal'
+import EditUserModal from '../components/Settings/Modals/EditUserModal'
 import Notification from '../components/Notification'
+import SetUserModal from '../components/Settings/Modals/SetUserModal';
 
 const settings = [
   {
     category: 'User', items:
       [{ id: 1, name: 'Create User', href: '#', detail: '신규 유저를 생성합니다. 필수 항목들만 입력하며, 나머지 항목(권한, 팀설정, ...)들은 편집화면을 통해 설정합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600', icon: UsersIcon},
-      { id: 2, name: 'Edit', href: '#', detail: '기존 유저를 편집합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon: UsersIcon },]
+      { id: 2, name: 'Edit', href: '#', detail: '기존 유저를 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon: UsersIcon },
+      { id: 3,  name: 'Set', href: '#', detail: '유저들의 직위(권한), 담당업무를 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600', icon: UsersIcon },]
   },
   {
     category: 'Semester', items:
       [{ id: 11, name: 'Create', href: '#', detail: '신규 학기를 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600', icon: AcademicCapIcon },
-      { id: 12, name: 'Edit', href: '#', detail: '학기 정보를 편집합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon: AcademicCapIcon },
+      { id: 12, name: 'Edit', href: '#', detail: '학기 정보를 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon: AcademicCapIcon },
       { id: 13,  name: 'Set', href: '#', detail: '시스템 기준학기(현재학기)를 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600', icon: AcademicCapIcon },]
   },
   {
@@ -37,31 +42,14 @@ const settings = [
   },
 ]
 
-const popups = [
-  {
-    id: 1,
-    icon: CheckCircleIcon,
-    title: 'Done!',
-    detail: <p>New user created.</p>,
-    href: '#',
-    iconForeground: 'text-green-700',
-    iconBackground: 'bg-green-50',
-  },
-  {
-    id: 2,
-    icon: ExclamationCircleIcon,
-    title: 'ERROR',
-    detail: <p>Server is not responding correctly. <br/> This may due to the incorrect OTP. Ask the administrator if the problem continues.</p>,
-    href: '#',
-    iconForeground: 'text-red-700',
-    iconBackground: 'bg-red-50',
-  },
-];
-
 export default function Settings() {
   const [isModalOpen, setIsModalOpen] = useState(0);
-  const [isNotify, setIsNotify] = useState(true);
+  const [isNotify, setIsNotify] = useState(false);
   const [message, setMessage] = useState({ type: 'success', title: 'Confirmed!', details: 'Test message initiated.', });
+
+  const { data: usersData, error: getUsersError, isLoading: getUsersLoading } = useSWR(
+    typeof window === "undefined" ? null : "/api/settings/user"
+  );
 
   return (
     <main className="relative -mt-32">
@@ -85,7 +73,7 @@ export default function Settings() {
                   <h2 className="text-m font-medium bg-white pr-3 text-gray-700">{setting.category} settings</h2>
                 </div>
               </div>
-
+{/* //TODO: isNotify 일 때 DISABLE MENU!!! */}
               <ul role="list" className="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
               {setting.items.map((item) => (
                   <a key={item.id} href={item.href} onClick={(evt) => {
@@ -126,6 +114,7 @@ export default function Settings() {
                   </a>
                 ))}
               </ul>
+
             </div>
           ))}
 
@@ -135,8 +124,9 @@ export default function Settings() {
 
 
 <CreateUserModal props={{ action: settings[0].items[0], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }}/>
+<EditUserModal props={{ action: settings[0].items[1], usersData, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }}/>
+<SetUserModal props={{ action: settings[0].items[2], usersData, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage}} />
 
-{/* <MessageModal props={{ popup: popups[0], isModalOpen, setIsModalOpen }} /> */}
 <Notification props={{message, isNotify, setIsNotify}}/>
 
     </main>

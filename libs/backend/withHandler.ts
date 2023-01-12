@@ -28,6 +28,9 @@ export default function withHandler({
     if (isPrivate && !req.session.user) {
       return res.status(401).json({ ok: false, error: "Sign in required." });
     }
+    if(false){
+      return res.status(403).json({ ok: false, error: "No permission to access the resource." });
+    }
     try {
       await handler(req, res);
     } catch (error) {

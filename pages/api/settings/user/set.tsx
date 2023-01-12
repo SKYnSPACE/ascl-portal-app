@@ -11,7 +11,7 @@ async function handler(
 
   if (req.method === "POST") {
     const {
-      body: { userNumber, email, phone, id },
+      body: { position, duties, id },
       session: { user }, //TODO: LOG the user who edited profiles.
     } = req;
 
@@ -21,38 +21,28 @@ async function handler(
       },
     });
 
-    if (userNumber && userNumber !== userToEdit?.userNumber) {
+    if (position && (+position.toString() !== userToEdit?.position)) {
       await client.user.update({
         where: {
           id: id,
         },
         data: {
-          userNumber: +userNumber.toString(),
+          position: +position.toString(),
         },
       });
     }
 
-    if (email && email !== userToEdit?.email) {
+    if (duties && (+duties.toString() !== userToEdit?.duties)) {
       await client.user.update({
         where: {
           id: id,
         },
         data: {
-          email,
+          duties: +duties.toString(),
         },
       });
     }
 
-    if (phone && phone !== userToEdit?.phone) {
-      await client.user.update({
-        where: {
-          id: id,
-        },
-        data: {
-          phone,
-        },
-      });
-    }
     res.json({ ok: true, })
   }
 }

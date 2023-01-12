@@ -13,7 +13,7 @@ async function handler(
     session: { user },
   } = req;
 
-  console.log(req.body, user);
+  // console.log(req.body, user);
 
   const newUser = await client.user.create({
     data: {
@@ -28,9 +28,6 @@ async function handler(
     newUser,
   });
 
-  if(!newUser){
-    console.log("Error!!!!!!!!!!!!!!!!!!!!!!!!")
-  }
   // res.json({ok: true,})
 }
 

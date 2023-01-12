@@ -1,3 +1,4 @@
+import Router from 'next/router'
 import { Fragment, useEffect } from 'react'
 import { Transition } from '@headlessui/react'
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline'
@@ -12,9 +13,21 @@ export default function Notification({ props }) {
     message = { type: 'success', title: 'Confirmed!', details: 'Test message initiated.', },
     isNotify, setIsNotify } = { ...props };
 
+
+
   useEffect(() => {
-    if(isNotify)
-    setTimeout(() => { setIsNotify(false) }, 5000)
+    if (isNotify && message.type === 'fail') {
+      setTimeout(() => {
+        setIsNotify(false);
+      }, 5000);
+    }
+    if (isNotify && message.type === 'success') {
+      setTimeout(() => {
+        setIsNotify(false);
+        Router.reload();
+      }, 5000);
+    }
+
   }, [isNotify])
 
   return (

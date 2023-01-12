@@ -139,8 +139,8 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-function getRole(role) {
-  switch (role) {
+function getRole(position) {
+  switch (position) {
     case 1: return 'Part-time Researcher';
     case 2: return 'Full-time Researcher';
     case 3: return 'Account manager';
@@ -167,7 +167,7 @@ export default function Home() {
     localDatabase.setUser(    {
     name: user?.name,
     email: user?.email,
-    role: user?.role,
+    position: user?.position,
     avatar: user?.avatar,
   })},[user])
 
@@ -196,7 +196,7 @@ export default function Home() {
                         <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
                           <p className="text-sm font-medium text-gray-600">Welcome back,</p>
                           <p className="text-xl font-bold text-gray-900 sm:text-2xl">{user?.name}</p>
-                          <p className="text-sm font-medium text-gray-600">{getRole(user?.role)}</p>
+                          <p className="text-sm font-medium text-gray-600">{getRole(user?.position)}</p>
                         </div>
                       </div>
                       <div className="mt-5 flex justify-center sm:mt-0">

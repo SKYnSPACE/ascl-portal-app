@@ -3,14 +3,14 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import useSWR from "swr";
 
-interface ProfileResponse {
+interface UserResponse {
   ok: boolean;
-  profile: User;
+  user: User;
 }
 // const fetcher = (url: string) => fetch(url).then((response) => response.json());
 
 export default function useUser() {
-  const { data, error, isLoading } = useSWR<ProfileResponse>(
+  const { data, error, isLoading } = useSWR<UserResponse>(
     typeof window === "undefined" ? null : "/api/users/me"
   );
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function useUser() {
   //   }
   // }, [data, router]);
 
-  return { user: data?.profile, isLoading: !data && !error };
+  return { user: data?.user, isLoading: !data && !error };
 }
 
 
