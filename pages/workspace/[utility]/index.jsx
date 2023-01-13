@@ -5,6 +5,7 @@ import Calendar from '../../../components/Workspace/Calendar';
 import Attendance from '../../../components/Workspace/Attendance';
 import BusinessTrip from '../../../components/Workspace/BusinessTrip';
 import Ledger from '../../../components/Workspace/Ledger';
+import Contacts from '../../../components/Workspace/Contacts';
 
 import {
   BriefcaseIcon,
@@ -52,6 +53,9 @@ function Utility() {
 
     case 'ledger':
       return <Ledger />;
+
+    case 'contacts':
+      return <Contacts />;
 
     default:
       return <Page404 />;

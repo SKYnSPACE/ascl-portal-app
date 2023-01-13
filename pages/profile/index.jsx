@@ -27,6 +27,17 @@ const settings = [
   { id: 2, name: 'Edit Phone Number', href: '#', detail: 'Change your phone number. Numbers in South Korea only.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon: UsersIcon },
 ]
 
+const Duties = {
+  seminar: 0b10000000,
+  publications: 0b01000000,
+
+  server: 0b00010000,
+  computer: 0b00001000,
+
+  safety: 0b00000010,
+  news: 0b00000001,
+}
+
 function getPositionName(position) {
   switch (position) {
     case 0: return 'Guest';
