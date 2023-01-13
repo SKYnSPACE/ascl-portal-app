@@ -23,7 +23,7 @@ const navigation = [
 ];
 
 const userNavigation = [
-  { name: 'Your Profile', href: '/me' },
+  { name: 'Your Profile', href: '/profile' },
   { name: 'Settings', href: '/settings' },
   { name: 'Sign out', href: '/signout' },
 ]
@@ -95,7 +95,16 @@ export default function Layout({ children }) {
                         <div>
                           <Menu.Button className="flex rounded-full bg-white text-sm ring-2 ring-white ring-opacity-20 focus:outline-none focus:ring-opacity-100">
                             <span className="sr-only">Open user menu</span>
-                            <img className="h-8 w-8 rounded-full" src={user?.avatar} alt="" />
+                            {/* <img className="h-8 w-8 rounded-full" src={user?.avatar} alt="" /> */}
+
+                            <div className="h-8 w-8 rounded-full flex justify-center items-center bg-gray-400 text-lg text-white">
+                              {user?.avatar ? <img className="rounded-full" src={user?.avatar} alt="" />
+                                : user?.name.split(' ')[0].charAt(0) + user?.name.split(' ')[1].charAt(0)}
+                            </div>
+
+
+
+
                           </Menu.Button>
                         </div>
                         <Transition
@@ -246,7 +255,14 @@ export default function Layout({ children }) {
                           <div className="pt-4 pb-2">
                             <div className="flex items-center px-5">
                               <div className="flex-shrink-0">
-                                <img className="h-10 w-10 rounded-full" src={user.avatar} alt="" />
+                                {/* <img className="h-10 w-10 rounded-full" src={user.avatar} alt="" /> */}
+                                <div className="h-10 w-10 rounded-full flex justify-center items-center bg-gray-400 text-lg text-white">
+                                  {user?.avatar ? <img className="rounded-full" src={user?.avatar} alt="" />
+                                    : user?.name.split(' ')[0].charAt(0) + user?.name.split(' ')[1].charAt(0)}
+                                </div>
+
+
+
                               </div>
                               <div className="ml-3 min-w-0 flex-1">
                                 <div className="truncate text-base font-medium text-gray-800">{user.name}</div>

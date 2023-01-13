@@ -191,7 +191,14 @@ export default function Home() {
                     <div className="sm:flex sm:items-center sm:justify-between">
                       <div className="sm:flex sm:space-x-5">
                         <div className="flex-shrink-0">
-                          <img className="mx-auto h-20 w-20 rounded-full" src={user?.avatar} alt="" />
+                          {/* <img className="mx-auto h-20 w-20 rounded-full" src={user?.avatar} alt="" /> */}
+
+                          <div className="h-20 w-20 rounded-full flex justify-center items-center bg-gray-400 text-4xl text-white">
+                      {user?.avatar ? <img className="rounded-full" src={user?.avatar} alt=""/> 
+                      : user?.name.split(' ')[0].charAt(0) + user?.name.split(' ')[1].charAt(0)}
+                    </div>
+
+
                         </div>
                         <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
                           <p className="text-sm font-medium text-gray-600">Welcome back,</p>
