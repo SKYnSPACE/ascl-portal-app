@@ -18,17 +18,14 @@ import {
 
 import useUser from '../../libs/frontend/useUser';
 import { classNames } from '../../libs/frontend/utils'
+import EditNameModal from '../../components/Profile/Modals/EditNameModal';
+import Notification from '../../components/Notification';
+import EditPhoneModal from '../../components/Profile/Modals/EditPhoneModal';
 
-const Duties = {
-  seminar: 0b10000000,
-  publications: 0b01000000,
-
-  server: 0b00010000,
-  computer: 0b00001000,
-
-  safety: 0b00000010,
-  news: 0b00000001,
-}
+const settings = [
+  { id: 1, name: 'Edit Name', href: '#', detail: 'Change your first, and last name.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon: UsersIcon },
+  { id: 2, name: 'Edit Phone Number', href: '#', detail: 'Change your phone number. Numbers in South Korea only.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon: UsersIcon },
+]
 
 function getPositionName(position) {
   switch (position) {
@@ -56,7 +53,19 @@ function getDutiesNames(duties) {
   </>);
 }
 
+function getInitials(name) {
+  const fullName = name?.toString().split(' ');
+  if (!fullName) return '^^';
+
+  const initials = [fullName[0].charAt(0), fullName[1].charAt(0)];
+  return initials.join('');
+}
+
 export default function Settings() {
+  const [isModalOpen, setIsModalOpen] = useState(0);
+  const [isNotify, setIsNotify] = useState(false);
+  const [message, setMessage] = useState({ type: 'success', title: 'Confirmed!', details: 'Test message initiated.', });
+
   const { user } = useUser();
 
   return (
@@ -94,6 +103,10 @@ export default function Settings() {
                     <button
                       type="button"
                       className="rounded-md bg-white font-medium text-sky-600 hover:text-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+                      onClick={(evt) => {
+                        evt.preventDefault();
+                        setIsModalOpen(1);
+                      }}
                     >
                       Update
                     </button>
@@ -117,6 +130,10 @@ export default function Settings() {
                     <button
                       type="button"
                       className="rounded-md bg-white font-medium text-sky-600 hover:text-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+                      onClick={(evt) => {
+                        evt.preventDefault();
+                        setIsModalOpen(2);
+                      }}
                     >
                       Update
                     </button>
@@ -147,13 +164,13 @@ export default function Settings() {
                 <dd className="mt-1 flex text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                   <span className="flex-grow">
                     <div className="m-1 mb-4 w-12 h-12 relative flex justify-center items-center bg-gray-400 text-xl text-white">
-                      {user?.avatar ? <img src={user?.avatar} alt=""/> 
-                      : user?.name.split(' ')[0].charAt(0) + user?.name.split(' ')[1].charAt(0)}
+                      {user?.avatar ? <img src={user?.avatar} alt="" />
+                        : <span>{getInitials(user?.name)}</span>}
                     </div>
 
                     <div className="m-1 w-12 h-12 relative flex justify-center items-center rounded-full bg-gray-400 text-xl text-white">
-                      {user?.avatar ? <img className="rounded-full" src={user?.avatar} alt=""/> 
-                      : user?.name.split(' ')[0].charAt(0) + user?.name.split(' ')[1].charAt(0)}
+                      {user?.avatar ? <img className="rounded-full" src={user?.avatar} alt="" />
+                        : <span>{getInitials(user?.name)}</span>}
                     </div>
                   </span>
 
@@ -177,7 +194,10 @@ export default function Settings() {
         </div>
       </div>
 
+      <EditNameModal props={{ action: settings[0], user, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }} />
+      <EditPhoneModal props={{ action: settings[1], user, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }} />
 
+      <Notification props={{ message, isNotify, setIsNotify }} />
 
     </main>
   )

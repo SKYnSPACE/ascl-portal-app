@@ -154,6 +154,15 @@ function getRole(position) {
       return 'Guest';
   }
 }
+
+function getInitials(name) {
+  const fullName = name?.toString().split(' ');
+  if(!fullName) return '^^';
+
+  const initials = [fullName[0].charAt(0), fullName[1].charAt(0)];
+  return initials.join('');
+}
+
 export default function Home() {
   const localDatabase = useContext(LocalDatabase);
   // const user = useContext(LocalDatabase).user;
@@ -195,7 +204,7 @@ export default function Home() {
 
                           <div className="h-20 w-20 rounded-full flex justify-center items-center bg-gray-400 text-4xl text-white">
                       {user?.avatar ? <img className="rounded-full" src={user?.avatar} alt=""/> 
-                      : user?.name.split(' ')[0].charAt(0) + user?.name.split(' ')[1].charAt(0)}
+                      : getInitials(user?.name)}
                     </div>
 
 

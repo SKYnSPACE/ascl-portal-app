@@ -28,6 +28,14 @@ const userNavigation = [
   { name: 'Sign out', href: '/signout' },
 ]
 
+function getInitials(name) {
+  const fullName = name?.toString().split(' ');
+  if(!fullName) return '^^';
+
+  const initials = [fullName[0].charAt(0), fullName[1].charAt(0)];
+  return initials.join('');
+}
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
@@ -99,7 +107,7 @@ export default function Layout({ children }) {
 
                             <div className="h-8 w-8 rounded-full flex justify-center items-center bg-gray-400 text-lg text-white">
                               {user?.avatar ? <img className="rounded-full" src={user?.avatar} alt="" />
-                                : user?.name.split(' ')[0].charAt(0) + user?.name.split(' ')[1].charAt(0)}
+                                : <span>{getInitials(user?.name)}</span>}
                             </div>
 
 
@@ -155,7 +163,8 @@ export default function Layout({ children }) {
                         </nav>
                       </div>
                       {/* <p>{router.pathname}</p> */}
-                      <div className="px-12 lg:px-0">
+
+                      <div className="px-12 ml-16 lg:px-0">
                         {/* Search */}
                         <div className="mx-auto w-full max-w-xs lg:max-w-md">
                           <label htmlFor="search" className="sr-only">
@@ -175,6 +184,7 @@ export default function Layout({ children }) {
                           </div>
                         </div>
                       </div>
+
                     </div>
                   </div>
 
@@ -258,7 +268,7 @@ export default function Layout({ children }) {
                                 {/* <img className="h-10 w-10 rounded-full" src={user.avatar} alt="" /> */}
                                 <div className="h-10 w-10 rounded-full flex justify-center items-center bg-gray-400 text-lg text-white">
                                   {user?.avatar ? <img className="rounded-full" src={user?.avatar} alt="" />
-                                    : user?.name.split(' ')[0].charAt(0) + user?.name.split(' ')[1].charAt(0)}
+                                    : <span>{getInitials(user?.name)}</span>}
                                 </div>
 
 

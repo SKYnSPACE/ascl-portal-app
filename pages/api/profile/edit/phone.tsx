@@ -1,0 +1,44 @@
+import { NextApiRequest, NextApiResponse } from "next";
+import withHandler, { ResponseType } from "../../../../libs/backend/withHandler";
+import client from "../../../../libs/backend/client";
+import { withApiSession } from "../../../../libs/backend/withSession";
+
+async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<ResponseType>
+) {
+
+
+  if (req.method === "POST") {
+    const {
+      body: { phone },
+      session: { user }, //TODO: LOG the user who edited profiles.
+    } = req;
+
+    const userToEdit = await client.user.findUnique({
+      where: {
+        id: user.id,
+      },
+    });
+
+    if (phone && phone !== userToEdit?.phone) {
+      await client.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          phone
+        },
+      });
+    }
+
+    res.json({ ok: true, })
+  }
+}
+
+export default withApiSession(
+  withHandler({
+    methods: ["POST"],
+    handler,
+  })
+);
