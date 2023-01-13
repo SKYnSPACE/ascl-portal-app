@@ -58,7 +58,7 @@ function sortUsers(users) {
 
   let sortedUsers = [];
   for (let i = 7; i > 0; --i) {
-    sortedUsers.push({ 
+    sortedUsers.push({
       position: getPositionName(i),
       people: (users.filter(item => item.position === i)).sort((a, b) => a.userNumber - b.userNumber)
     })
@@ -103,7 +103,7 @@ export default function Contacts() {
                       Email
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Location
+                      Location*
                     </th>
                     <th scope="col" className="py-3.5 text-center text-sm font-semibold text-gray-900">
                       Duties
@@ -128,11 +128,11 @@ export default function Contacts() {
                           className={classNames(personIdx === 0 ? 'border-gray-300' : 'border-gray-200', 'border-t')}
                         >
                           <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                            {person?.name}
+                            {person?.name}&ensp;({person?.userNumber})
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person?.phone}</td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person?.email}</td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person?.position}</td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"> M ---- (ext.0000)</td>
                           <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm text-gray-500 sm:pr-6">
                             {getDutiesNames(person?.duties)}
                           </td>
@@ -145,6 +145,16 @@ export default function Contacts() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="sm:flex sm:items-center">
+        <div className="sm:flex-auto">
+          <p className="mt-4 text-sm text-gray-700">
+            * A: Aerospace Engineering Building (N7-2) <br />
+          &ensp; E: Eureka Hall (N27)
+          </p>
+        </div>
+
       </div>
 
     </>

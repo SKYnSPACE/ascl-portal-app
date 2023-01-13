@@ -18,7 +18,7 @@ const navigation = [
   { name: 'Workspace', href: '/workspace/[utility]', current: false },
   { name: 'Projects', href: '/projects', current: false },
   { name: 'Seminar', href: '/seminar/[menu]', current: false },
-  { name: 'Handbook', href: '/handbook', current: false },
+  { name: 'Handbook', href: '/handbook/[item]', current: false },
   // { name: 'Chats', href: '/', current: false },
 ];
 

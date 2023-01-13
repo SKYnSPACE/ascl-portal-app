@@ -63,7 +63,7 @@ model Semester{
 
 model Seminar {
   id            Int       @id @default(autoincrement())
-  alias         String    @unique //2022-F-34141-[slot ID]
+  alias         String    @unique //2022-F-34141-[01~99]
   createdAt	    DateTime  @default(now())
   updatedAt	    DateTime  @updatedAt
 
@@ -74,11 +74,11 @@ model Seminar {
   presentedBy   User      @relation(name:"presentedSeminar", fields:[presentedById], references:[id], onDelete: Cascade)
   presentedById Int
   @@index([presentedById])
+
   // Many-to-Many NOT SUPPORTED IN MYSQL. Bypassing through Review model
   // reviewedBy User[] @relation(name:"reviewedSeminar", fields:[reviewedById], references:[id], onDelete: Cascade)
   // reviewedById Int
   // @@index([reviewedById])
-
 
   title         String
   abstract      String  @db.Text

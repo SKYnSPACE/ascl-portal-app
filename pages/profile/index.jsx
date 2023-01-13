@@ -119,7 +119,7 @@ export default function Settings() {
                         setIsModalOpen(1);
                       }}
                     >
-                      Update
+                      Edit
                     </button>
                   </span>
                 </dd>
@@ -146,7 +146,7 @@ export default function Settings() {
                         setIsModalOpen(2);
                       }}
                     >
-                      Update
+                      Edit
                     </button>
                   </span>
                 </dd>
@@ -190,7 +190,7 @@ export default function Settings() {
                       type="button"
                       className="rounded-md bg-white font-medium text-sky-600 hover:text-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
                     >
-                      Update
+                      Edit
                     </button>
                   </span> */}
                 </dd>
