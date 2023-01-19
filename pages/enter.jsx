@@ -21,7 +21,7 @@ const popups = [
     id: 0,
     icon: ExclamationCircleIcon,
     title: 'ERROR',
-    detail: <p>Server is not responding correctly. <br/> This may due to the incorrect user account. Ask the administrator if the problem continues.</p>,
+    detail: <p>Server is not responding correctly. <br /> This may due to the incorrect user account. Ask the administrator if the problem continues.</p>,
     href: '#',
     iconForeground: 'text-red-700',
     iconBackground: 'bg-red-50',
@@ -30,7 +30,7 @@ const popups = [
     id: 1,
     icon: ExclamationCircleIcon,
     title: 'ERROR',
-    detail: <p>Server is not responding correctly. <br/> This may due to the incorrect OTP. Ask the administrator if the problem continues.</p>,
+    detail: <p>Server is not responding correctly. <br /> This may due to the incorrect OTP. Ask the administrator if the problem continues.</p>,
     href: '#',
     iconForeground: 'text-red-700',
     iconBackground: 'bg-red-50',
@@ -57,21 +57,21 @@ export default function Enter() {
     //TODO: setError("serverError", {message:"User does not exist."})
     //TODO: setError("serverError", {message:"Server does not respond."})
     //TODO: resetField("email") 
-    console.log(data)
+    // console.log(data)
   }
   //<p>{errors.serverError?.message}</p>
   const onEmailFormInvalid = () => {
     console.log("Do something when the form is invalid.");
   }
 
-  const onTokenFormValid =(validForm) => {
+  const onTokenFormValid = (validForm) => {
     if (tokenLoading) return;
     tokenConfirm(validForm);
     //TODO: setError("serverError", {message:"Incorrect Token."})
     //TODO: setError("serverError", {message:"Server does not respond."})
     //TODO: resetField("token") 
   }
-  const onTokenFormInvalid =(validForm) => {
+  const onTokenFormInvalid = (validForm) => {
 
   }
 
@@ -81,30 +81,28 @@ export default function Enter() {
   // },[])
 
   const router = useRouter();
-  useEffect(()=>{
-    if(tokenData?.ok){
-    //   setTimeout(() => {
-    //     router.push('/');
-    // }, 5000);
+  useEffect(() => {
+    if (tokenData?.ok) {
+      //   setTimeout(() => {
+      //     router.push('/');
+      // }, 5000);
       router.replace("/"); //router.push("/");
     }
   }, [tokenData, router]);
 
-  useEffect(()=>{
-    if(error || data?.error)
-    {
+  useEffect(() => {
+    if (error || data?.error) {
       console.log(error, data?.error);
       setIsModalOpen(true);
     }
-  },[data,error])
+  }, [data, error])
 
-  useEffect(()=>{
-    if(tokenError || tokenData?.error)
-    {
+  useEffect(() => {
+    if (tokenError || tokenData?.error) {
       console.log(tokenError, tokenData?.error);
       setIsOtpErrorModalOpen(true);
     }
-  },[tokenData,tokenError])
+  }, [tokenData, tokenError])
 
   // useEffect(()=>{
   //   console.log(error)
@@ -113,7 +111,7 @@ export default function Enter() {
   //   console.log(tokenError)
   // }, [tokenError]);
 
-  
+
 
   return (
     <main className="relative -mt-32">
@@ -166,6 +164,14 @@ export default function Enter() {
                   </div>
                 </div>
 
+
+                <p className="text-center text-sm text-gray-600">
+                  <a href={data.link.toString()} target="_blank" className="font-medium text-sky-600 hover:text-sky-500">
+                  &rarr;{' '}Check this Link{' '}&larr;
+                  </a>
+                  {' '}to see your access token.
+                </p>
+
                 <div>
                   <button
                     type="submit"
@@ -175,8 +181,8 @@ export default function Enter() {
                     <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                       <LockClosedIcon className="h-5 w-5 text-sky-500 group-hover:text-sky-400" aria-hidden="true" />
                     </span>
-                    { tokenLoading ? <span>Signing in...</span> : <span>Sign in</span>}
-                    { tokenLoading ? <span className="absolute inset-y-0 right-0 flex items-center pr-3">
+                    {tokenLoading ? <span>Signing in...</span> : <span>Sign in</span>}
+                    {tokenLoading ? <span className="absolute inset-y-0 right-0 flex items-center pr-3">
                       <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-sky-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -239,6 +245,8 @@ export default function Enter() {
                   </div>
                 </div> */}
 
+
+
                 <div>
                   <button
                     type="submit"
@@ -248,7 +256,7 @@ export default function Enter() {
                     <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                       <LockClosedIcon className="h-5 w-5 text-sky-500 group-hover:text-sky-400" aria-hidden="true" />
                     </span>
-                    { loading ? <span>Sending Email to your account...</span> : <span>Get Access Token</span>}
+                    {loading ? <span>Sending Email to your account...</span> : <span>Get Access Token</span>}
 
                     {loading ? <span className="absolute inset-y-0 right-0 flex items-center pr-3">
                       <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-sky-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

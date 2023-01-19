@@ -48,12 +48,13 @@ model Token {
 
 model Semester{
   id Int @id @default(autoincrement())
-  year Int
-  season Int
+  alias Int @unique //202201~202204 (2022봄~겨울)
+
+  isCurrentSemester Boolean @default(false)
 
   postDocCount  Int
-  partTimeCount Int
-  fullTimeCount Int
+  phdCandidateCount Int
+  msCandidateCount Int
 
   seminars      Seminar[]
   seminarSlots  Seminarslot[]
@@ -63,7 +64,7 @@ model Semester{
 
 model Seminar {
   id            Int       @id @default(autoincrement())
-  alias         String    @unique //2022-F-34141-[01~99]
+  alias         String    @unique //2022spr-34141-[01~99]
   createdAt	    DateTime  @default(now())
   updatedAt	    DateTime  @updatedAt
 
@@ -80,13 +81,13 @@ model Seminar {
   // reviewedById Int
   // @@index([reviewedById])
 
-  title         String
-  abstract      String  @db.Text
-  category      String
-  tags          String  //(TODO: Array.)
-  progress      Int     //(Enum. No submission, Draft submission, Reviewed, Full submission)
-  draftFile     String
-  finalFile     String
+  title         String?
+  abstract      String?  @db.Text
+  category      String?
+  tags          String?  //(TODO: Array.)
+  progress      Int   ?  //(Enum. No submission, Draft submission, Reviewed, Full submission)
+  draftFile     String?
+  finalFile     String?
 
   slot          Seminarslot?
 
@@ -129,12 +130,19 @@ model Request{
   createdAt	  DateTime  @default(now())
   updatedAt	  DateTime  @updatedAt
 
-  requestedBy User      @relation(fields:[userId], references:[id], onDelete: Cascade)
+  requestedFor User      @relation(fields:[userId], references:[id], onDelete: Cascade)
   userId      Int
   @@index([userId])
 
   kind        Int //(Enum. announcement, carry-out, credit-card, purchase, business-trip, review)
-  payload     Int //id of requesting item. (e.g. seminar id)
+  payload1    String  //requested user id
+  payload2    String? //id of requesting item. (e.g.semester id, seminar id, etc.) 
+  payload3    String? //reserved.
+  payload4    String? //reserved.
+  payload5    String? //reserved.
+  payload6    String? //reserved.
+  payload7    String? //reserved.
+  payload8    String? //reserved.
 
   due         DateTime
   status      Int //(Enum. Pending, Accepted(Processing), Delayed, Rejected)

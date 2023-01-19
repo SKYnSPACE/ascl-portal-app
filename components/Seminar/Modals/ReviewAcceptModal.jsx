@@ -1,5 +1,6 @@
 // TODO: onClicked Requested list
-
+import { useState, useEffect } from "react";
+import useSWR from "swr";
 import { Dialog } from "@headlessui/react";
 
 import { CheckIcon, ExclamationCircleIcon, HomeIcon, LocationMarkerIcon, RefreshIcon, PlusIcon, PlusSmIcon, TrashIcon } from '@heroicons/react/24/outline';
@@ -10,22 +11,30 @@ function classNames(...classes) {
 }
 
 export default function ReviewAcceptModal({props}) {
-  const {action, isModalOpen, setIsModalOpen} = {...props};
+  const {modal, isModalOpen, setIsModalOpen, seminarData} = {...props};
+
+  
+  // useEffect(()=>{
+  //   console.log(isModalOpen?.pid)
+  //   if(data?.seminar){
+  //   console.log(data.seminar);
+  //   }
+  // },[data]);
 
   return (
     <Dialog
       as="div"
       className="fixed z-10 inset-0 overflow-y-auto"
-      open={action.id == isModalOpen}
+      open={modal.id == isModalOpen}
       onClose={() => setIsModalOpen(false)}
     >
       <div className="flex items-end justify-center min-h-screen pt-32 px-4 pb-20 text-center sm:block">
         <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6">
-          <div className={classNames("mx-auto flex items-center justify-center h-12 w-12 rounded-full", action.iconBackground)}>
+          <div className={classNames("mx-auto flex items-center justify-center h-12 w-12 rounded-full", modal.iconBackground)}>
 
-            <action.icon
-              className={classNames("h-6 w-6", action.iconForeground)}
+            <modal.icon
+              className={classNames("h-6 w-6", modal.iconForeground)}
               aria-hidden="true"
             />
           </div>
@@ -35,62 +44,47 @@ export default function ReviewAcceptModal({props}) {
               as="h3"
               className="text-lg leading-6 font-medium text-gray-900"
             >
-              {action.name}
+              {modal.name}
             </Dialog.Title>
           </div>
           <Dialog.Description className="mt-4">
-            {action.detail}
+            {modal.detail}
           </Dialog.Description>
 
           <div className="mt-5 flex flex-col items-center">
-            <div className="w-full">
-              <label htmlFor="title" className="text-sm">
-                Title
-              </label>
-              <input
-                type="text"
-                name="title"
-                id="title"
-                className="my-1 shadow-sm focus:ring-cyan-500 focus:border-cyan-500 block w-full border-gray-300 rounded-md"
 
-              />
-            </div>
-            <div className="w-full">
-              <label htmlFor="contents" className="text-sm">
-                Presenter
-              </label>
-              <input
-                type="text"
-                name="contents"
-                id="contents"
-                className="my-1 shadow-sm focus:ring-cyan-500 focus:border-cyan-500 block w-full border-gray-300 rounded-md"
+          <div className="w-full overflow-hidden bg-white shadow sm:rounded-lg">
+          <div className="px-4 py-3 sm:px-4">
+        <h3 className="text-lg font-medium leading-6 text-gray-900">{seminarData?.title}</h3>
+        <p className="mt-1 max-w-2xl text-sm text-gray-500">{seminarData?.tags}</p>
+      </div>
+      <div className="border-t border-gray-200 px-4 py-2 sm:p-0">
+        <dl className="sm:divide-y sm:divide-gray-200">
+          <div className="py-2 sm:grid sm:grid-cols-4 sm:gap-2 sm:px-4 sm:py-3">
+            <dt className="text-sm font-medium text-gray-500">Presenter</dt>
+            <dd className="mt-0 text-sm text-gray-900 sm:col-span-3 sm:mt-0">{seminarData?.presentedBy?.name}</dd>
+          </div>
+          <div className="py-2 sm:grid sm:grid-cols-4 sm:gap-2 sm:px-4 sm:py-3">
+            <dt className="text-sm font-medium text-gray-500">Category</dt>
+            <dd className="mt-0 text-sm text-gray-900 sm:col-span-3 sm:mt-0">{seminarData?.category}</dd>
+          </div>
+          <div className="py-2 sm:grid sm:grid-cols-4 sm:gap-2 sm:px-4 sm:py-3">
+            <dt className="text-sm font-medium text-gray-500">Last Modified</dt>
+            <dd className="mt-0 text-sm text-gray-900 sm:col-span-3 sm:mt-0">{seminarData?.updatedAt}</dd>
+          </div>
+          <div className="py-2 sm:grid sm:grid-cols-4 sm:gap-2 sm:px-4 sm:py-3">
+            <dt className="text-sm font-medium text-gray-500">Abstract</dt>
+            <dd className="mt-0 text-sm text-gray-900 sm:col-span-3 sm:mt-0">
+            {seminarData?.abstract}
+            </dd>
+          </div>
+          
+        </dl>
+      </div>
+      </div>
 
-              />
-            </div>
-            <div className="w-full">
-              <label htmlFor="altitude" className="text-sm">
-                Abstract
-              </label>
-              <input
-                type="text"
-                name="altitude"
-                id="altitude"
-                className="my-1 shadow-sm focus:ring-cyan-500 focus:border-cyan-500 block w-full border-gray-300 rounded-md"
 
-              />
-            </div>
-            <div className="w-full">
-              <label htmlFor="speed" className="text-sm">
-                Tags
-              </label>
-              <input
-                type="text"
-                name="speed"
-                id="speed"
-                className="my-1 shadow-sm focus:ring-cyan-500 focus:border-cyan-500 block w-full border-gray-300 rounded-md"
-
-              />
-            </div>
+           
 
 
             <div className="mt-5 sm:mt-6">

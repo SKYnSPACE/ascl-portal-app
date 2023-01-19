@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import useSWR from "swr";
 
 
@@ -17,10 +17,14 @@ import {
 
 import { classNames } from '../libs/frontend/utils'
 
-import CreateUserModal from '../components/Settings/Modals/CreateUserModal'
-import EditUserModal from '../components/Settings/Modals/EditUserModal'
 import Notification from '../components/Notification'
-import SetUserModal from '../components/Settings/Modals/SetUserModal';
+import CreateUserModal from '../components/Settings/User/CreateUserModal'
+import EditUserModal from '../components/Settings/User/EditUserModal'
+import SetUserModal from '../components/Settings/User/SetUserModal'
+import CreateSemesterModal from '../components/Settings/Semester/CreateSemesterModal';
+import EditSemesterModal from '../components/Settings/Semester/EditSemesterModal';
+import SetSemesterModal from '../components/Settings/Semester/SetSemesterModal';
+
 
 const settings = [
   {
@@ -42,14 +46,41 @@ const settings = [
   },
 ]
 
+const Semester = {
+  spring: 1,
+  summer: 2,
+  fall: 3,
+  winter: 4,
+}
+
+function semesterAliasToString(semester){
+  const year = semester.toString().slice(0,4);
+  const season = semester.toString().slice(-2);
+  // console.log(year + ' ' + Object.keys(Semester).find(key => Semester[key] === +season))
+  return year + ' ' + Object.keys(Semester).find(key => Semester[key] === +season);
+}
+
 export default function Settings() {
   const [isModalOpen, setIsModalOpen] = useState(0);
   const [isNotify, setIsNotify] = useState(false);
   const [message, setMessage] = useState({ type: 'success', title: 'Confirmed!', details: 'Test message initiated.', });
 
+  const [semestersList, setSemestersList] = useState([]);
+
   const { data: usersData, error: getUsersError, isLoading: getUsersLoading } = useSWR(
     typeof window === "undefined" ? null : "/api/settings/user"
   );
+  const { data: semestersData, error: getSemestersError, isLoading: getSemestersLoading } = useSWR(
+    typeof window === "undefined" ? null : "/api/settings/semester"
+  );
+
+  useEffect(() => {
+    if (semestersData) {
+      const semesters = semestersData.semesters.map((semester)=>semesterAliasToString(semester.alias));
+      // console.log(semesters)
+      setSemestersList(semesters);
+    }
+  }, [semestersData]);
 
   return (
     <main className="relative -mt-32">
@@ -126,6 +157,10 @@ export default function Settings() {
 <CreateUserModal props={{ action: settings[0].items[0], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }}/>
 <EditUserModal props={{ action: settings[0].items[1], usersData, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }}/>
 <SetUserModal props={{ action: settings[0].items[2], usersData, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage}} />
+
+<CreateSemesterModal props={{ action: settings[1].items[0], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }}/>
+<EditSemesterModal props={{ action: settings[1].items[1], semestersList, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }}/>
+<SetSemesterModal props={{ action: settings[1].items[2], semestersList, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }}/>
 
 <Notification props={{message, isNotify, setIsNotify}}/>
 

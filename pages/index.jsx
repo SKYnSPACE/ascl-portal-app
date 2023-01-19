@@ -21,8 +21,8 @@ import SteppingoutModal from '../components/Modals/SteppingoutModal';
 
 const stats = [
   { label: 'Requested actions', value: 4 },
-  { label: 'Upcoming events', value: 3 },
-  { label: 'Vacation days left', value: 99 },
+  { label: 'Upcoming events', value: 0 },
+  { label: 'Vacation days left', value: 0 },
 ]
 const actions = [
   {

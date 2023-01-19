@@ -25,7 +25,7 @@ async function handler(
         }
       }
     });
-    console.log(users)
+    // console.log(users)
     res.json({
       ok: true,
       users,

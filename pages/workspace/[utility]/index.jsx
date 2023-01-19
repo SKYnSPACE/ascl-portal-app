@@ -8,6 +8,7 @@ import Ledger from '../../../components/Workspace/Ledger';
 import Contacts from '../../../components/Workspace/Contacts';
 
 import {
+  BellAlertIcon,
   BriefcaseIcon,
   CalendarDaysIcon,
   ClipboardDocumentListIcon,
@@ -17,17 +18,22 @@ import {
   UsersIcon,
 } from '@heroicons/react/24/outline'
 import Purchasing from '../../../components/Workspace/Purchasing';
+import Requests from '../../../components/Workspace/Requests';
 
 
 
 const subNavigation = [
   { name: 'Lab. Calendar', href: '/workspace/calendar', icon: CalendarDaysIcon },
-  { name: 'Attendance', href: '/workspace/attendance', icon: UsersIcon },
+  { name: 'Requests', href: '/workspace/requests', icon: BellAlertIcon },
+  
   { name: 'Purchasing', href: '/workspace/purchasing', icon: CreditCardIcon },
-  { name: 'Business Trip', href: '/workspace/trip', icon: BriefcaseIcon },
   { name: 'Ledger', href: '/workspace/ledger', icon: ClipboardDocumentListIcon },
+
+  { name: 'Business Trip', href: '/workspace/trip', icon: BriefcaseIcon },
   { name: 'Conferences', href: '/workspace/conferences', icon: PresentationChartLineIcon },
+
   { name: 'Contacts', href: '/workspace/contacts', icon: IdentificationIcon },
+  { name: 'Attendance', href: '/workspace/attendance', icon: UsersIcon },
 ]
 
 function classNames(...classes) {
@@ -41,6 +47,9 @@ function Utility() {
   switch (utility) {
     case 'calendar':
       return <Calendar />;
+
+    case 'requests':
+      return <Requests />;
 
     case 'attendance':
       return <Attendance />;

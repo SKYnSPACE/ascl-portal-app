@@ -53,12 +53,19 @@ async function handler(
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
     host: "smtp.ethereal.email",
+    // host: "ascl.kaist.ac.kr",
+    // host: "143.248.99.160",
     port: 587,
+    // port: 25,
     secure: false, // true for 465, false for other ports
     auth: {
       user: testAccount.user, // generated ethereal user
       pass: testAccount.pass, // generated ethereal password
     },
+    // auth: {
+    //   user: 'ascl', // generated ethereal user
+    //   pass: 'asclmail', // generated ethereal password
+    // },
   });
 
   // send mail with defined transport object
@@ -82,6 +89,7 @@ async function handler(
 
   return res.json({
     ok: true,
+    link: nodemailer.getTestMessageUrl(info),
   });
 }
 
