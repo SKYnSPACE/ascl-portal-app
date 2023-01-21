@@ -6,13 +6,18 @@ import {
   ArrowRightOnRectangleIcon,
   BanknotesIcon,
   BriefcaseIcon,
+  CheckCircleIcon,
   CreditCardIcon,
   PaperAirplaneIcon,
   QuestionMarkCircleIcon,
+  XCircleIcon,
 } from '@heroicons/react/24/outline'
 
-import ReviewAcceptModal from './Modals/ReviewAcceptModal'
+import { format, parseISO } from "date-fns";
 
+import ReviewPendingModal from './Modals/ReviewPendingModal'
+import ReviewAcceptedModal from './Modals/ReviewAcceptedModal'
+import ReviewDeclinedModal from './Modals/ReviewDeclinedModal';
 
 
 const items = [
@@ -67,13 +72,31 @@ const items = [
 
 const modals = [
   {
-    id: 1,
+    id: 'requests',
     icon: QuestionMarkCircleIcon,
     name: 'Seminar Review Request',
     detail: 'Press accept or decline. Press outside of the pop-up to withhold your decision.',
     href: '#',
     iconForeground: 'text-yellow-700',
     iconBackground: 'bg-yellow-50',
+  },
+  {
+    id: 'accepted',
+    icon: CheckCircleIcon,
+    name: 'Seminar Review Request',
+    detail: 'Please write a review for the presentation!',
+    href: '#',
+    iconForeground: 'text-green-700',
+    iconBackground: 'bg-green-50',
+  },
+  {
+    id: 'declined',
+    icon: XCircleIcon,
+    name: 'Seminar Review Request',
+    detail: 'This is the seminar information you declined to review.',
+    href: '#',
+    iconForeground: 'text-red-700',
+    iconBackground: 'bg-red-50',
   },
   {
     id: 2,
@@ -159,14 +182,16 @@ function classNames(...classes) {
 //   }
 // }
 
-function parseReviewRequests(requests){
+function parseReviewRequests(requests) {
   const parsedList = requests.map((e) => {
     return {
+      requestId: +`${e.id}`,
       name: `${e.payload2}`,
       title: `${e.payload5}`,
       alias: `${e.payload4}`,
       tags: `${e.payload6}`,
-      requestedAt: `${e.createdAt}`
+      requestedAt: `${e.createdAt}`,
+      dueTo: `${e.due}`,
     };
   })
 
@@ -174,19 +199,21 @@ function parseReviewRequests(requests){
 }
 
 export default function Review() {
-  const [isModalOpen, setIsModalOpen] = useState(0); //0: None, 1: Accept/Decline, 2: Write Review, 3: Modify Review, 4: Presentation Info
-  const [items, setItems] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(0); 
+  const [reviewItems, setReviewItems] = useState([]);
 
-  const { data:reviewRequestData, error, isLoading } = useSWR(`/api/request/review`);
+  const { data: reviewRequestData, error, isLoading } = useSWR(`/api/request/review`);
 
   const [seminarAlias, setSeminarAlias] = useState(null);
-  const { data:seminarData, error:seminarError, isLoading:seminarIsLoading } = useSWR(
+  const { data: seminarData, error: seminarError, isLoading: seminarIsLoading } = useSWR(
     seminarAlias ? `/api/seminar/${seminarAlias}` : null);
+
+  const [requestId, setRequestId] = useState(null);
 
 
   useEffect(() => {
     if (reviewRequestData && reviewRequestData.ok) {
-      
+
       let items = [];
 
       const pendingList = parseReviewRequests(reviewRequestData.pendingList);
@@ -207,24 +234,29 @@ export default function Review() {
 
       const declinedList = parseReviewRequests(reviewRequestData.declinedList);
       const declines = {
-        category: 'accepted',
-        descriptions: 'Please write a review for the presentation!',
+        category: 'declined',
+        descriptions: 'List of declined presentations.',
         list: declinedList,
       };
       items.push(declines)
 
 
-      setItems(items);
+      setReviewItems(items);
     }
   }, [reviewRequestData])
 
-  useEffect(()=>{
-    console.log(seminarAlias)
-  },[seminarAlias])
+  // useEffect(() => {
+  //   // console.log(seminarAlias)
+  // }, [seminarAlias])
 
-  useEffect(()=>{
-    console.log(seminarData?.seminar)
-  },[seminarData])
+  // useEffect(() => {
+  //   console.log(seminarData?.seminar)
+  //   console.log(requestId)
+  // }, [seminarData])
+
+  // useEffect(() => {
+  //   console.log(requestId)
+  // }, [requestId])
 
   return (
     <div className="px-4">
@@ -239,8 +271,8 @@ export default function Review() {
       </div> */}
 
 
-      {items?.map((item) => (
-        <div className="overflow-hidden bg-white border border-gray-300 shadow-lg sm:rounded-md mt-4">
+      {reviewItems?.map((item) => (
+        <div key={item.category} className="overflow-hidden bg-white border border-gray-300 shadow-lg sm:rounded-md mt-4">
           <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
             <h3 className="text-lg font-medium leading-6 text-gray-900">{item?.list?.length} {item?.category}</h3>
             <p className="mt-1 text-sm text-gray-500">
@@ -249,11 +281,12 @@ export default function Review() {
           </div>
           <ul role="list" className="divide-y divide-gray-200">
             {item?.list?.map((presentation) => (
-              <li key={item.category}>
+              <li key={presentation.alias}>
                 <a href="#" className="block hover:bg-gray-50" onClick={(evt) => {
                   evt.preventDefault();
-                  setIsModalOpen(1);
                   setSeminarAlias(`${presentation.alias}`);
+                  setRequestId(presentation.requestId);
+                  setIsModalOpen(item.category);
                 }}>
                   <div className="px-4 py-4 sm:px-6">
                     <div className="flex items-center justify-between">
@@ -278,7 +311,7 @@ export default function Review() {
                       <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
                         <CalendarIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                         {/* <DateTimeDisplay category={item.category} presentationInfo={presentation} /> */}
-                        <p>requests on <time dateTime={presentation.requestedAt}>{presentation.requestedAt}</time></p>
+                        <p>due to <time dateTime={presentation.dueTo}>{format(parseISO(presentation.dueTo), "yyyy-MM-dd HH:mm:ss")}</time></p>
                       </div>
                     </div>
                   </div>
@@ -288,7 +321,9 @@ export default function Review() {
           </ul>
         </div>))}
 
-      <ReviewAcceptModal props={{ modal: modals[0], isModalOpen, setIsModalOpen, seminarData:seminarData?.seminar }} />
+      <ReviewPendingModal props={{ modal: modals[0], isModalOpen, setIsModalOpen, requestId, seminarData: seminarData?.seminar }} />
+      <ReviewAcceptedModal props={{ modal: modals[1], isModalOpen, setIsModalOpen, requestId, seminarData: seminarData?.seminar }} />
+      <ReviewDeclinedModal props={{ modal: modals[2], isModalOpen, setIsModalOpen, requestId, seminarData: seminarData?.seminar }} />
 
     </div>
   )

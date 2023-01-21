@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
+import { Switch } from '@headlessui/react'
+
 import axios from "axios";
 import useSWR from "swr";
 import { useForm } from 'react-hook-form';
 
+import { format, parseISO } from "date-fns";
+
+
 // import { MuiChipsInput } from 'mui-chips-input';
 
 import { PaperClipIcon, StarIcon } from '@heroicons/react/20/solid';
+
 
 import useMutation from "../../libs/frontend/useMutation";
 
@@ -65,7 +71,7 @@ const reviews = [
     id: 1,
     title: "Thank you so much!",
     rating: 5,
-    content: `
+    comments: `
       <p>I was really pleased with the overall presentation material, which delighted me!</p>
       <p>Thank you so much!</p>
     `,
@@ -77,7 +83,7 @@ const reviews = [
     id: 2,
     title: "Why do we use it?",
     rating: 4,
-    content: `
+    comments: `
     It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
     `,
     author: 'Junwoo Park',
@@ -111,7 +117,9 @@ export default function Submission() {
   const { data: reviewData, error: reviewError, isLoading: reviewIsLoading } = useSWR(`/api/seminar/review`);
   const [reviewers, setReviewers] = useState([]);
   const [reviewRequest, { loading: reviewRequestLoading, data: reviewRequestData, error: reviewRequestError }] = useMutation("/api/request/review");
+  const [reviews, setReviews] = useState([]);
 
+  const [enabled, setEnabled] = useState(false)
 
 
   const [isNotify, setIsNotify] = useState(false);
@@ -219,6 +227,10 @@ export default function Submission() {
     if (reviewData?.reviewers) {
       console.log(reviewData.reviewers)
       setReviewers(reviewData.reviewers);
+    }
+    if (reviewData?.reviews) {
+      console.log(reviewData.reviews)
+      setReviews(reviewData.reviews)
     }
   }, [reviewData])
 
@@ -454,6 +466,68 @@ export default function Submission() {
             </div>
             : <></>}
 
+
+
+
+
+<Switch.Group as="div" className="flex items-center justify-between pt-4">
+      <span className="flex flex-grow flex-col">
+        <Switch.Label as="span" className="text-sm font-medium text-gray-900" passive>
+          WAIVER
+        </Switch.Label>
+        <Switch.Description as="span" className="text-sm text-gray-500">
+        I want to request a waiver for this seminar. A notification (e-mail) will be sent to the professor and Lab manager.        </Switch.Description>
+      </span>
+      <Switch
+        checked={enabled}
+        onChange={setEnabled}
+        className={classNames(
+          enabled ? 'bg-red-600' : 'bg-gray-200',
+          'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
+        )}
+      >
+<span
+        className={classNames(
+          enabled ? 'translate-x-5' : 'translate-x-0',
+          'pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+        )}
+      >
+        <span
+          className={classNames(
+            enabled ? 'opacity-0 ease-out duration-100' : 'opacity-100 ease-in duration-200',
+            'absolute inset-0 flex h-full w-full items-center justify-center transition-opacity'
+          )}
+          aria-hidden="true"
+        >
+          <svg className="h-3 w-3 text-gray-400" fill="none" viewBox="0 0 12 12">
+            <path
+              d="M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+        <span
+          className={classNames(
+            enabled ? 'opacity-100 ease-in duration-200' : 'opacity-0 ease-out duration-100',
+            'absolute inset-0 flex h-full w-full items-center justify-center transition-opacity'
+          )}
+          aria-hidden="true"
+        >
+          <svg className="h-3 w-3 text-red-600" fill="currentColor" viewBox="0 0 12 12">
+            <path d="M3.707 5.293a1 1 0 00-1.414 1.414l1.414-1.414zM5 8l-.707.707a1 1 0 001.414 0L5 8zm4.707-3.293a1 1 0 00-1.414-1.414l1.414 1.414zm-7.414 2l2 2 1.414-1.414-2-2-1.414 1.414zm3.414 2l4-4-1.414-1.414-4 4 1.414 1.414z" />
+          </svg>
+        </span>
+      </span>
+      </Switch>
+    </Switch.Group>
+
+
+
+
+
           {/* TODO: capacity 없애기. */}
           {/* TODO: user 목록[userList] 수집 (id, name, position) -> guest는 필터링  */}
           {/* TODO: 나의 request 목록 수집, [userList]를 [reviewerList]로 upsert  */}
@@ -574,21 +648,24 @@ export default function Submission() {
                   </div>
                 </div>
 
-                TODO: Waiver Button here (DB: add column. reviewWaiver T/F)
+                
+
+
+
+
+{/* 리뷰생략요청 */}
+
+
+
 
 
                 <div className="sm:items-start sm:gap-4 sm:border-t sm:border-gray-200">
-                  <div className="mt-6 space-y-10 divide-y divide-gray-200 border-gray-200 pb-10">
-                    TODO: No reviews yet (when reviews array is empty)
+                  {false ? <div className="mt-6 space-y-10 divide-y divide-gray-200 border-gray-200 pb-10">
+
                     {reviews.map((review) => (
                       <div key={review.id} className="pt-10 lg:grid lg:grid-cols-12 lg:gap-x-8">
                         <div className="lg:col-span-8 lg:col-start-5 ">
 
-                          {/* Clarity: 발표자료 내용이 명확/명료하게 작성되어 청중들에게 쉽게 정보를 전달할 수 있는지. 
-Integrity: 발표자료가 주제에 맞게 통일성 있게 구성되어 있는지? 
-Informative: 발표자료의 내용이 유익한지? 
-Verbosity: 발표자료의 길이가 20분 발표에 적절한지?
-*/}
                           <div className="">
                             <h3 className="text-sm font-medium text-gray-900">{review.title}</h3>
 
@@ -600,34 +677,34 @@ Verbosity: 발표자료의 길이가 20분 발표에 적절한지?
                                     <StarIcon
                                       key={rating}
                                       className={classNames(
-                                        review.rating > rating ? 'text-yellow-400' : 'text-gray-200',
+                                        review.rating1 > rating ? 'text-yellow-400' : 'text-gray-200',
                                         'h-5 w-5 flex-shrink-0'
                                       )}
                                       aria-hidden="true"
                                     />
                                   ))}
                                   <p className="ml-3 text-sm text-gray-700">
-                                    {review.rating}
+                                    {review.rating1}
                                     <span className="sr-only"> out of 5 stars</span>
                                   </p>
                                 </div>
                               </div>
 
                               <div className="flex flex-col items">
-                                <span className="text-sm font-small text-gray-700">Educative </span>
+                                <span className="text-sm font-small text-gray-700">Creativity </span>
                                 <div className="flex items-center">
                                   {[0, 1, 2, 3, 4].map((rating) => (
                                     <StarIcon
                                       key={rating}
                                       className={classNames(
-                                        review.rating > rating ? 'text-yellow-400' : 'text-gray-200',
+                                        review.rating2 > rating ? 'text-yellow-400' : 'text-gray-200',
                                         'h-5 w-5 flex-shrink-0'
                                       )}
                                       aria-hidden="true"
                                     />
                                   ))}
                                   <p className="ml-3 text-sm text-gray-700">
-                                    {review.rating}
+                                    {review.rating2}
                                     <span className="sr-only"> out of 5 stars</span>
                                   </p>
                                 </div>
@@ -640,54 +717,54 @@ Verbosity: 발표자료의 길이가 20분 발표에 적절한지?
                                     <StarIcon
                                       key={rating}
                                       className={classNames(
-                                        review.rating > rating ? 'text-yellow-400' : 'text-gray-200',
+                                        review.rating3 > rating ? 'text-yellow-400' : 'text-gray-200',
                                         'h-5 w-5 flex-shrink-0'
                                       )}
                                       aria-hidden="true"
                                     />
                                   ))}
                                   <p className="ml-3 text-sm text-gray-700">
-                                    {review.rating}
+                                    {review.rating3}
                                     <span className="sr-only"> out of 5 stars</span>
                                   </p>
                                 </div>
                               </div>
 
                               <div className="flex flex-col items">
-                                <span className="text-sm font-small text-gray-700">Measure 4 </span>
+                                <span className="text-sm font-small text-gray-700">Integrity </span>
                                 <div className="flex items-center">
                                   {[0, 1, 2, 3, 4].map((rating) => (
                                     <StarIcon
                                       key={rating}
                                       className={classNames(
-                                        review.rating > rating ? 'text-yellow-400' : 'text-gray-200',
+                                        review.rating4 > rating ? 'text-yellow-400' : 'text-gray-200',
                                         'h-5 w-5 flex-shrink-0'
                                       )}
                                       aria-hidden="true"
                                     />
                                   ))}
                                   <p className="ml-3 text-sm text-gray-700">
-                                    {review.rating}
+                                    {review.rating4}
                                     <span className="sr-only"> out of 5 stars</span>
                                   </p>
                                 </div>
                               </div>
 
                               <div className="flex flex-col items">
-                                <span className="text-sm font-small text-gray-700">Overall </span>
+                                <span className="text-sm font-small text-gray-700">Verbosity </span>
                                 <div className="flex items-center">
                                   {[0, 1, 2, 3, 4].map((rating) => (
                                     <StarIcon
                                       key={rating}
                                       className={classNames(
-                                        review.rating > rating ? 'text-yellow-400' : 'text-gray-200',
+                                        review.rating5 > rating ? 'text-yellow-400' : 'text-gray-200',
                                         'h-5 w-5 flex-shrink-0'
                                       )}
                                       aria-hidden="true"
                                     />
                                   ))}
                                   <p className="ml-3 text-sm text-gray-700">
-                                    {review.rating}
+                                    {review.rating5}
                                     <span className="sr-only"> out of 5 stars</span>
                                   </p>
                                 </div>
@@ -697,24 +774,31 @@ Verbosity: 발표자료의 길이가 20분 발표에 적절한지?
                             </div>
 
                             <div
-                              className="mt-6 space-y-6 text-sm text-gray-500"
-                              dangerouslySetInnerHTML={{ __html: review.content }}
+                              className="mt-6 space-y-6 text-sm text-gray-500 whitespace-pre-wrap"
+                              dangerouslySetInnerHTML={{ __html: review.comments }}
                             />
                           </div>
                         </div>
 
                         <div className="mt-6 flex items-center text-sm lg:col-span-4 lg:col-start-1 lg:row-start-1 lg:mt-0 lg:flex-col lg:items-start xl:col-span-3">
-                          <p className="font-medium text-gray-900">{review.author}</p>
+                          <p className="font-medium text-gray-900">{review.writtenBy.name}</p>
                           <time
-                            dateTime={review.datetime}
+                            dateTime={review.updatedAt}
                             className="ml-4 border-l border-gray-200 pl-4 text-gray-500 lg:ml-0 lg:mt-2 lg:border-0 lg:pl-0"
                           >
-                            {review.date}
+                            {format(parseISO(review.updatedAt), "LLL dd, yyyy (EEE.)")} <br />
+                            {format(parseISO(review.updatedAt), "HH:mm:ss")}
+
                           </time>
                         </div>
                       </div>
                     ))}
                   </div>
+                    : <div className="text-center">
+                    
+                    <h3 className="mt-2 text-sm font-medium text-gray-900">No reviews yet</h3>
+      <p className="mt-1 text-sm text-gray-500">Ask colleagues to review your presentation.</p>
+      </div>}
                 </div>
 
               </div>

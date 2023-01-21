@@ -56,7 +56,7 @@ async function handler(
       session: { user }
     } = req;
 
-    console.log(requestFor)
+    // console.log(requestFor)
 
     const currentUser = await client.user.findUnique({
       where: { id: user.id },

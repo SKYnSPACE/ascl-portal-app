@@ -57,6 +57,7 @@ model Semester{
   msCandidateCount Int
 
   seminars      Seminar[]
+  reviews       Review[]  
   seminarSlots  Seminarslot[]
 
   settings      Settings[]
@@ -113,11 +114,23 @@ model Review{
   createdAt	  DateTime  @default(now())
   updatedAt	  DateTime  @updatedAt
 
+  semester      Semester  @relation(fields:[semesterId], references:[id], onDelete: Cascade)
+  semesterId    Int
+  @@index([semesterId])
+
   reviewFor   Seminar   @relation(fields:[seminarId], references:[id], onDelete: Cascade)
   seminarId   Int
   @@index([seminarId])
  
-  review      String
+  title      String
+  comments   String
+
+  rating1    Int?
+  rating2    Int?
+  rating3    Int?
+  rating4    Int?
+  rating5    Int?
+  rating6    Int?
 
   writtenBy   User      @relation(name:"writtenReview", fields:[writtenById], references:[id], onDelete:Cascade)
   writtenById Int
