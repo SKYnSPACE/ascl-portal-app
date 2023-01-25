@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import withHandler, { ResponseType } from "../../../libs/backend/withHandler";
-import client from "../../../libs/backend/client";
-import { withApiSession } from "../../../libs/backend/withSession";
+import withHandler, { ResponseType } from "../../../../libs/backend/withHandler";
+import client from "../../../../libs/backend/client";
+import { withApiSession } from "../../../../libs/backend/withSession";
 
 async function handler(
   req: NextApiRequest,
@@ -72,7 +72,7 @@ async function handler(
       }
     })
 
-    console.log(reviews)
+    // console.log(reviews)
 
     res.json({
       ok: true,
@@ -84,14 +84,14 @@ async function handler(
   if (req.method === "POST") {
     //TODO: post review to the user.
     const {
-      body: { seminarId,
+      body: { seminarId, requestId,
         title, comments,
         clarity, creativity, informative, integrity, verbosity
       },
       session: { user }
     } = req;
 
-    console.log(req.body)
+    // console.log(req.body)
 
     const currentUser = await client.user.findUnique({
       where: { id: user.id },
@@ -107,6 +107,11 @@ async function handler(
       where: { id: +seminarId },
     });
 
+    const relatedRequest = await client.request.findUnique({
+      where: {id: +requestId,},
+    })
+
+    //TODO: upsert review to prevent multiple reviews from one user.
     const newReview = await client.review.create({
       data: {
         semesterId: +currentSemester.id,
@@ -122,9 +127,28 @@ async function handler(
       },
     });
 
-    console.log(newReview)
+    // console.log(newReview)
+
+    //TODO: 연결된 seminar progress 2로 조정할것.
+
+    await client.seminar.update({
+      where: {
+        id: +currentSeminar.id,
+      },
+      data: {
+        progress: 2,
+      },
+    });
 
 //TODO: 연결된 request status를 2로 조정할것.
+    await client.request.update({
+      where: {
+        id: +relatedRequest.id,
+      },
+      data:{
+        status: 2,
+      },
+    })
 
     res.json({ ok: true,
       newReview,

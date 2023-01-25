@@ -9,14 +9,16 @@ import {
   CheckCircleIcon,
   CreditCardIcon,
   PaperAirplaneIcon,
+  PencilSquareIcon,
   QuestionMarkCircleIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline'
 
 import { format, parseISO } from "date-fns";
 
-import ReviewPendingModal from './Modals/ReviewPendingModal'
-import ReviewAcceptedModal from './Modals/ReviewAcceptedModal'
+import ReviewPendingModal from './Modals/ReviewPendingModal';
+import ReviewAcceptedModal from './Modals/ReviewAcceptedModal';
+import ReviewCompletedModal from './Modals/ReviewCompletedModal';
 import ReviewDeclinedModal from './Modals/ReviewDeclinedModal';
 
 
@@ -82,9 +84,18 @@ const modals = [
   },
   {
     id: 'accepted',
-    icon: CheckCircleIcon,
+    icon: PencilSquareIcon,
     name: 'Seminar Review Request',
     detail: 'Please write a review for the presentation!',
+    href: '#',
+    iconForeground: 'text-green-700',
+    iconBackground: 'bg-green-50',
+  },
+  {
+    id: 'completed',
+    icon: CheckCircleIcon,
+    name: 'Review Completed',
+    detail: 'Thank you for your efforts',
     href: '#',
     iconForeground: 'text-green-700',
     iconBackground: 'bg-green-50',
@@ -232,6 +243,14 @@ export default function Review() {
       };
       items.push(accepts)
 
+      const completedList = parseReviewRequests(reviewRequestData.completedList);
+      const completes = {
+        category: 'completed',
+        descriptions: 'Thanks for your efforts :)',
+        list: completedList,
+      };
+      items.push(completes)
+
       const declinedList = parseReviewRequests(reviewRequestData.declinedList);
       const declines = {
         category: 'declined',
@@ -239,7 +258,6 @@ export default function Review() {
         list: declinedList,
       };
       items.push(declines)
-
 
       setReviewItems(items);
     }
@@ -323,7 +341,8 @@ export default function Review() {
 
       <ReviewPendingModal props={{ modal: modals[0], isModalOpen, setIsModalOpen, requestId, seminarData: seminarData?.seminar }} />
       <ReviewAcceptedModal props={{ modal: modals[1], isModalOpen, setIsModalOpen, requestId, seminarData: seminarData?.seminar }} />
-      <ReviewDeclinedModal props={{ modal: modals[2], isModalOpen, setIsModalOpen, requestId, seminarData: seminarData?.seminar }} />
+      <ReviewCompletedModal props={{ modal: modals[2], isModalOpen, setIsModalOpen, requestId, seminarData: seminarData?.seminar }} />
+      <ReviewDeclinedModal props={{ modal: modals[3], isModalOpen, setIsModalOpen, requestId, seminarData: seminarData?.seminar }} />
 
     </div>
   )

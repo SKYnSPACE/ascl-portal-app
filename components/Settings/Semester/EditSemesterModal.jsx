@@ -117,7 +117,7 @@ export default function EditSemesterModal({ props }) {
             />
           </div>
 
-          <div className="mt-3 text-center sm:mt-5">
+          <div className="mt-1 text-center">
             <Dialog.Title
               as="h3"
               className="text-lg leading-6 font-medium text-gray-900"
@@ -130,7 +130,7 @@ export default function EditSemesterModal({ props }) {
           </Dialog.Description>
 
 
-          <form className="mt-5 flex flex-col items-center" onSubmit={handleSubmit(onValid)}>
+          <form className="mt-3 flex flex-col items-center" onSubmit={handleSubmit(onValid)}>
 
 
             {semestersList ?

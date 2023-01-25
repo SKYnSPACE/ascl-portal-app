@@ -18,12 +18,17 @@ import {
 import { classNames } from '../libs/frontend/utils'
 
 import Notification from '../components/Notification'
+
 import CreateUserModal from '../components/Settings/User/CreateUserModal'
 import EditUserModal from '../components/Settings/User/EditUserModal'
 import SetUserModal from '../components/Settings/User/SetUserModal'
+
 import CreateSemesterModal from '../components/Settings/Semester/CreateSemesterModal';
 import EditSemesterModal from '../components/Settings/Semester/EditSemesterModal';
 import SetSemesterModal from '../components/Settings/Semester/SetSemesterModal';
+
+import CreateSlotModal from '../components/Settings/Slot/CreateSlotModal';
+import EditSlotModal from '../components/Settings/Slot/EditSlotModal';
 
 
 const settings = [
@@ -41,8 +46,9 @@ const settings = [
   },
   {
     category: 'Seminar', items:
-      [{ id: 21, name: 'Create', href: '#', detail: '세미나 발표일정(슬롯)을 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600', icon: CalendarDaysIcon },
-      { id: 22,  name: 'Edit', href: '#', detail: '기존 일정(슬롯)을 편집합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon: CalendarDaysIcon },]
+      [{ id: 21, name: 'Create', href: '#', detail: '세미나 발표일정(슬롯)을 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600', icon: PresentationChartLineIcon },
+      { id: 22,  name: 'Edit', href: '#', detail: '기존 일정(슬롯)을 편집합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon: PresentationChartLineIcon },
+      { id: 23,  name: 'Set', href: '#', detail: '슬롯에 발표자를 배정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600', icon: PresentationChartLineIcon },]
   },
 ]
 
@@ -161,6 +167,9 @@ export default function Settings() {
 <CreateSemesterModal props={{ action: settings[1].items[0], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }}/>
 <EditSemesterModal props={{ action: settings[1].items[1], semestersList, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }}/>
 <SetSemesterModal props={{ action: settings[1].items[2], semestersList, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }}/>
+
+<CreateSlotModal props={{ action: settings[2].items[0], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }}/>
+<EditSlotModal props={{ action: settings[2].items[1], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }}/>
 
 <Notification props={{message, isNotify, setIsNotify}}/>
 

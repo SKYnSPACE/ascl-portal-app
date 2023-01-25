@@ -96,16 +96,25 @@ model Seminar {
 }
 
 model Seminarslot{
-  id            Int @id @default(autoincrement())
+  id          Int @id @default(autoincrement())
+  createdAt	  DateTime  @default(now())
+  updatedAt	  DateTime  @updatedAt
 
-  dateTime	    DateTime  
-
-  semester Semester @relation(fields:[semesterId], references:[id], onDelete: Cascade)
-  semesterId Int
+  semester    Semester @relation(fields:[semesterId], references:[id], onDelete: Cascade)
+  semesterId  Int
   @@index([semesterId])
 
-  seminar Seminar? @relation(fields:[seminarId], references:[id])
-  seminarId Int? @unique
+  date        String
+  startsAt	  String
+  endsAt	    String
+
+  isBreak     Boolean  @default(false)
+  note        String?
+
+  // isShow      Boolean  @default(true) // Make it visible/invisible in the Seminar Schedule
+
+  seminar     Seminar? @relation(fields:[seminarId], references:[id])
+  seminarId   Int? @unique
   @@index([seminarId])
 }
 

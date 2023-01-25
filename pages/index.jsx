@@ -172,13 +172,13 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(0)
   // const closeAnnouncementModal = () => { setIsAnnouncementModalOpen(false) }
 
-  useEffect(()=>{
-    localDatabase.setUser(    {
-    name: user?.name,
-    email: user?.email,
-    position: user?.position,
-    avatar: user?.avatar,
-  })},[user])
+  // useEffect(()=>{
+  //   localDatabase.setUser(    {
+  //   name: user?.name,
+  //   email: user?.email,
+  //   position: user?.position,
+  //   avatar: user?.avatar,
+  // })},[user])
 
   return (
     <>

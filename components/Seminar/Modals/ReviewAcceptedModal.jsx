@@ -16,7 +16,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function ReviewPendingModal({ props }) {
+export default function ReviewAcceptedModal({ props }) {
   const { modal, isModalOpen, setIsModalOpen, requestId, seminarData } = { ...props };
 
   const [postReview, { loading: postReviewLoading, data: postReviewData, error: postReviewError }] = useMutation("/api/seminar/review");
@@ -35,8 +35,8 @@ export default function ReviewPendingModal({ props }) {
 
   const onValid = (validForm) => {
     if (postReviewLoading) return;
-    console.log({ ...validForm, seminarId: seminarData?.id })
-    postReview({ ...validForm, seminarId: seminarData?.id });
+    // console.log({ ...validForm, seminarId: seminarData?.id, requestId })
+    postReview({ ...validForm, seminarId: seminarData?.id, requestId });
   }
   const onInvalid = (errors) => {
     if (errors?.year?.message) {

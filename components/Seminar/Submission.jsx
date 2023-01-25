@@ -103,7 +103,7 @@ const scrollToTop = () => {
   })
 }
 export default function Submission() {
-  const { data: seminarData, error, isLoading } = useSWR(`/api/seminar`);
+  const { data: seminarData, error: seminarDataError, isLoading: seminarDataIsLoading } = useSWR(`/api/seminar`);
 
   const { register, setValue, watch, handleSubmit } = useForm();
   const [saveSubmission, { loading, data: submissionData, error: submissionError }] = useMutation("/api/seminar/save");
@@ -270,15 +270,20 @@ export default function Submission() {
 
 
           {/* {DRAFT} */}
-          {seminarData?.mySeminarSubmission ?
-            <div className="space-y-6 sm:space-y-5">
-              <div>
-                <h3 className="text-lg font-medium leading-6 text-gray-900">Draft</h3>
-                <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                  This information will be displayed publicly so be careful what you share.
-                </p>
-              </div>
 
+
+          <div className="space-y-6 sm:space-y-5">
+
+            <div>
+              <h3 className="text-xl font-medium leading-6 text-gray-900">Draft</h3>
+              <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                This information will be displayed publicly so be careful what you share.
+              </p>
+            </div>
+
+            {seminarDataIsLoading ? <div className="flex items-center justify-center my-16"> <LoadingSpinner className="h-8 w-8 text-sky-500" /> </div> : <></>}
+
+            {seminarData?.mySeminarSubmission ?
               <div className="space-y-6 sm:space-y-5">
                 <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                   <label htmlFor="title" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
@@ -463,66 +468,67 @@ export default function Submission() {
                   </div>
                 </div>
               </div>
-            </div>
-            : <></>}
+              : <></>}
+          </div>
 
 
 
 
 
-<Switch.Group as="div" className="flex items-center justify-between pt-4">
-      <span className="flex flex-grow flex-col">
-        <Switch.Label as="span" className="text-sm font-medium text-gray-900" passive>
-          WAIVER
-        </Switch.Label>
-        <Switch.Description as="span" className="text-sm text-gray-500">
-        I want to request a waiver for this seminar. A notification (e-mail) will be sent to the professor and Lab manager.        </Switch.Description>
-      </span>
-      <Switch
-        checked={enabled}
-        onChange={setEnabled}
-        className={classNames(
-          enabled ? 'bg-red-600' : 'bg-gray-200',
-          'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
-        )}
-      >
-<span
-        className={classNames(
-          enabled ? 'translate-x-5' : 'translate-x-0',
-          'pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
-        )}
-      >
-        <span
-          className={classNames(
-            enabled ? 'opacity-0 ease-out duration-100' : 'opacity-100 ease-in duration-200',
-            'absolute inset-0 flex h-full w-full items-center justify-center transition-opacity'
-          )}
-          aria-hidden="true"
-        >
-          <svg className="h-3 w-3 text-gray-400" fill="none" viewBox="0 0 12 12">
-            <path
-              d="M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </span>
-        <span
-          className={classNames(
-            enabled ? 'opacity-100 ease-in duration-200' : 'opacity-0 ease-out duration-100',
-            'absolute inset-0 flex h-full w-full items-center justify-center transition-opacity'
-          )}
-          aria-hidden="true"
-        >
-          <svg className="h-3 w-3 text-red-600" fill="currentColor" viewBox="0 0 12 12">
-            <path d="M3.707 5.293a1 1 0 00-1.414 1.414l1.414-1.414zM5 8l-.707.707a1 1 0 001.414 0L5 8zm4.707-3.293a1 1 0 00-1.414-1.414l1.414 1.414zm-7.414 2l2 2 1.414-1.414-2-2-1.414 1.414zm3.414 2l4-4-1.414-1.414-4 4 1.414 1.414z" />
-          </svg>
-        </span>
-      </span>
-      </Switch>
-    </Switch.Group>
+
+          <Switch.Group as="div" className="flex items-center justify-between pt-4">
+            <span className="flex flex-grow flex-col">
+              <Switch.Label as="span" className="text-sm font-medium text-gray-900" passive>
+                WAIVER
+              </Switch.Label>
+              <Switch.Description as="span" className="text-sm text-gray-500">
+                I want to request a waiver for this seminar. A notification (e-mail) will be sent to the professor and Lab manager.        </Switch.Description>
+            </span>
+            <Switch
+              checked={enabled}
+              onChange={setEnabled}
+              className={classNames(
+                enabled ? 'bg-red-600' : 'bg-gray-200',
+                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
+              )}
+            >
+              <span
+                className={classNames(
+                  enabled ? 'translate-x-5' : 'translate-x-0',
+                  'pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+                )}
+              >
+                <span
+                  className={classNames(
+                    enabled ? 'opacity-0 ease-out duration-100' : 'opacity-100 ease-in duration-200',
+                    'absolute inset-0 flex h-full w-full items-center justify-center transition-opacity'
+                  )}
+                  aria-hidden="true"
+                >
+                  <svg className="h-3 w-3 text-gray-400" fill="none" viewBox="0 0 12 12">
+                    <path
+                      d="M4 8l2-2m0 0l2-2M6 6L4 4m2 2l2 2"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span
+                  className={classNames(
+                    enabled ? 'opacity-100 ease-in duration-200' : 'opacity-0 ease-out duration-100',
+                    'absolute inset-0 flex h-full w-full items-center justify-center transition-opacity'
+                  )}
+                  aria-hidden="true"
+                >
+                  <svg className="h-3 w-3 text-red-600" fill="currentColor" viewBox="0 0 12 12">
+                    <path d="M3.707 5.293a1 1 0 00-1.414 1.414l1.414-1.414zM5 8l-.707.707a1 1 0 001.414 0L5 8zm4.707-3.293a1 1 0 00-1.414-1.414l1.414 1.414zm-7.414 2l2 2 1.414-1.414-2-2-1.414 1.414zm3.414 2l4-4-1.414-1.414-4 4 1.414 1.414z" />
+                  </svg>
+                </span>
+              </span>
+            </Switch>
+          </Switch.Group>
 
 
 
@@ -536,7 +542,7 @@ export default function Submission() {
           {seminarData?.mySeminarSubmission?.progress >= 1 ?
             <div className="space-y-6 pt-8 sm:space-y-5 sm:pt-10">
               <div>
-                <h3 className="text-lg font-medium leading-6 text-gray-900">Reviews</h3>
+                <h3 className="text-xl font-medium leading-6 text-gray-900">Reviews</h3>
                 <p className="mt-1 max-w-2xl text-sm text-gray-500">Ask for a review and check the responses. Press select button to send a review request.
                   <br /> You need at least one review to proceed.</p>
               </div>
@@ -648,157 +654,159 @@ export default function Submission() {
                   </div>
                 </div>
 
-                
 
 
 
 
-{/* 리뷰생략요청 */}
+
+                {/* 리뷰생략요청 */}
 
 
 
 
 
                 <div className="sm:items-start sm:gap-4 sm:border-t sm:border-gray-200">
-                  {false ? <div className="mt-6 space-y-10 divide-y divide-gray-200 border-gray-200 pb-10">
+                  {reviews && reviews?.length ?
 
-                    {reviews.map((review) => (
-                      <div key={review.id} className="pt-10 lg:grid lg:grid-cols-12 lg:gap-x-8">
-                        <div className="lg:col-span-8 lg:col-start-5 ">
+                    <div className="mt-6 space-y-10 divide-y divide-gray-200 border-gray-200 pb-10">
 
-                          <div className="">
-                            <h3 className="text-sm font-medium text-gray-900">{review.title}</h3>
+                      {reviews.map((review) => (
+                        <div key={review.id} className="lg:grid lg:grid-cols-12 lg:gap-x-8">
+                          <div className="lg:col-span-8 lg:col-start-5 ">
 
-                            <div className="mt-2 grid grid-cols-2 sm:grid-cols-3">
-                              <div className="flex flex-col items">
-                                <span className="text-sm font-small text-gray-700">Clarity </span>
-                                <div className="flex items-center">
-                                  {[0, 1, 2, 3, 4].map((rating) => (
-                                    <StarIcon
-                                      key={rating}
-                                      className={classNames(
-                                        review.rating1 > rating ? 'text-yellow-400' : 'text-gray-200',
-                                        'h-5 w-5 flex-shrink-0'
-                                      )}
-                                      aria-hidden="true"
-                                    />
-                                  ))}
-                                  <p className="ml-3 text-sm text-gray-700">
-                                    {review.rating1}
-                                    <span className="sr-only"> out of 5 stars</span>
-                                  </p>
+                            <div className="">
+                              <h3 className="text-sm font-medium text-gray-900">{review.title}</h3>
+
+                              <div className="mt-2 grid grid-cols-2 sm:grid-cols-3">
+                                <div className="flex flex-col items">
+                                  <span className="text-sm font-small text-gray-700">Clarity </span>
+                                  <div className="flex items-center">
+                                    {[0, 1, 2, 3, 4].map((rating) => (
+                                      <StarIcon
+                                        key={rating}
+                                        className={classNames(
+                                          review.rating1 > rating ? 'text-yellow-400' : 'text-gray-200',
+                                          'h-5 w-5 flex-shrink-0'
+                                        )}
+                                        aria-hidden="true"
+                                      />
+                                    ))}
+                                    <p className="ml-3 text-sm text-gray-700">
+                                      {review.rating1}
+                                      <span className="sr-only"> out of 5 stars</span>
+                                    </p>
+                                  </div>
                                 </div>
+
+                                <div className="flex flex-col items">
+                                  <span className="text-sm font-small text-gray-700">Creativity </span>
+                                  <div className="flex items-center">
+                                    {[0, 1, 2, 3, 4].map((rating) => (
+                                      <StarIcon
+                                        key={rating}
+                                        className={classNames(
+                                          review.rating2 > rating ? 'text-yellow-400' : 'text-gray-200',
+                                          'h-5 w-5 flex-shrink-0'
+                                        )}
+                                        aria-hidden="true"
+                                      />
+                                    ))}
+                                    <p className="ml-3 text-sm text-gray-700">
+                                      {review.rating2}
+                                      <span className="sr-only"> out of 5 stars</span>
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex flex-col items">
+                                  <span className="text-sm font-small text-gray-700">Informative </span>
+                                  <div className="flex items-center">
+                                    {[0, 1, 2, 3, 4].map((rating) => (
+                                      <StarIcon
+                                        key={rating}
+                                        className={classNames(
+                                          review.rating3 > rating ? 'text-yellow-400' : 'text-gray-200',
+                                          'h-5 w-5 flex-shrink-0'
+                                        )}
+                                        aria-hidden="true"
+                                      />
+                                    ))}
+                                    <p className="ml-3 text-sm text-gray-700">
+                                      {review.rating3}
+                                      <span className="sr-only"> out of 5 stars</span>
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex flex-col items">
+                                  <span className="text-sm font-small text-gray-700">Integrity </span>
+                                  <div className="flex items-center">
+                                    {[0, 1, 2, 3, 4].map((rating) => (
+                                      <StarIcon
+                                        key={rating}
+                                        className={classNames(
+                                          review.rating4 > rating ? 'text-yellow-400' : 'text-gray-200',
+                                          'h-5 w-5 flex-shrink-0'
+                                        )}
+                                        aria-hidden="true"
+                                      />
+                                    ))}
+                                    <p className="ml-3 text-sm text-gray-700">
+                                      {review.rating4}
+                                      <span className="sr-only"> out of 5 stars</span>
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex flex-col items">
+                                  <span className="text-sm font-small text-gray-700">Verbosity </span>
+                                  <div className="flex items-center">
+                                    {[0, 1, 2, 3, 4].map((rating) => (
+                                      <StarIcon
+                                        key={rating}
+                                        className={classNames(
+                                          review.rating5 > rating ? 'text-yellow-400' : 'text-gray-200',
+                                          'h-5 w-5 flex-shrink-0'
+                                        )}
+                                        aria-hidden="true"
+                                      />
+                                    ))}
+                                    <p className="ml-3 text-sm text-gray-700">
+                                      {review.rating5}
+                                      <span className="sr-only"> out of 5 stars</span>
+                                    </p>
+                                  </div>
+                                </div>
+
+
                               </div>
 
-                              <div className="flex flex-col items">
-                                <span className="text-sm font-small text-gray-700">Creativity </span>
-                                <div className="flex items-center">
-                                  {[0, 1, 2, 3, 4].map((rating) => (
-                                    <StarIcon
-                                      key={rating}
-                                      className={classNames(
-                                        review.rating2 > rating ? 'text-yellow-400' : 'text-gray-200',
-                                        'h-5 w-5 flex-shrink-0'
-                                      )}
-                                      aria-hidden="true"
-                                    />
-                                  ))}
-                                  <p className="ml-3 text-sm text-gray-700">
-                                    {review.rating2}
-                                    <span className="sr-only"> out of 5 stars</span>
-                                  </p>
-                                </div>
-                              </div>
-
-                              <div className="flex flex-col items">
-                                <span className="text-sm font-small text-gray-700">Informative </span>
-                                <div className="flex items-center">
-                                  {[0, 1, 2, 3, 4].map((rating) => (
-                                    <StarIcon
-                                      key={rating}
-                                      className={classNames(
-                                        review.rating3 > rating ? 'text-yellow-400' : 'text-gray-200',
-                                        'h-5 w-5 flex-shrink-0'
-                                      )}
-                                      aria-hidden="true"
-                                    />
-                                  ))}
-                                  <p className="ml-3 text-sm text-gray-700">
-                                    {review.rating3}
-                                    <span className="sr-only"> out of 5 stars</span>
-                                  </p>
-                                </div>
-                              </div>
-
-                              <div className="flex flex-col items">
-                                <span className="text-sm font-small text-gray-700">Integrity </span>
-                                <div className="flex items-center">
-                                  {[0, 1, 2, 3, 4].map((rating) => (
-                                    <StarIcon
-                                      key={rating}
-                                      className={classNames(
-                                        review.rating4 > rating ? 'text-yellow-400' : 'text-gray-200',
-                                        'h-5 w-5 flex-shrink-0'
-                                      )}
-                                      aria-hidden="true"
-                                    />
-                                  ))}
-                                  <p className="ml-3 text-sm text-gray-700">
-                                    {review.rating4}
-                                    <span className="sr-only"> out of 5 stars</span>
-                                  </p>
-                                </div>
-                              </div>
-
-                              <div className="flex flex-col items">
-                                <span className="text-sm font-small text-gray-700">Verbosity </span>
-                                <div className="flex items-center">
-                                  {[0, 1, 2, 3, 4].map((rating) => (
-                                    <StarIcon
-                                      key={rating}
-                                      className={classNames(
-                                        review.rating5 > rating ? 'text-yellow-400' : 'text-gray-200',
-                                        'h-5 w-5 flex-shrink-0'
-                                      )}
-                                      aria-hidden="true"
-                                    />
-                                  ))}
-                                  <p className="ml-3 text-sm text-gray-700">
-                                    {review.rating5}
-                                    <span className="sr-only"> out of 5 stars</span>
-                                  </p>
-                                </div>
-                              </div>
-
-
+                              <div
+                                className="mt-6 space-y-6 text-sm text-gray-500 whitespace-pre-wrap"
+                                dangerouslySetInnerHTML={{ __html: review.comments }}
+                              />
                             </div>
+                          </div>
 
-                            <div
-                              className="mt-6 space-y-6 text-sm text-gray-500 whitespace-pre-wrap"
-                              dangerouslySetInnerHTML={{ __html: review.comments }}
-                            />
+                          <div className="mt-6 flex items-center text-sm lg:col-span-4 lg:col-start-1 lg:row-start-1 lg:mt-0 lg:flex-col lg:items-start xl:col-span-3">
+                            <p className="font-medium text-gray-900">{review.writtenBy.name}</p>
+                            <time
+                              dateTime={review.updatedAt}
+                              className="ml-4 border-l border-gray-200 pl-4 text-gray-500 lg:ml-0 lg:mt-2 lg:border-0 lg:pl-0"
+                            >
+                              {format(parseISO(review.updatedAt), "LLL dd, yyyy (EEE.)")} <br />
+                              {format(parseISO(review.updatedAt), "HH:mm:ss")}
+
+                            </time>
                           </div>
                         </div>
-
-                        <div className="mt-6 flex items-center text-sm lg:col-span-4 lg:col-start-1 lg:row-start-1 lg:mt-0 lg:flex-col lg:items-start xl:col-span-3">
-                          <p className="font-medium text-gray-900">{review.writtenBy.name}</p>
-                          <time
-                            dateTime={review.updatedAt}
-                            className="ml-4 border-l border-gray-200 pl-4 text-gray-500 lg:ml-0 lg:mt-2 lg:border-0 lg:pl-0"
-                          >
-                            {format(parseISO(review.updatedAt), "LLL dd, yyyy (EEE.)")} <br />
-                            {format(parseISO(review.updatedAt), "HH:mm:ss")}
-
-                          </time>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
                     : <div className="text-center">
-                    
-                    <h3 className="mt-2 text-sm font-medium text-gray-900">No reviews yet</h3>
-      <p className="mt-1 text-sm text-gray-500">Ask colleagues to review your presentation.</p>
-      </div>}
+
+                      <h3 className="mt-2 text-sm font-medium text-gray-900">No reviews yet</h3>
+                      <p className="mt-1 text-sm text-gray-500">Ask colleagues to review your presentation.</p>
+                    </div>}
                 </div>
 
               </div>
@@ -807,12 +815,12 @@ export default function Submission() {
 
 
 
-          {seminarData?.mySeminarSubmission.progress >= 2 ?
+          {seminarData?.mySeminarSubmission?.progress >= 2 ?
             <div className="space-y-6 divide-y divide-gray-200 pt-8 sm:space-y-5 sm:pt-10">
               <div>
-                <h3 className="text-lg font-medium leading-6 text-gray-900">Finalize</h3>
+                <h3 className="text-xl font-medium leading-6 text-gray-900">Finalize</h3>
                 <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                  Finalize your presentation material.
+                  Finalize your presentation material and select the desired presentation time.
                 </p>
               </div>
               <div className="space-y-6 divide-y divide-gray-200 sm:space-y-5">

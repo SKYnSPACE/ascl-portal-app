@@ -6,6 +6,7 @@ export function middleware(req) {
   if (userAgent(req)?.isBot) {
     // return new Response("Be human.", {status: 403});
     // response 불가능하도록 바뀜. 페이지 redirection 필요함. https://nextjs.org/docs/messages/returning-response-body-in-middleware
+    return;
   }
 
   const url = req.nextUrl.clone();

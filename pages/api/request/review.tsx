@@ -32,6 +32,7 @@ async function handler(
 
     const pendingList = allReviewRequests.filter(request => request.status === 0);
     const acceptedList = allReviewRequests.filter(request => request.status === 1);
+    const completedList = allReviewRequests.filter(request => request.status === 2);
     const declinedList = allReviewRequests.filter(request => request.status === -1);
     //user가 받은 세미나 리뷰 요청정보를 수집.
 
@@ -43,6 +44,7 @@ async function handler(
       ok: true,
       pendingList,
       acceptedList,
+      completedList,
       declinedList,
     });
   }

@@ -43,8 +43,8 @@ function classNames(...classes) {
 export default function Layout({ children }) {
   const router = useRouter();
   // const localDatabase = useContext(LocalDatabase);
-  const user = useContext(LocalDatabase).user;
-  // const { user } = useUser();
+  // const user = useContext(LocalDatabase).user;
+  const { user } = useUser();
   // const user = null;
 
   //   useEffect(()=>{localDatabase.setUser(    {
@@ -54,6 +54,10 @@ export default function Layout({ children }) {
   //   role: user?.role,
   //   avatar: user?.avatar,
   // })},[user])
+
+  //     useEffect(()=>{
+  //       console.log(user)
+  // },[user]);
 
 
   return (

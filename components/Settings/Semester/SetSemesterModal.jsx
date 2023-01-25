@@ -111,7 +111,7 @@ export default function SetSemesterModal({ props }) {
             />
           </div>
 
-          <div className="mt-3 text-center sm:mt-5">
+          <div className="mt-1 text-center">
             <Dialog.Title
               as="h3"
               className="text-lg leading-6 font-medium text-gray-900"
@@ -124,7 +124,7 @@ export default function SetSemesterModal({ props }) {
           </Dialog.Description>
 
 
-          <form className="mt-5 flex flex-col items-center" onSubmit={handleSubmit(onValid)}>
+          <form className="mt-3 flex flex-col items-center" onSubmit={handleSubmit(onValid)}>
 
 
             {semestersList ?
@@ -159,6 +159,7 @@ export default function SetSemesterModal({ props }) {
                 className="mx-1 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2980b9] text-sm"
                 onClick={(e) => {
                   reset();
+                  setValue('semester', semesterAliasToString(currentSemesterData?.semester?.alias))
                   setIsModalOpen(false);
                 }}>
                 Cancel

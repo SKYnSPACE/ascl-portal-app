@@ -85,7 +85,7 @@ export default function CreateUserModal({ props }) {
             />
           </div>
 
-          <div className="mt-3 text-center sm:mt-5">
+          <div className="mt-1 text-center">
             <Dialog.Title
               as="h3"
               className="text-lg leading-6 font-medium text-gray-900"
@@ -97,7 +97,7 @@ export default function CreateUserModal({ props }) {
             {action.detail}
           </Dialog.Description>
 
-          <form className="mt-5 flex flex-col items-center" onSubmit={handleSubmit(onValid)}>
+          <form className="mt-3 flex flex-col items-center" onSubmit={handleSubmit(onValid)}>
             <div className="w-full">
               <label htmlFor="userNumber" className="text-sm">
                 ID

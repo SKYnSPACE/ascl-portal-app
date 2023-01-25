@@ -9,7 +9,7 @@ import {
   QuestionMarkCircleIcon,
 } from '@heroicons/react/24/outline'
 
-import ReviewAcceptModal from '../Seminar/Modals/ReviewAcceptModal'
+import ReviewPendingModal from '../Seminar/Modals/ReviewPendingModal'
 
 // TODO:
 // Seminar Review Request
@@ -225,7 +225,7 @@ export default function Requests() {
           </ul>
         </div>))}
 
-      <ReviewAcceptModal props={{ action: actions[0], isModalOpen, setIsModalOpen }} />
+      <ReviewPendingModal props={{ action: actions[0], isModalOpen, setIsModalOpen }} />
 
     </div>
   )

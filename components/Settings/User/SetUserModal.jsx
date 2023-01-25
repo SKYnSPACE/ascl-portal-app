@@ -109,7 +109,7 @@ export default function SetUserModal({ props }) {
             />
           </div>
 
-          <div className="mt-3 text-center sm:mt-5">
+          <div className="mt-1 text-center">
             <Dialog.Title
               as="h3"
               className="text-lg leading-6 font-medium text-gray-900"
