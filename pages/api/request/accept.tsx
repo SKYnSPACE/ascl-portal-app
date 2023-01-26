@@ -25,19 +25,19 @@ async function handler(
     return res.status(403).json({ ok: false, error: "Not allowed to." });
   
 
-  const declined = await client.request.update({
+  const accepted = await client.request.update({
     where: {
       id: +requestId,
     },
     data: {
-      status: -1,
+      status: 1,
     },
   });
 
 
   res.json({
     ok: true,
-    declined,
+    accepted,
   });
 }
 

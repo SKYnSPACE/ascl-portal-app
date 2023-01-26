@@ -20,57 +20,7 @@ import ReviewPendingModal from './Modals/ReviewPendingModal';
 import ReviewAcceptedModal from './Modals/ReviewAcceptedModal';
 import ReviewCompletedModal from './Modals/ReviewCompletedModal';
 import ReviewDeclinedModal from './Modals/ReviewDeclinedModal';
-
-
-const items = [
-  {
-    category: 'requests',
-    descriptions: 'Please accept or decline the requests.',
-    list: [
-      {
-        name: 'Seongheon Lee',
-        title: 'Dynamic modeling and control of mechanical systems using machine learning approaches and their applications to a quadrotor UAV',
-        alias: '2022-F',
-        tags: 'UAV, AI, quadrotor, modeling, control',
-        requestedAt: '2022-12-29 23:00',
-      },
-      {
-        name: 'Hyochoong Bang',
-        title: '프로젝트 담당자 할당 및 바람직한 랩 생활을 위한 조언',
-        alias: '2022-F',
-        tags: 'ASCL',
-        requestedAt: '2022-12-29 23:00',
-      },
-    ],
-  },
-  {
-    category: 'accepted',
-    descriptions: 'Please write a review for the presentation!',
-    list: [
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...1', alias: '2022-F', },
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...2', alias: '2022-F', },
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...3', alias: '2022-F', },
-    ],
-  },
-  {
-    category: 'finished',
-    descriptions: 'Thanks for your efforts :)',
-    list: [
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...1', alias: '2022-F', },
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...2', alias: '2022-F', },
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...3', alias: '2022-F', },
-    ],
-  },
-  {
-    category: 'declined',
-    descriptions: 'List of declined presentations.',
-    list: [
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...1', alias: '2022-F', },
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...2', alias: '2022-F', },
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...3', alias: '2022-F', },
-    ],
-  },
-]
+import Notification from '../Notification';
 
 const modals = [
   {
@@ -108,51 +58,6 @@ const modals = [
     href: '#',
     iconForeground: 'text-red-700',
     iconBackground: 'bg-red-50',
-  },
-  {
-    id: 2,
-    icon: ArrowRightOnRectangleIcon,
-    name: 'Carry-out report',
-    detail: '실험실 물품 반출/반납 대장',
-    href: '#',
-    iconForeground: 'text-purple-700',
-    iconBackground: 'bg-purple-50',
-  },
-  {
-    id: 3,
-    icon: CreditCardIcon,
-    name: 'Credit-card Use',
-    detail: '법인카드 사용을 위한 일정 문의',
-    href: '#',
-    iconForeground: 'text-sky-700',
-    iconBackground: 'bg-sky-50',
-  },
-  {
-    id: 4,
-    icon: BanknotesIcon,
-    name: 'Purchase Request',
-    detail: '공동구매를 위한 물품 기록',
-    href: '#',
-    iconForeground: 'text-yellow-700',
-    iconBackground: 'bg-yellow-50',
-  },
-  {
-    id: 5,
-    icon: BriefcaseIcon,
-    name: 'Business Trip',
-    detail: 'Request account information for a business trip.',
-    href: '#',
-    iconForeground: 'text-rose-700',
-    iconBackground: 'bg-rose-50',
-  },
-  {
-    id: 6,
-    icon: PaperAirplaneIcon,
-    name: 'Stepping Out',
-    detail: 'Report for a temporary absence from a office, vacation, etc.',
-    href: '#',
-    iconForeground: 'text-indigo-700',
-    iconBackground: 'bg-indigo-50',
   },
 ]
 
@@ -210,7 +115,10 @@ function parseReviewRequests(requests) {
 }
 
 export default function Review() {
-  const [isModalOpen, setIsModalOpen] = useState(0); 
+  const [isModalOpen, setIsModalOpen] = useState(0);
+  const [isNotify, setIsNotify] = useState(false);
+  const [message, setMessage] = useState({ type: 'success', title: 'Confirmed!', details: 'Test message initiated.', });
+
   const [reviewItems, setReviewItems] = useState([]);
 
   const { data: reviewRequestData, error, isLoading } = useSWR(`/api/request/review`);
@@ -339,10 +247,25 @@ export default function Review() {
           </ul>
         </div>))}
 
-      <ReviewPendingModal props={{ modal: modals[0], isModalOpen, setIsModalOpen, requestId, seminarData: seminarData?.seminar }} />
-      <ReviewAcceptedModal props={{ modal: modals[1], isModalOpen, setIsModalOpen, requestId, seminarData: seminarData?.seminar }} />
-      <ReviewCompletedModal props={{ modal: modals[2], isModalOpen, setIsModalOpen, requestId, seminarData: seminarData?.seminar }} />
-      <ReviewDeclinedModal props={{ modal: modals[3], isModalOpen, setIsModalOpen, requestId, seminarData: seminarData?.seminar }} />
+      <ReviewPendingModal props={{
+        modal: modals[0], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+        requestId, seminarData: seminarData?.seminar
+      }} />
+      <ReviewAcceptedModal props={{
+        modal: modals[1], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+        requestId, seminarData: seminarData?.seminar
+      }} />
+      <ReviewCompletedModal props={{
+        modal: modals[2], isModalOpen, setIsModalOpen, 
+        requestId, seminarData: seminarData?.seminar
+      }} />
+      <ReviewDeclinedModal props={{
+        modal: modals[3], isModalOpen, setIsModalOpen, 
+        requestId, seminarData: seminarData?.seminar
+      }} />
+
+
+    <Notification props={{message, isNotify, setIsNotify}}/>
 
     </div>
   )

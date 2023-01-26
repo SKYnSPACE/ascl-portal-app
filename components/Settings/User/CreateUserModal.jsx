@@ -44,12 +44,14 @@ export default function CreateUserModal({ props }) {
             { type: 'fail', title: 'Connection Lost.', details: "Database Server does not respond.", }
           )
           setIsNotify(true);
+          return;
         case 'P2002':
           console.log("Existing User.");
           setMessage(
             { type: 'fail', title: 'Creating user failed!', details: "User already exists. Or you may typed someone else's Email and phone number.", }
           )
           setIsNotify(true);
+          return;
         default:
           console.log("ERROR CODE", data.error);
       }

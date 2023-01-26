@@ -90,6 +90,10 @@ model Seminar {
   draftFile     String?
   finalFile     String?
 
+  waiver        Boolean  @default(false)
+  skipReview    Boolean  @default(false)
+  skipRevision  Boolean  @default(false)
+  
   slot          Seminarslot?
 
   reviews Review[]

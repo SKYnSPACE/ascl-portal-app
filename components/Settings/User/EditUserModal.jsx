@@ -76,12 +76,15 @@ export default function EditUserModal({ props }) {
           setMessage(
             { type: 'fail', title: 'Connection Lost.', details: "Database Server does not respond.", }
           )
+          setIsNotify(true);
+          return;
         case 'P2002':
           console.log("Data is not unique.");
           setMessage(
             { type: 'fail', title: 'Editing user failed!', details: "You may entered someone else's Email or phone number.", }
           )
           setIsNotify(true);
+          return;
         default:
           console.log("ERROR", data.error);
       }

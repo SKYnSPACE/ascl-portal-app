@@ -68,12 +68,14 @@ export default function CreateSemesterModal({ props }) {
             { type: 'fail', title: 'Connection Lost.', details: "Database Server does not respond.", }
           )
           setIsNotify(true);
+          return;
         case 'P2002':
           console.log("Existing User.");
           setMessage(
             { type: 'fail', title: 'Creating semester failed!', details: "Semester already exists.", }
           )
           setIsNotify(true);
+          return;
         default:
           console.log("ERROR CODE", data.error);
       }
