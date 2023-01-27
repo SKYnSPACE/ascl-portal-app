@@ -10,6 +10,9 @@ async function handler(
   if (req.method === "GET") {
     const user = await client.user.findUnique({
       where: { id: req.session.user?.id },
+      include:{
+        requests:true,
+      }
     });
     res.json({
       ok: true,

@@ -168,7 +168,6 @@ export function Schedule() {
       });
 
       setScehdule(schedule);
-      console.log(schedule)
     }
   }, [currentSlotsData])
 

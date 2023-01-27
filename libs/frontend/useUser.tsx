@@ -15,6 +15,7 @@ export default function useUser() {
   );
   const router = useRouter();
 
+  // Check the Login status from middleware!
   // useEffect(() => {
   //   console.log(data, error, isLoading, router);
   //   if (data && !data.ok) {

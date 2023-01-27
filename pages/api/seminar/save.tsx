@@ -37,7 +37,7 @@ async function handler(
     }
 
 
-    const updateProgress1 = async () => {
+    const updateStage2 = async () => {
 
       const currentSeminar = await client.seminar.findUnique({
         where: {
@@ -48,7 +48,7 @@ async function handler(
 
       if (!waiver &&
         !currentSeminar?.waiver &&
-        +currentSeminar?.progress === 0 &&
+        +currentSeminar?.currentStage === 1 &&
         currentSeminar?.title &&
         currentSeminar?.abstract &&
         currentSeminar?.draftFile) {
@@ -57,13 +57,13 @@ async function handler(
             alias: alias?.toString(),
           },
           data: {
-            progress: 1,
+            currentStage: 2,
           },
         });
       }
     }
 
-    const updateProgress3 = async () => {
+    const updateStage4 = async () => {
 
       const currentSeminar = await client.seminar.findUnique({
         where: { alias: alias?.toString(), }
@@ -71,7 +71,7 @@ async function handler(
 
       if (!waiver &&
         !currentSeminar?.waiver &&
-        +currentSeminar?.progress === 2 && (
+        +currentSeminar?.currentStage === 3 && (
           currentSeminar?.skipRevision ||
           currentSeminar?.finalFile)) {
         await client.seminar.update({
@@ -79,13 +79,13 @@ async function handler(
             alias: alias?.toString(),
           },
           data: {
-            progress: 3,
+            currentStage: 4,
           },
         });
       }
     }
 
-    // progress: 3,
+    // currentStage: 3,
 
 
 
@@ -180,7 +180,7 @@ async function handler(
                 id: +slotId,
               }
             },
-            progress: 4,
+            currentStage: 5,
           },
         })
       }
@@ -212,12 +212,12 @@ async function handler(
         },
         data: {
           skipReview,
-          progress: 2,
+          currentStage: 3,
         },
       });
     }
     
-    //TODO: Waiver at anypoint (e.g. waiver @ progress 4,3,2,1 must be possible)
+    //TODO: Waiver at anypoint (e.g. waiver @ currentStage 4,3,2,1 must be possible)
     //WAIVER cannot be undone.
     // if (waiver ^ currentSeminar?.waiver) {
       if (waiver) {
@@ -227,7 +227,7 @@ async function handler(
         },
         data: {
           waiver,
-          progress: -1,
+          currentStage: 0,
           slot: {
             disconnect: true,
           },
@@ -235,17 +235,9 @@ async function handler(
       });
     }
 
-    updateProgress1();
-    updateProgress3();
+    updateStage2();
+    updateStage4();
 
-
-
-
-
-    //TODO: Progress to -1 when waiver accepted
-    //TODO: Progress to 2 when skipped review
-    //TODO: Progress to 3 when skipped finalFile
-    //TODO: Progress to 3 when submitted finalFile
 
     res.json({ ok: true, })
   }

@@ -3,6 +3,8 @@ import withHandler, { ResponseType } from "../../../libs/backend/withHandler";
 import client from "../../../libs/backend/client";
 import { withApiSession } from "../../../libs/backend/withSession";
 
+import { postMail } from "../../../libs/backend/postMail";
+
 async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
@@ -75,32 +77,68 @@ async function handler(
         alias: alias.toString(),
       }
     })
-    //TODO: 중복요청 방지기능 필요...
-    const newRequest = await client.request.create({
-      data: {
-        requestedFor: {
-          connect: {
-            id: +requestFor
-          },
-        },
 
+    //TODO: 아래 두 기능 동작 확인 필요. & error 코드 수정.
+    // Prevent sending request to user itself.
+    if (currentUser.id == +requestFor) {
+      return res.status(403).json({ ok: false, error: { code: "403", message: "Not allowed to set yourself as a reviewer." } });//Not allowed to.
+    }
+    // Prevent duplicated request.
+    const previousRequest = await client.request.findFirst({
+      where: {
+        requestedFor: {
+          id: +requestFor,
+        },
         kind: 90,
-        payload1: currentUser.id.toString(),
-        payload2: currentUser.name.toString(),
-        payload3: currentSemester.alias.toString(),
-        payload4: currentSeminar.alias.toString(),
-        payload5: currentSeminar.title.toString(),
-        payload6: currentSeminar.tags.toString(),
-        due: dueDate,
-        status: 0,
       },
-    });
+    })
+
+    if (previousRequest) {
+      return res.status(409).json({ ok: false, error: { code: "409", message: "Conflicting request." } });//Conflict.
+    }
+    else {
+      const newRequest = await client.request.create({
+        data: {
+          requestedFor: {
+            connect: {
+              id: +requestFor
+            },
+          },
+
+          kind: 90,
+          payload1: currentUser.id.toString(),
+          payload2: currentUser.name.toString(),
+          payload3: currentSemester.alias.toString(),
+          payload4: currentSeminar.alias.toString(),
+          payload5: currentSeminar.title.toString(),
+          payload6: currentSeminar.tags.toString(),
+          due: dueDate,
+          status: 0,
+        },
+      });
+
+      const user = await client.user.findUnique({
+        where:{id:+requestFor}
+      })
+
+      postMail(
+      `${user.email}`,
+      `Peer Review Request from ${currentUser.name.toString()}`,
+      "You have new seminar review request. Please check the request from the ASCL Portal.",
+      `<p>You have new seminar review request. <br /> 
+      Please check the request from the ASCL Portal.</p>
+      <p>
+      <b>Title: </b> ${currentSeminar.title.toString()} <br />
+      <b>Presented by:</b> ${currentUser.name.toString()}<br />
+      <b>Tags:</b> ${currentSeminar.tags.toString()}<br />
+      <b>Abstract:</b> ${currentSeminar.abstract.toString()}</p>
+      `);
+    }
 
     // console.log(newRequest)
 
     res.json({
       ok: true,
-      newRequest,
     });
   }
 }

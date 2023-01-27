@@ -129,14 +129,13 @@ async function handler(
 
     // console.log(newReview)
 
-    //TODO: 연결된 seminar progress 2로 조정할것.
-
+    
     await client.seminar.update({
       where: {
         id: +currentSeminar.id,
       },
       data: {
-        progress: 2,
+        currentStage: 3,
       },
     });
 

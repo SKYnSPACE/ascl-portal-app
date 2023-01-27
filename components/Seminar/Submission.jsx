@@ -313,6 +313,7 @@ export default function Submission() {
 
   useEffect(() => {
     if (seminarData?.mySeminarSubmission) {
+
       setValue("title", seminarData.mySeminarSubmission.title);
       setValue("abstract", seminarData.mySeminarSubmission.abstract);
       setValue("category", seminarData.mySeminarSubmission.category);
@@ -326,7 +327,6 @@ export default function Submission() {
 
   useEffect(() => {
     if (reviewData?.reviewers) {
-      // console.log(reviewData.reviewers)
       setReviewers(reviewData.reviewers);
     }
     if (reviewData?.reviews) {
@@ -406,7 +406,11 @@ export default function Submission() {
           setIsNotify(true);
           return;
         default:
-        // console.log("ERROR CODE", data.error);
+        console.log("ERROR CODE", reviewRequestData.error);
+          setMessage(
+            { type: 'fail', title: `ERROR ${reviewRequestData.error?.code}`, details: `${reviewRequestData.error?.message}`, }
+          )
+          setIsNotify(true);
       }
     }
 
@@ -470,7 +474,7 @@ export default function Submission() {
                             id="title"
                             name="title"
                             type="text"
-                            disabled={seminarData?.mySeminarSubmission?.progress >= 2}
+                            disabled={seminarData?.mySeminarSubmission?.currentStage >= 3}
                             // required
                             className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm disabled:bg-gray-100"
                           />
@@ -496,7 +500,7 @@ export default function Submission() {
                           id="abstract"
                           name="abstract"
                           rows={7}
-                          disabled={seminarData?.mySeminarSubmission?.progress >= 2}
+                          disabled={seminarData?.mySeminarSubmission?.currentStage >= 3}
                           className="block w-full max-w-xl rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm disabled:bg-gray-100"
                           defaultValue={''}
                         />
@@ -514,7 +518,7 @@ export default function Submission() {
                           id="category"
                           name="category"
                           autoComplete="category-name"
-                          disabled={seminarData?.mySeminarSubmission?.progress >= 2}
+                          disabled={seminarData?.mySeminarSubmission?.currentStage >= 3}
                           className="block w-full max-w-xl rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:max-w-xs sm:text-sm disabled:bg-gray-100"
                         >
                           <option value="none">None</option>
@@ -541,7 +545,7 @@ export default function Submission() {
                           id="tags"
                           name="tags"
                           type="text"
-                          disabled={seminarData?.mySeminarSubmission?.progress >= 2}
+                          disabled={seminarData?.mySeminarSubmission?.currentStage >= 3}
                           className="block w-full max-w-xl rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm disabled:bg-gray-100"
                         />
                         <p className="mt-2 text-sm text-gray-500">ONLY USE lowercase UNLESS IT IS AN ACRONYM. Use comma(,) to separate tags.</p>
@@ -573,7 +577,7 @@ export default function Submission() {
                           </div>
                           : <></>}
 
-                        {seminarData?.mySeminarSubmission?.progress < 2 ?
+                        {seminarData?.mySeminarSubmission?.currentStage < 3 ?
                           <div className="flex max-w-xl justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
                             <div className="space-y-1 text-center">
 
@@ -704,7 +708,7 @@ export default function Submission() {
 
 
               {/* REVIEW */}
-              {seminarData?.mySeminarSubmission?.progress >= 1 ?
+              {seminarData?.mySeminarSubmission?.currentStage >= 2 ?
                 <div className="space-y-4 pt-16">
                   <div>
                     <h3 className="text-2xl font-semibold leading-6 text-sky-500">Reviews</h3>
@@ -1045,7 +1049,7 @@ export default function Submission() {
 
 
 
-              {seminarData?.mySeminarSubmission?.progress >= 2 ?
+              {seminarData?.mySeminarSubmission?.currentStage >= 3 ?
                 <div className="space-y-6 divide-y divide-gray-200 pt-16">
                   <div>
                     <h3 className="text-2xl font-semibold leading-6 text-sky-500">Finalize</h3>
@@ -1194,7 +1198,7 @@ export default function Submission() {
                         </div>
                       </div>}
 
-                    {seminarData?.mySeminarSubmission?.progress >= 3 ?
+                    {seminarData?.mySeminarSubmission?.currentStage >= 4 ?
                       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                         <label htmlFor="slot" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                           Presentation Time

@@ -12,20 +12,27 @@ datasource db {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  userNumber  Int       @unique
-  email       String    @unique
-  phone       String    @unique
-  name        String
-  avatar      String?
-  status	    String?
-  team	      String?
-  position	  Int?      @default(0)
-  duties	    Int?      @default(0)// 0b00000000
-  createdAt	  DateTime  @default(now())
-  updatedAt	  DateTime  @updatedAt
-  presentedSeminars	Seminar[]  @relation(name:"presentedSeminar")
-  writtenReviews	  Review[]   @relation(name:"writtenReview")
+  id                Int       @id @default(autoincrement())
+  userNumber        Int       @unique
+  email             String    @unique
+  phone             String    @unique
+  name              String
+  
+  avatar            String?
+  status	          String?
+  team	            String?
+  researchFields    String?
+
+  position	        Int?      @default(0)
+  duties	          Int?      @default(0)// 0b00000000
+
+  seminarExemption  Boolean   @default(false)
+
+  createdAt	        DateTime  @default(now())
+  updatedAt	        DateTime  @updatedAt
+  
+  presentedSeminars	Seminar[] @relation(name:"presentedSeminar")
+  writtenReviews	  Review[]  @relation(name:"writtenReview")
 
   requests          Request[]
 
@@ -86,7 +93,7 @@ model Seminar {
   abstract      String?  @db.Text
   category      String?
   tags          String?  //(TODO: Array.)
-  progress      Int   ?  //(Enum. No submission, Draft submission, Reviewed, Full submission)
+  currentStage  Int   ?  //(Enum. No submission, Draft submission, Reviewed, Full submission)
   draftFile     String?
   finalFile     String?
 

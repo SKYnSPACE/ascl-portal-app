@@ -166,10 +166,11 @@ export default function Enter() {
 
 
                 <p className="text-center text-sm text-gray-600">
-                  <a href={data.link.toString()} target="_blank" className="font-medium text-sky-600 hover:text-sky-500">
+                  {/* <a href={data.link.toString()} target="_blank" className="font-medium text-sky-600 hover:text-sky-500">
                   &rarr;{' '}Check this Link{' '}&larr;
-                  </a>
-                  {' '}to see your access token.
+                  </a> */}
+                  {/* {' '}to see your access token. */}
+                  Check your Email to see your one-time access token.
                 </p>
 
                 <div>

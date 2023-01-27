@@ -47,7 +47,7 @@ async function handler(
           },
         },
 
-        progress: 0,
+        currentStage: 1,
 
       },
     });
