@@ -6,6 +6,7 @@ import useSWR from "swr";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 
 import useMutation from "../../../libs/frontend/useMutation";
+import useDeletion from "../../../libs/frontend/useDeletion";
 import { useEffect } from "react";
 
 import { classNames } from '../../../libs/frontend/utils'
@@ -39,6 +40,7 @@ export default function EditSlotModal({ props }) {
   const { data: currentSlotsData, error: getCurrentSlotsError, isLoading: getCurrentSlotsLoading, mutate } = useSWR('/api/slot/current');
 
   const [editSlot, { loading, data, error }] = useMutation("/api/settings/slot/edit");
+  const [deleteSlot, { loading:deletionLoading, data:deletionData, error:deletionError }] = useDeletion("/api/settings/slot/edit");
 
   const slotId = watch('slotId');
   const startsAt = watch('startsAt');
@@ -46,7 +48,7 @@ export default function EditSlotModal({ props }) {
   
 
   const onValid = (validForm) => {
-    if (loading) return;
+    if (loading || deletionLoading) return;
     if (endsAt <= startsAt) {
       setMessage(
         { type: 'fail', title: 'Creating seminar slot failed.', details: `Invalid starts/ends time range`, }
@@ -63,12 +65,17 @@ export default function EditSlotModal({ props }) {
 
   }
 
+  const onClickDelete = (slotId) =>{
+    if (loading || deletionLoading) return;
+    deleteSlot({slotId});
+  }
+
   useEffect(()=>{
     mutate();
-  },[loading]);
+  },[loading, deletionLoading]);
 
   useEffect(() => {
-    console.log(currentSemesterData)
+    // console.log(currentSemesterData)
     if (currentSemesterData) {
       // console.log(semesterAliasToString(currentSemesterData?.semester?.alias));
       setValue('semester', semesterAliasToString(currentSemesterData?.semester?.alias))
@@ -267,6 +274,27 @@ export default function EditSlotModal({ props }) {
                     </svg>processing...</span>
                   : <span>Modify</span>}
               </button>
+
+              {slotId ?
+              <button
+              className="mx-1 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-rose-600 text-base font-medium text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500   sm:text-sm"
+              disabled={deletionLoading}
+              onClick={(e) => {
+                e.preventDefault();
+                onClickDelete(slotId);
+                // setIsModalOpen(false);
+              }}
+            >
+              {deletionLoading ?
+                <span className="flex items-center text-center">
+                  <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-sky-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>processing...</span>
+                : <span>Delete</span>}
+              
+            </button> :<></>}
+
               <button
                 className="mx-1 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2980b9] text-sm"
                 onClick={(e) => {

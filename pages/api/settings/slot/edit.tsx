@@ -25,7 +25,7 @@ async function handler(
       session: { user },
     } = req;
 
-    
+
     const currentUser = await client.user.findUnique({
       where: { id: user.id },
     });
@@ -94,11 +94,45 @@ async function handler(
     });
 
   }
+
+  if (req.method === "DELETE") {
+    const {
+      body: { slotId },
+      session: { user },
+    } = req;
+
+
+    const currentUser = await client.user.findUnique({
+      where: { id: user.id },
+    });
+    const authority = currentUser.position;
+    const duties = currentUser.duties;
+
+    if (authority >= 5 || (duties & Duties.seminar)) {
+
+      const deleteSlot = await client.seminarslot.delete({
+        where: {
+          id: +slotId,
+        },
+      });
+
+      console.log(deleteSlot)
+
+    }
+    else {
+      return res.status(403).json({ ok: false, error: "Not allowed to edit seminar slots." })
+    }
+
+    res.json({
+      ok: true,
+    });
+
+  }
 }
 
 export default withApiSession(
   withHandler({
-    methods: ["POST"],
+    methods: ["POST", "DELETE"],
     handler,
   })
 );

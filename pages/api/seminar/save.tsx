@@ -21,6 +21,7 @@ async function handler(
       session: { user },
     } = req;
 
+    console.log(req.body)
     const currentUser = await client.user.findUnique({
       where: { id: user?.id },
     });
@@ -69,11 +70,14 @@ async function handler(
         where: { alias: alias?.toString(), }
       }); //Check the updates locally!
 
+      console.log(currentSeminar.currentStage)
+
       if (!waiver &&
         !currentSeminar?.waiver &&
-        +currentSeminar?.currentStage === 3 && (
-          currentSeminar?.skipRevision ||
+        +currentSeminar?.currentStage === 3 && 
+        ( currentSeminar?.skipRevision ||
           currentSeminar?.finalFile)) {
+            console.log("Setting stage as 4.")
         await client.seminar.update({
           where: {
             alias: alias?.toString(),
@@ -146,6 +150,35 @@ async function handler(
       });
     }
 
+
+
+    updateStage2();
+
+    //Skipping Review cannot be undone.
+    // if (skipReview ^ currentSeminar?.skipReview) {
+      if (skipReview && currentSeminar?.currentStage == 2) {
+        await client.seminar.update({
+          where: {
+            alias: alias?.toString(),
+          },
+          data: {
+            skipReview,
+            currentStage: 3,
+          },
+        });
+      }
+
+    if (skipRevision ^ currentSeminar?.skipRevision) {
+      await client.seminar.update({
+        where: {
+          alias: alias?.toString(),
+        },
+        data: {
+          skipRevision,
+        },
+      });
+    }
+
     const newFinalFilename = finalFile?.name + '.' + finalFile?.ext;
     if (finalFile && newFinalFilename !== currentSeminar?.finalFile) {
       await client.seminar.update({
@@ -159,63 +192,41 @@ async function handler(
     }
 
 
-    // TODO: When selected slot. (IMPORTANT!! check the slot is not occupied first!)
-    if (!waiver && slotId && slotId !== currentSeminar?.slot?.id) {
-      console.log(slotId, currentSeminar?.slot?.id)
-      const selectedSlot = await client.seminarslot.findUnique({
-        where: {
-          id: +slotId,
-        }
-      })
 
-      if (!selectedSlot.seminarId) {
+    updateStage4();
 
-        await client.seminar.update({
-          where: {
-            alias: alias?.toString(),
-          },
-          data: {
-            slot: {
-              connect: {
-                id: +slotId,
+            // TODO: When selected slot. (IMPORTANT!! check the slot is not occupied first!)
+            if (!waiver && slotId && slotId !== currentSeminar?.slot?.id) {
+              console.log(slotId, currentSeminar?.slot?.id)
+              const selectedSlot = await client.seminarslot.findUnique({
+                where: {
+                  id: +slotId,
+                }
+              })
+        
+              if (!selectedSlot.seminarId) {
+        
+                await client.seminar.update({
+                  where: {
+                    alias: alias?.toString(),
+                  },
+                  data: {
+                    slot: {
+                      connect: {
+                        id: +slotId,
+                      }
+                    },
+                    currentStage: 5,
+                  },
+                })
               }
-            },
-            currentStage: 5,
-          },
-        })
-      }
-      else {
-        return res.status(503).json({ ok: false, error: '503' });
-
-      }
-    }
+              else {
+                return res.status(503).json({ ok: false, error: '503' });
+        
+              }
+            }
 
 
-    //Skipping Review cannot be undone.
-    if (skipRevision ^ currentSeminar?.skipRevision) {
-      await client.seminar.update({
-        where: {
-          alias: alias?.toString(),
-        },
-        data: {
-          skipRevision,
-        },
-      });
-    }
-
-    //Skipping Review cannot be undone.
-    // if (skipReview ^ currentSeminar?.skipReview) {
-    if (skipReview) {
-      await client.seminar.update({
-        where: {
-          alias: alias?.toString(),
-        },
-        data: {
-          skipReview,
-          currentStage: 3,
-        },
-      });
-    }
     
     //TODO: Waiver at anypoint (e.g. waiver @ currentStage 4,3,2,1 must be possible)
     //WAIVER cannot be undone.
@@ -234,9 +245,6 @@ async function handler(
         },
       });
     }
-
-    updateStage2();
-    updateStage4();
 
 
     res.json({ ok: true, })

@@ -112,7 +112,8 @@ function TimeSlots({ day, className }) {
           {timeSlotIndex > 0 && (
             <div className="mx-auto mb-8 h-px w-48 bg-indigo-500/10" />
           )}
-          <h4 className="text-lg font-semibold tracking-tight text-slate-900">
+          <h4 className={classNames( timeSlot?.isBreak ? "text-sky-600" :"text-slate-900",
+            "text-lg font-semibold tracking-tight")}>
             {timeSlot?.isBreak ? "Break Time" : timeSlot?.seminar?.presentedBy?.name ? timeSlot?.seminar?.presentedBy?.name : "EMPTY"}
           </h4>
           

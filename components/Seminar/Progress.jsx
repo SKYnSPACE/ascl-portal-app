@@ -83,9 +83,13 @@ export default function Progress() {
       setPresentations(presentations);
     }
     if (data?.progresses) {
+      data?.progresses?.find((item) => item.stage == 2)
       const presenterCounts = data?.presenters?.length;
+      const draftSubmittedCounts = ((data?.progresses?.find((item)=>item.stage == 2)?.count || 0)
+      +(data?.progresses?.find((item)=>item.stage == 3)?.count || 0)
+      +(data?.progresses?.find((item)=>item.stage == 4)?.count || 0)
+      +(data?.progresses?.find((item)=>item.stage == 5)?.count || 0));
       const presentationReadyCounts = data?.progresses?.find((item)=>item.stage == 5)?.count || 0;
-      const draftSubmittedCounts = presentationReadyCounts + (data?.progresses?.find((item)=>item.stage == 2)?.count || 0);
 
       const draftSubmissionRate = presenterCounts ? draftSubmittedCounts/presenterCounts : 0;
       const presentationreadyRate = presenterCounts ? presentationReadyCounts/presenterCounts : 0;
