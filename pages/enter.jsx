@@ -21,7 +21,7 @@ const popups = [
     id: 0,
     icon: ExclamationCircleIcon,
     title: 'ERROR',
-    detail: <p>Server is not responding correctly. <br /> This may due to the incorrect user account. Ask the administrator if the problem continues.</p>,
+    detail: `Server is not responding correctly.\n This may due to the incorrect user account, or too many login attempts. Ask the administrator if the problem continues.`,
     href: '#',
     iconForeground: 'text-red-700',
     iconBackground: 'bg-red-50',
@@ -30,7 +30,7 @@ const popups = [
     id: 1,
     icon: ExclamationCircleIcon,
     title: 'ERROR',
-    detail: <p>Server is not responding correctly. <br /> This may due to the incorrect OTP. Ask the administrator if the problem continues.</p>,
+    detail: `Server is not responding correctly.\n This may due to the incorrect OTP. Ask the administrator if the problem continues.`,
     href: '#',
     iconForeground: 'text-red-700',
     iconBackground: 'bg-red-50',
@@ -246,6 +246,12 @@ export default function Enter() {
                   </div>
                 </div> */}
 
+                {data?.error.code == "429" ?
+                  <p className="text-center text-sm text-red-600">
+                    Too many login attempts. {data?.error?.message}
+                  </p> :
+                  <></>
+                }
 
 
                 <div>

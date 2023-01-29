@@ -116,7 +116,7 @@ async function handler(
         },
       });
 
-      console.log(deleteSlot)
+      // console.log(deleteSlot)
 
     }
     else {
