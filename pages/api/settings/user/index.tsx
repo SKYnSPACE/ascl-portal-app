@@ -23,6 +23,9 @@ async function handler(
         position:{
           lte: authority,
         }
+      },
+      orderBy:{
+        userNumber: 'asc',
       }
     });
     // console.log(users)
