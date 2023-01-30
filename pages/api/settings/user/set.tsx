@@ -32,7 +32,7 @@ async function handler(
       });
     }
 
-    if (duties && (+duties.toString() !== userToEdit?.duties)) {
+    if (+duties?.toString() !== userToEdit?.duties) {
       await client.user.update({
         where: {
           id: id,
