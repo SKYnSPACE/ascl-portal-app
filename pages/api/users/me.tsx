@@ -11,7 +11,11 @@ async function handler(
     const user = await client.user.findUnique({
       where: { id: req.session.user?.id },
       include:{
-        requests:true,
+        requests:{
+          where:{
+            status:0,
+          },
+        },
       }
     });
     res.json({

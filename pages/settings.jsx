@@ -69,6 +69,9 @@ const settings = [
       { id: 22, positionRequired: 4, dutyRequired: Duties.seminar, name: 'Edit', href: '#', detail: '기존 일정(슬롯)을 편집합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon: PresentationChartLineIcon },
       { id: 23, positionRequired: 4, dutyRequired: Duties.seminar, name: 'Set', href: '#', detail: '슬롯에 발표자를 배정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600', icon: PresentationChartLineIcon },]
   },
+  {
+    category: 'Project', items:[],
+  }
 ]
 
 function semesterAliasToString(semester) {
@@ -127,10 +130,10 @@ export default function Settings() {
               {/* //TODO: isNotify 일 때 DISABLE MENU!!! */}
               <ul role="list"
                 className="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
-                {setting.items.map((item) => (
+                {setting.items?.map((item) => (
                   <div key={item.id} >
-                    {user.position >= item.positionRequired || 
-                    (item.dutyRequired && item.dutyRequired & user.duties ) ?
+                    {user?.position >= item.positionRequired || 
+                    (item.dutyRequired && item.dutyRequired & user?.duties ) ?
                       <a
                         href={item.href}
                         onClick={(evt) => {

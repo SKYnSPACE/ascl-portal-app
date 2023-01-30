@@ -14,11 +14,11 @@ import useUser from '../libs/frontend/useUser';
 import LocalDatabase from './LocalDatabase'
 
 const navigation = [
-  { name: 'Home', href: '/', current: true },
-  { name: 'Workspace', href: '/workspace/[utility]', current: false },
-  { name: 'Projects', href: '/projects', current: false },
-  { name: 'Seminar', href: '/seminar/[menu]', current: false },
-  { name: 'Handbook', href: '/handbook/[item]', current: false },
+  { name: 'Home', href: '/', current: true, onDev:false },
+  { name: 'Workspace', href: '/workspace/[utility]', current: false, onDev:true },
+  { name: 'Projects', href: '/projects', current: false, onDev:true },
+  { name: 'Seminar', href: '/seminar/[menu]', current: false, onDev:false },
+  { name: 'Handbook', href: '/handbook/[item]', current: false, onDev:true },
   // { name: 'Chats', href: '/', current: false },
 ];
 
@@ -156,7 +156,8 @@ export default function Layout({ children }) {
                               key={item.name}
                               href={item.href}
                               className={classNames(
-                                item.href === router.pathname ? 'text-white' : 'text-cyan-300',
+                                item.href === router.pathname ? 'text-white' : 'text-sky-300',
+                                item.onDev ? 'line-through decoration-double':'underline underline-offset-2',
                                 'text-sm font-medium rounded-md bg-white bg-opacity-0 px-3 py-2 hover:bg-opacity-10'
                               )}
                               aria-current={item.current ? 'page' : undefined}
