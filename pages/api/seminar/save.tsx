@@ -168,7 +168,7 @@ async function handler(
         });
       }
 
-    if (skipRevision ^ currentSeminar?.skipRevision) {
+    if (skipRevision ^ (currentSeminar?.skipRevision ? 1 : 0)) {
       await client.seminar.update({
         where: {
           alias: alias?.toString(),

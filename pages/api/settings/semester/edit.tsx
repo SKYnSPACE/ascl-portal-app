@@ -31,7 +31,7 @@ async function handler(
 
     // console.log(req.body, user);
 
-    const semesterToEdit = client.semester.findUnique({
+    const semesterToEdit = await client.semester.findUnique({
       where: {
         alias: semesterStringToAlias(semester),
       },
