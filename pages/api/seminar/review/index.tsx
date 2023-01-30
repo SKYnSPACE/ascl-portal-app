@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import withHandler, { ResponseType } from "../../../../libs/backend/withHandler";
 import client from "../../../../libs/backend/client";
 import { withApiSession } from "../../../../libs/backend/withSession";
+import { postMail } from "../../../../libs/backend/postMail";
 
 async function handler(
   req: NextApiRequest,
@@ -111,6 +112,10 @@ async function handler(
       where: {id: +requestId,},
     })
 
+    const requestedUser = await client.user.findUnique({
+      where: { id: +relatedRequest.payload1  }
+    })
+
     //TODO: upsert review to prevent multiple reviews from one user.
     const newReview = await client.review.create({
       data: {
@@ -148,6 +153,16 @@ async function handler(
         status: 2,
       },
     })
+
+
+    postMail(
+      `${requestedUser.email}`,
+      `${currentUser.name.toString()} posted a Review to your seminar.`,
+      "Review completed. Please check the details from the ASCL Portal.",
+      `<p>Your review request to [${currentUser.name.toString()}] has been completed. <br /> 
+      Please check the details from the ASCL Portal.</p>`,
+      false);
+
 
     res.json({ ok: true,
       newReview,

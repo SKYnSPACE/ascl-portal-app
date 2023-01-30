@@ -39,6 +39,12 @@ model User {
   tokens	          Token[]
   // writtenReviews Review[]
   // receivedReviews Review[]
+
+  managingProjects   ManagingProjectsTable[]
+  staffingProjects  StaffingProjectsTable[]
+  participatingProjects ParticipatingProjectsTable[]
+
+
 }
 
 model Token {
@@ -182,6 +188,67 @@ model Request{
   // 세미나 관련 request 및 status는 모두 유지
   // 나머지의 경우 처리 완료되면 레코드 삭제.
 }
+
+model Project{
+  id            Int           @id @default(autoincrement())
+  createdAt	    DateTime      @default(now())
+  updatedAt	    DateTime      @updatedAt
+
+  title         String
+  
+  managers      ManagingProjectsTable[]
+  staffs        StaffingProjectsTable[]
+  participants  ParticipatingProjectsTable[]
+  // staffs User[]
+  // participants User[]
+
+}
+
+model ManagingProjectsTable{ //PIVOT TAVLE
+  user        User     @relation(fields: [userId], references:[id])
+  userId      Int
+  @@index([userId])
+
+  project     Project  @relation(fields: [projectId], references:[id])
+  projectId   Int
+  @@index([projectId])
+
+  createdAt	  DateTime  @default(now())
+  updatedAt	  DateTime  @updatedAt
+
+  @@id([userId, projectId])
+}
+
+model StaffingProjectsTable{ //PIVOT TAVLE
+  user        User     @relation(fields: [userId], references:[id])
+  userId      Int
+  @@index([userId])
+
+  project     Project  @relation(fields: [projectId], references:[id])
+  projectId   Int
+  @@index([projectId])
+
+  createdAt	  DateTime  @default(now())
+  updatedAt	  DateTime  @updatedAt
+
+  @@id([userId, projectId])
+}
+
+model ParticipatingProjectsTable{ //PIVOT TAVLE
+  user        User     @relation(fields: [userId], references:[id])
+  userId      Int
+  @@index([userId])
+
+  project     Project  @relation(fields: [projectId], references:[id])
+  projectId   Int
+  @@index([projectId])
+
+  createdAt	  DateTime  @default(now())
+  updatedAt	  DateTime  @updatedAt
+
+  @@id([userId, projectId])
+}
+
 
 model Settings{
   id          Int       @id @default(autoincrement())
