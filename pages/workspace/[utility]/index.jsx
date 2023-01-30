@@ -23,18 +23,33 @@ import Requests from '../../../components/Workspace/Requests';
 
 
 const subNavigation = [
-  { name: 'Lab. Calendar', href: '/workspace/calendar', icon: CalendarDaysIcon },
-  { name: 'Requests', href: '/workspace/requests', icon: BellAlertIcon },
+  { name: 'Lab. Calendar', href: '/workspace/calendar', icon: CalendarDaysIcon, onDev: true },
+  { name: 'Contacts', href: '/workspace/contacts', icon: IdentificationIcon, onDev:false },
   
-  { name: 'Purchasing', href: '/workspace/purchasing', icon: CreditCardIcon },
-  { name: 'Ledger', href: '/workspace/ledger', icon: ClipboardDocumentListIcon },
+  { name: 'Requests', href: '/workspace/requests', icon: BellAlertIcon, onDev: true },
+  
+  { name: 'Purchasing', href: '/workspace/purchasing', icon: CreditCardIcon, onDev:true },
+  { name: 'Ledger', href: '/workspace/ledger', icon: ClipboardDocumentListIcon, onDev:true },
 
-  { name: 'Business Trip', href: '/workspace/trip', icon: BriefcaseIcon },
-  { name: 'Conferences', href: '/workspace/conferences', icon: PresentationChartLineIcon },
+  { name: 'Business Trip', href: '/workspace/trip', icon: BriefcaseIcon, onDev:true },
+  { name: 'Conferences', href: '/workspace/conferences', icon: PresentationChartLineIcon, onDev:true },
 
-  { name: 'Contacts', href: '/workspace/contacts', icon: IdentificationIcon },
-  { name: 'Attendance', href: '/workspace/attendance', icon: UsersIcon },
+  { name: 'Attendance', href: '/workspace/attendance', icon: UsersIcon, onDev:true },
 ]
+
+// const subNavigation = [
+//   { name: 'Lab. Calendar', href: '/workspace/calendar', icon: CalendarDaysIcon, onDev: true },
+//   { name: 'Requests', href: '/workspace/requests', icon: BellAlertIcon, onDev: true },
+  
+//   { name: 'Purchasing', href: '/workspace/purchasing', icon: CreditCardIcon, onDev:true },
+//   { name: 'Ledger', href: '/workspace/ledger', icon: ClipboardDocumentListIcon, onDev:true },
+
+//   { name: 'Business Trip', href: '/workspace/trip', icon: BriefcaseIcon, onDev:true },
+//   { name: 'Conferences', href: '/workspace/conferences', icon: PresentationChartLineIcon, onDev:true },
+
+//   { name: 'Contacts', href: '/workspace/contacts', icon: IdentificationIcon, onDev:false },
+//   { name: 'Attendance', href: '/workspace/attendance', icon: UsersIcon, onDev:true },
+// ]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -46,8 +61,8 @@ function Utility() {
 
   switch (utility) {
     case 'calendar':
-      return <Page404 />;
-      // return <Calendar />;
+      // return <Page404 />;
+      return <Calendar />;
 
     case 'requests':
       return <Page404 />;
@@ -98,6 +113,7 @@ export default function Workspace() {
                       item.href === router.asPath
                         ? 'bg-sky-50 border-sky-500 text-sky-700 hover:bg-sky-50 hover:text-sky-700'
                         : 'border-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-900',
+                        item.onDev ? 'line-through decoration-double':'underline underline-offset-2',
                       'group border-l-4 px-3 py-2 flex items-center text-sm font-medium'
                     )}
                     aria-current={item.href === router.asPath ? 'page' : undefined}

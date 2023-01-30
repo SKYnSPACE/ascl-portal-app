@@ -44,12 +44,12 @@ function getPositionName(position) {
 function getDutiesNames(duties) {
   if (!duties) return (<></>);
   return (<>
-    {(duties & Duties.seminar) ? <span className="bg-sky-100 text-sky-700 text-xs font-medium mr-2 px-2 py-0.5 rounded-full">랩세미나</span> : <></>}
-    {(duties & Duties.publications) ? <span className="bg-sky-100 text-sky-700 text-xs font-medium mr-2 px-2 py-0.5 rounded-full">실적관리</span> : <></>}
-    {(duties & Duties.server) ? <span className="bg-green-100 text-green-700 text-xs font-medium mr-2 px-2 py-0.5 rounded-full">서버관리</span> : <></>}
-    {(duties & Duties.computer) ? <span className="bg-green-100 text-green-700 text-xs font-medium mr-2 px-2 py-0.5 rounded-full">PC관리</span> : <></>}
-    {(duties & Duties.safety) ? <span className="bg-yellow-100 text-yellow-700 text-xs font-medium mr-2 px-2 py-0.5 rounded-full">안전관리</span> : <></>}
-    {(duties & Duties.news) ? <span className="bg-yellow-100 text-yellow-700 text-xs font-medium mr-2 px-2 py-0.5 rounded-full">뉴스레터</span> : <></>}
+    {(duties & Duties.seminar) ? <span className="bg-sky-100 text-sky-700 text-xs font-medium mr-2 px-2 py-0.5 rounded-full">Seminar</span> : <></>}
+    {(duties & Duties.publications) ? <span className="bg-sky-100 text-sky-700 text-xs font-medium mr-2 px-2 py-0.5 rounded-full">Records</span> : <></>}
+    {(duties & Duties.server) ? <span className="bg-green-100 text-green-700 text-xs font-medium mr-2 px-2 py-0.5 rounded-full">Server</span> : <></>}
+    {(duties & Duties.computer) ? <span className="bg-green-100 text-green-700 text-xs font-medium mr-2 px-2 py-0.5 rounded-full">PC</span> : <></>}
+    {(duties & Duties.safety) ? <span className="bg-yellow-100 text-yellow-700 text-xs font-medium mr-2 px-2 py-0.5 rounded-full">Safety</span> : <></>}
+    {(duties & Duties.news) ? <span className="bg-yellow-100 text-yellow-700 text-xs font-medium mr-2 px-2 py-0.5 rounded-full">News</span> : <></>}
   </>);
 }
 
