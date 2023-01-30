@@ -93,19 +93,19 @@ export default function Contacts() {
               <table className="min-w-full">
                 <thead className="bg-white">
                   <tr>
-                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-bold text-gray-900 sm:pl-6">
                       Name
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-bold text-gray-900">
                       Phone Number
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-bold text-gray-900">
                       Email
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-bold text-gray-900">
                       Location*
                     </th>
-                    <th scope="col" className="py-3.5 text-center text-sm font-semibold text-gray-900">
+                    <th scope="col" className="py-3.5 text-center text-sm font-bold text-gray-900">
                       Duties
                     </th>
                   </tr>
@@ -117,7 +117,7 @@ export default function Contacts() {
                         <th
                           colSpan={5}
                           scope="colgroup"
-                          className="bg-gray-50 px-4 py-2 text-left text-sm font-semibold text-gray-900 sm:px-6"
+                          className="bg-gray-50 px-4 py-2 text-left text-sm font-bold text-gray-900"
                         >
                           {user.position}
                         </th>
@@ -127,12 +127,12 @@ export default function Contacts() {
                           key={person?.id}
                           className={classNames(personIdx === 0 ? 'border-gray-300' : 'border-gray-200', 'border-t')}
                         >
-                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-600 sm:pl-6">
                             {person?.name}&ensp;({person?.userNumber})
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person?.phone}</td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person?.email}</td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"> M ---- (ext.0000)</td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"> M ----</td>
                           <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm text-gray-500 sm:pr-6">
                             {getDutiesNames(person?.duties)}
                           </td>
@@ -150,8 +150,8 @@ export default function Contacts() {
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <p className="mt-4 text-sm text-gray-700">
-            * A: Aerospace Engineering Building (N7-2) <br />
-          &ensp; E: Eureka Hall (N27)
+            * A: Aerospace Engineering Building (N7-2): ext 0000 <br />
+          &ensp; E: Eureka Hall (N27): ext 0000
           </p>
         </div>
 
