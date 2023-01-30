@@ -132,7 +132,8 @@ async function handler(
       <b>Presented by:</b> ${currentUser.name.toString()}<br />
       <b>Tags:</b> ${currentSeminar.tags.toString()}<br />
       <b>Abstract:</b> ${currentSeminar.abstract.toString()}</p>
-      `);
+      `,
+      false);
     }
 
     // console.log(newRequest)

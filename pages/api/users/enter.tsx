@@ -49,7 +49,8 @@ async function handler(
   postMail(email,
     'Login Info',
     `Your OTP: ${payload}. Do not reply to this email address. Ask Lab manager if you have any issues.`,
-    `<p>Your OTP: <b>${payload}</b></p> <p>Do not reply to this email address. Ask Lab manager if you have any issues.</p>`
+    `<p>Your OTP: <b>${payload}</b></p> <p>Do not reply to this email address. Ask Lab manager if you have any issues.</p>`,
+    false
   );
 
 
