@@ -56,7 +56,7 @@ async function handler(
     `${requestedUser.email}`,
     `${currentUser.name.toString()} declined your [${getRequestString(currentRequest.kind)}] request.`,
     "Request declined. Please check the details from the ASCL Portal.",
-    `<p>Your [${getRequestString(currentRequest.kind)}] request to [${currentUser.name.toString()}] has been declined. <br /> 
+    `<p>Your <b>${getRequestString(currentRequest.kind)}</b> request to <b>${currentUser.name.toString()}</b> (${currentUser.email.toString()}) has been declined. <br /> 
     Please check the details from the ASCL Portal.</p>`,
     false);
 

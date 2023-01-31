@@ -69,6 +69,7 @@ export default function SetUserModal({ props }) {
 
     if (userToEdit) {
       setValue("position", userToEdit.position.toString());
+      setValue("seminarExemption", userToEdit.seminarExemption);
       setValue("seminar", userToEdit.duties & Duties.seminar);
       setValue("publications", userToEdit.duties & Duties.publications);
       setValue("server", userToEdit.duties & Duties.server);
@@ -100,7 +101,7 @@ export default function SetUserModal({ props }) {
     >
       <div className="flex items-end justify-center min-h-screen pt-32 px-4 pb-20 text-center sm:block">
         <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
+        <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
           <div className={classNames("mx-auto flex items-center justify-center h-12 w-12 rounded-full", action.iconBackground)}>
 
             <action.icon
@@ -160,12 +161,44 @@ export default function SetUserModal({ props }) {
                 </div>
 
 
+                <div className="w-full mt-4">
+                  <label htmlFor="exemption" className="block text-sm font-medium text-gray-700">
+                    Seminar Exemption
+                  </label>
+
+                  <div className="relative flex items-start">
+                    <div className="flex h-5 items-center">
+                      <input
+                        {...register("seminarExemption")}
+                        id="seminarExemption"
+                        aria-describedby="exemption-description"
+                        name="seminarExemption"
+                        type="checkbox"
+                        className="h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500"
+                      />
+                    </div>
+                    <div className="ml-3 text-sm">
+                      <label htmlFor="seminarExemption" className="font-medium text-gray-700">
+                        랩세미나 예외처리
+                      </label>
+                      <p id="seminar-description" className="text-gray-500">
+                        신입생, 포닥 등 랩세미나 발표인원에서 제외해야 하는 경우 체크.
+                      </p>
+                    </div>
+
+                  </div>
+                  
+                </div>
 
 
-                <div className="w-full mt-2">
-                  <label className="text-sm">
+
+                <div className="w-full mt-4">
+                  <label className="block text-sm font-medium text-gray-700">
                     Duties
                   </label>
+
+                  
+                  <div className="w-full grid grid-cols-2 gap-2">
 
                   <div className="relative flex items-start">
                     <div className="flex h-5 items-center">
@@ -291,6 +324,7 @@ export default function SetUserModal({ props }) {
                         학과사무실 POC. 연구실 홍보자료 작성 등.
                       </p>
                     </div>
+                  </div>
                   </div>
 
                 </div>

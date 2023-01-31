@@ -29,7 +29,7 @@ async function handler(
         semesterId: +currentSemester.id,
         presentedById: +currentUser.id,
       }
-    });
+    }); //내 세미나는 파일 조회 가능해야함.
 
     const presenters = await client.user.findMany({
       orderBy: {

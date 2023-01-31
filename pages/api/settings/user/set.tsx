@@ -11,7 +11,7 @@ async function handler(
 
   if (req.method === "POST") {
     const {
-      body: { position, duties, id },
+      body: { position, seminarExemption, duties, id },
       session: { user }, //TODO: LOG the user who edited profiles.
     } = req;
 
@@ -28,6 +28,17 @@ async function handler(
         },
         data: {
           position: +position.toString(),
+        },
+      });
+    }
+
+    if(seminarExemption ^ (userToEdit?.seminarExemption ? 1 : 0)){
+      await client.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          seminarExemption,
         },
       });
     }

@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
 import {
   AcademicCapIcon,
+  CurrencyDollarIcon,
   CalendarDaysIcon,
   CheckCircleIcon,
   ClipboardDocumentListIcon,
@@ -31,6 +32,8 @@ import SetSemesterModal from '../components/Settings/Semester/SetSemesterModal';
 
 import CreateSlotModal from '../components/Settings/Slot/CreateSlotModal';
 import EditSlotModal from '../components/Settings/Slot/EditSlotModal';
+
+import CreateProjectModal from '../components/Settings/Project/CreateProjectModal';
 
 const Semester = {
   spring: 1,
@@ -64,13 +67,20 @@ const settings = [
       { id: 13, positionRequired: 4, name: 'Set', href: '#', detail: '시스템 기준학기(현재학기)를 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600', icon: AcademicCapIcon },]
   },
   {
-    category: 'Seminar', items:
-      [{ id: 21, positionRequired: 4, dutyRequired: Duties.seminar, name: 'Create', href: '#', detail: '세미나 발표일정(슬롯)을 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600', icon: PresentationChartLineIcon },
-      { id: 22, positionRequired: 4, dutyRequired: Duties.seminar, name: 'Edit', href: '#', detail: '기존 일정(슬롯)을 편집합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon: PresentationChartLineIcon },
-      { id: 23, positionRequired: 4, dutyRequired: Duties.seminar, name: 'Set', href: '#', detail: '슬롯에 발표자를 배정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600', icon: PresentationChartLineIcon },]
+    category: 'Seminar', 
+    items:[
+      { id: 21, positionRequired: 4, dutyRequired: Duties.seminar, name: 'Create', href: '#', detail: '세미나 발표일정(슬롯)을 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600', icon: PresentationChartLineIcon },
+      { id: 22, positionRequired: 4, dutyRequired: Duties.seminar, name: 'Edit', href: '#', detail: '발표일정(슬롯)을 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon: PresentationChartLineIcon },
+      { id: 23, positionRequired: 4, dutyRequired: Duties.seminar, name: 'Set [WIP]', href: '#', detail: '슬롯에 발표자를 배정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600', icon: PresentationChartLineIcon },
+    ]
   },
   {
-    category: 'Project', items:[],
+    category: 'Project', 
+    items:[
+    {id: 31, positionRequired: 2, name:'Create [WIP]', href:'#', detail:'신규 프로젝트를 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600', icon:CurrencyDollarIcon},
+    {id: 32, positionRequired: 2, name:'Edit [WIP]', href:'#', detail:'프로젝트 정보를 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon:CurrencyDollarIcon},
+    {id: 33, positionRequired: 2, name:'Set [WIP]', href:'#', detail:'프로젝트 참여인력을 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600', icon:CurrencyDollarIcon},
+  ],
   }
 ]
 
@@ -235,6 +245,8 @@ export default function Settings() {
 
       <CreateSlotModal props={{ action: settings[2].items[0], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }} />
       <EditSlotModal props={{ action: settings[2].items[1], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }} />
+
+      <CreateProjectModal props={{ action: settings[3].items[0], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }} />
 
       <Notification props={{ message, isNotify, setIsNotify }} />
 

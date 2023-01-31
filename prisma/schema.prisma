@@ -190,15 +190,36 @@ model Request{
 }
 
 model Project{
-  id            Int           @id @default(autoincrement())
-  createdAt	    DateTime      @default(now())
-  updatedAt	    DateTime      @updatedAt
+  id              Int           @id @default(autoincrement())
+  createdAt	      DateTime      @default(now())
+  updatedAt	      DateTime      @updatedAt
 
-  title         String
-  
-  managers      ManagingProjectsTable[]
-  staffs        StaffingProjectsTable[]
-  participants  ParticipatingProjectsTable[]
+// [CREATE, EDIT]
+  title           String
+  alias           String  //G00000000
+  adjustment      Boolean //정산여부
+
+  startDate	      String
+  endDate	        String
+
+  scale           Int // 100, 200, 300 (소/중/대)
+
+  teamInCharge    String
+
+  materialCost    Int 
+  materialBalance Int
+  dteCost         Int // DTE: Domestic Traveling Expenses
+  dteBalance      Int
+  oteCost         Int // OTE: Overseas Traveling Expenses
+  oteBalance      Int
+  // Balance는 최초 Create시 Cost와 동일한 값으로 설정됨. 
+  // Edit에서 Cost값을 변경하는 경우, 기존 Cost에서의 차액만큼을 Balance에 누산
+  // Tooltip: 오차 발생 시, request 기능을 통해 보정할 것.
+
+// [SET]
+  managers        ManagingProjectsTable[]
+  staffs          StaffingProjectsTable[]
+  participants    ParticipatingProjectsTable[]
   // staffs User[]
   // participants User[]
 

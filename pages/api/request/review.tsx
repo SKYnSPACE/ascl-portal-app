@@ -129,7 +129,7 @@ async function handler(
       Please check the request from the ASCL Portal.</p>
       <p>
       <b>Title: </b> ${currentSeminar.title.toString()} <br />
-      <b>Presented by:</b> ${currentUser.name.toString()}<br />
+      <b>Presented by:</b> ${currentUser.name.toString()} (${currentUser.email.toString()})<br />
       <b>Tags:</b> ${currentSeminar.tags.toString()}<br />
       <b>Abstract:</b> ${currentSeminar.abstract.toString()}</p>
       `,

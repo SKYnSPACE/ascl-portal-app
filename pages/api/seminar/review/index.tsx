@@ -159,7 +159,7 @@ async function handler(
       `${requestedUser.email}`,
       `${currentUser.name.toString()} posted a Review to your seminar.`,
       "Review completed. Please check the details from the ASCL Portal.",
-      `<p>Your review request to [${currentUser.name.toString()}] has been completed. <br /> 
+      `<p>Your review request to <b>${currentUser.name.toString()}</b> (${currentUser.email}) has been completed. <br /> 
       Please check the details from the ASCL Portal.</p>`,
       false);
 
