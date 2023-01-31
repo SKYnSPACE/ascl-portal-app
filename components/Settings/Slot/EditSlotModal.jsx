@@ -158,7 +158,7 @@ export default function EditSlotModal({ props }) {
                     name="slot"
                     className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
                     {...register("slotId", {
-                      required: "Date is required.",
+                      required: "Slot is required.",
                     })}
                   >
                     {currentSlotsData?.slots?.map((item) => (<option key={item.id} value={item.id}>[{item.date}] {item.startsAt} ~ {item.endsAt}</option>)

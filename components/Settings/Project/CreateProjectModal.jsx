@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import useSWR from "swr";
 
-import { useForm } from "react-hook-form";
-import { Dialog, RadioGroup } from "@headlessui/react";
+import { useForm, Controller } from "react-hook-form";
 
+import { Dialog, RadioGroup } from "@headlessui/react";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
+
+import { NumericFormat } from 'react-number-format';
 
 import useMutation from "../../../libs/frontend/useMutation";
 
@@ -45,16 +47,18 @@ export default function CreateSlotModal({ props }) {
       return;
     }
 
-    setValue('startDate', "");
-    setValue('endDate', "");
-    setValue('isBreak', false);
-    setValue('note', "");
-
     console.log(validForm);
     // createSlot(validForm);
   }
   const onInvalid = (errors) => {
-
+    console.log(errors);
+    setMessage(
+      {
+        type: 'fail', title: 'Creating project failed.',
+        details: `${Object.values(errors)[0]?.message}`,
+      }
+    )
+    setIsNotify(true);
   }
 
   return (
@@ -64,7 +68,7 @@ export default function CreateSlotModal({ props }) {
       open={action.id == isModalOpen}
       onClose={() => setIsModalOpen(false)}
     >
-      <div className="flex items-end justify-center min-h-screen pt-16 px-4 pb-20 text-center sm:block">
+      <div className="flex items-end justify-center min-h-screen pt-12 px-4 pb-20 text-center sm:block">
         <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-6">
           <div className={classNames("mx-auto flex items-center justify-center h-12 w-12 rounded-full", action.iconBackground)}>
@@ -117,22 +121,47 @@ export default function CreateSlotModal({ props }) {
                     Account Type
                   </label>
                   <select
+                    {...register("type", {
+                      required: "Account type is required.",
+                    })}
                     id="type"
                     name="type"
                     autoComplete="type"
-                    className="h-full rounded-l-md border-transparent bg-transparent py-0 pl-3 pr-7 border-r-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                    className="h-full rounded-l-md border-transparent bg-transparent py-0 pl-3 pr-8 border-r-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                    required
+                    placeholder="test"
+                    defaultValue=""
                   >
-                    <option>정산</option>
-                    <option>일부정산</option>
-                    <option>비정산</option>
+                    <option value="" hidden></option>
+                    <option value="Y">정산</option>
+                    <option value="Y/N">일부정산</option>
+                    <option value="N">비정산</option>
                   </select>
                 </div>
                 <input
+                  {...register("alias", {
+                    required: "Account number is required.",
+                    minLength: {
+                      value: 9,
+                      message: "Project code length should be 9.",
+                    },
+                    maxLength: {
+                      value: 9,
+                      message: "Project code length should be 9.",
+                    },
+                    pattern: {
+                      value: /^[G|N]{1}\d{8}/,
+                      message: "Invalid project code. It should be /^[G|N]{1}\d{8}/"
+                    }
+                  }
+                  )}
                   type="text"
                   name="alias"
                   id="alias"
-                  className="block w-full rounded-md border-gray-300 pl-24 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                  className="block w-full rounded-md border-gray-300 pl-28 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                   placeholder="G00000000"
+                  required
+                  onChange={(e) => { e.target.value = e.target.value.toUpperCase() }}
                 />
               </div>
             </div>
@@ -172,7 +201,7 @@ export default function CreateSlotModal({ props }) {
 
             <div className="w-full">
               <label htmlFor="title" className="text-sm font-semibold">
-                Team / Scale (Include VAT)
+                Team in Charge / Project Scale (Include VAT)
               </label>
 
 
@@ -189,25 +218,36 @@ export default function CreateSlotModal({ props }) {
 
                 <div className="absolute w-1/2 inset-y-0 left-0 flex items-center">
                   <select
-                    id="type"
-                    name="type"
+                    {...register("teamInCharge", {
+                      required: "Team in charge is required.",
+                    })}
+                    id="teamInCharge"
+                    name="teamInCharge"
                     className="h-full w-full rounded-l-md border-transparent bg-transparent py-0 pl-3 pr-7 border-r-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                    defaultValue=""
                   >
-                    <option>ALL</option>
-                    <option>SAT</option>
-                    <option>UAV</option>
+                    <option value="" hidden></option>
+                    <option value="all">ALL</option>
+                    <option value="sat">SAT</option>
+                    <option value="uav">UAV</option>
                   </select>
                 </div>
 
                 <div className="absolute w-1/2 inset-y-0 right-0 flex items-center">
                   <select
+                    {...register("scale", {
+                      required: "Project scale is required.",
+                    })}
                     id="scale"
                     name="scale"
                     className="h-full w-full rounded-r-md border-transparent bg-transparent py-0 pl-2 pr-7 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                    required
+                    defaultValue=""
                   >
-                    <option> &lt; 80M won/year</option>
-                    <option> &lt; 150M won/year</option>
-                    <option> &ge; 150M won/year</option>
+                    <option value="" hidden></option>
+                    <option value={100}> &lt; 80M &#8361;/year</option>
+                    <option value={200}> &lt; 160M &#8361;/year</option>
+                    <option value={300}> &ge; 160M &#8361;/year</option>
                   </select>
                 </div>
               </div>
@@ -225,57 +265,134 @@ export default function CreateSlotModal({ props }) {
               <div className="mt-1 -space-y-px rounded-md bg-white shadow-sm">
                 <div className="grid grid-cols-2 border border-gray-300 rounded-md">
                   <div className="border-r border-gray-300">
-                    <input
-                      type="text"
+                    <Controller
+                      control={control}
                       name="mpePlanned"
-                      id="mpePlanned"
-                      className="relative block w-full rounded-none border-transparent rounded-tl-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
-                      placeholder="재료비"
+                      render={({ field: { onChange, name, value } }) => (
+                        <NumericFormat
+                          className="relative block w-full border-transparent rounded-tl-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                          placeholder="재료비"
+                          suffix={" KRW"}
+                          thousandSeparator=","
+                          value={value}
+                          // onChange={onChange} 
+                          onValueChange={(target) => {
+                            onChange();
+                            setValue("mpePlanned", target.floatValue);
+                          }}
+                        />
+                      )}
                     />
                   </div>
                   <div className="">
-                    <input
-                      type="text"
+                    <Controller
+                      control={control}
                       name="cpePlanned"
-                      id="cpePlanned"
-                      className="relative block w-full rounded-none border-transparent rounded-tr-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
-                      placeholder="전산처리비"
+                      render={({ field: { onChange, name, value } }) => (
+                        <NumericFormat
+                          className="relative block w-full border-transparent rounded-tr-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                          placeholder="전산처리비"
+                          suffix={" KRW"}
+                          thousandSeparator=","
+                          value={value}
+                          // onChange={onChange} 
+                          onValueChange={(target) => {
+                            onChange();
+                            setValue("cpePlanned", target.floatValue);
+                          }}
+                        />
+                      )}
                     />
                   </div>
                   <div className="border-r border-y border-gray-300">
-                    <input
-                      type="text"
+
+                    <Controller
+                      control={control}
                       name="dtePlanned"
-                      id="dtePlanned"
-                      className="relative block w-full rounded-none border-transparent border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
-                      placeholder="국내출장비"
+                      render={({ field: { onChange, name, value } }) => (
+                        <NumericFormat
+                          className="relative block w-full rounded-none border-transparent border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                          placeholder="국내출장비"
+                          suffix={" KRW"}
+                          thousandSeparator=","
+                          value={value}
+                          // onChange={onChange} 
+                          onValueChange={(target) => {
+                            onChange();
+                            setValue("dtePlanned", target.floatValue);
+                          }}
+                        />
+                      )}
                     />
                   </div>
                   <div className="border-y border-gray-300">
-                    <input
-                      type="text"
+
+
+                    <Controller
+                      control={control}
                       name="otePlanned"
-                      id="otePlanned"
-                      className="relative block w-full rounded-none border-transparent border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
-                      placeholder="국외출장비"
+                      render={({ field: { onChange, name, value } }) => (
+                        <NumericFormat
+                          className="relative block w-full rounded-none border-transparent border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                          placeholder="국외출장비"
+                          suffix={" KRW"}
+                          thousandSeparator=","
+                          value={value}
+                          // onChange={onChange} 
+                          onValueChange={(target) => {
+                            onChange();
+                            setValue("otePlanned", target.floatValue);
+                          }}
+                        />
+                      )}
                     />
                   </div>
                   <div className="border-r border-gray-300">
-                    <input
-                      type="text"
+
+                    <Controller
+                      control={control}
                       name="mePlanned"
-                      id="mePlanned"
-                      className="relative block w-full rounded-none border-transparent rounded-bl-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
-                      placeholder="회의비"
+                      render={({ field: { onChange, name, value } }) => (
+                        <NumericFormat
+                          className="relative block w-full border-transparent rounded-bl-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                          placeholder="회의비"
+                          suffix={" KRW"}
+                          thousandSeparator=","
+                          value={value}
+                          // onChange={onChange} 
+                          onValueChange={(target) => {
+                            onChange();
+                            setValue("mePlanned", target.floatValue);
+                          }}
+                        />
+                      )}
                     />
                   </div>
                   <div className="">
-                    <input
+                    {/* <input
                       type="text"
                       name="aePlanned"
                       id="aePlanned"
                       className="relative block w-full rounded-none border-transparent rounded-br-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                       placeholder="수용비"
+                    /> */}
+                    <Controller
+                      control={control}
+                      name="aePlanned"
+                      render={({ field: { onChange, name, value } }) => (
+                        <NumericFormat
+                          className="relative block w-full border-transparent rounded-br-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                          placeholder="수용비"
+                          suffix={" KRW"}
+                          thousandSeparator=","
+                          value={value}
+                          // onChange={onChange} 
+                          onValueChange={(target) => {
+                            onChange();
+                            setValue("aePlanned", target.floatValue);
+                          }}
+                        />
+                      )}
                     />
                   </div>
 
@@ -283,21 +400,26 @@ export default function CreateSlotModal({ props }) {
               </div>
 
               <div className="w-full mt-1">
-              <label htmlFor="note" className="text-sm font-semibold">
-                Note (재료비 지출가능 항목 등 과제관련 참고사항 작성)
-              </label>
-              <input
-                {...register("note", {
-                  required: "Note is required.",
-                })}
-                type="text"
-                name="note"
-                id="note"
-                required
-                className="my-1 shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full border-gray-300 rounded-md text-sm"
+                <label htmlFor="note" className="text-sm font-semibold">
+                  Note (재료비 지출가능 항목 등 과제관련 참고사항 작성)
+                </label>
+                <textarea
+                  {...register("note", {
+                    required: "Note is required.",
+                    maxLength: {
+                      message: "Maximum length of the note is 500.",
+                      value: 500
+                    }
+                  })}
+                  type="text"
+                  name="note"
+                  id="note"
+                  rows={2}
+                  required
+                  className="my-1 shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full border-gray-300 rounded-md text-sm"
 
-              />
-            </div>
+                />
+              </div>
 
             </div>
 
