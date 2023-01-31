@@ -1,30 +1,22 @@
-import { useForm } from "react-hook-form";
-import { Dialog } from "@headlessui/react";
-
+import { useState, useEffect } from "react";
 import useSWR from "swr";
+
+import { useForm } from "react-hook-form";
+import { Dialog, RadioGroup } from "@headlessui/react";
 
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 
 import useMutation from "../../../libs/frontend/useMutation";
-import { useEffect } from "react";
 
 import { classNames } from '../../../libs/frontend/utils'
 
-const Semester = {
-  spring: 1,
-  summer: 2,
-  fall: 3,
-  winter: 4,
-}
 
-function semesterAliasToString(semester) {
-  if (!semester) return null;
-  const year = semester.toString().slice(0, 4);
-  const season = semester.toString().slice(-2);
-  // console.log(year + ' ' + Object.keys(Semester).find(key => Semester[key] === +season))
-  return year + ' ' + Object.keys(Semester).find(key => Semester[key] === +season);
-}
 
+const settings = [
+  { name: 'UAV', description: '' },
+  { name: 'BOTH', description: '' },
+  { name: 'SAT', description: '' },
+]
 
 export default function CreateSlotModal({ props }) {
   const { action, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage } = { ...props };
@@ -41,6 +33,7 @@ export default function CreateSlotModal({ props }) {
   const startDate = watch('startDate');
   const endDate = watch('endDate');
 
+  const [selected, setSelected] = useState(settings[0])
 
   const onValid = (validForm) => {
     if (loading) return;
@@ -64,47 +57,6 @@ export default function CreateSlotModal({ props }) {
 
   }
 
-  useEffect(() => {
-    console.log(currentSemesterData)
-    if (currentSemesterData) {
-      // console.log(semesterAliasToString(currentSemesterData?.semester?.alias));
-      setValue('semester', semesterAliasToString(currentSemesterData?.semester?.alias))
-    }
-  }, [currentSemesterData])
-
-
-  // useEffect(() => {
-  //   if (data?.ok) {
-  //     setMessage(
-  //       { type: 'success', title: 'Successfully Saved!', details: 'New semester created. Wait for the page reload.', }
-  //     )
-  //     setIsNotify(true);
-  //     reset();
-  //     setIsModalOpen(false);
-  //   }
-
-  //   if (data?.error) {
-  //     switch (data.error?.code) {
-  //       case 'P1017':
-  //         console.log("Connection Lost.")
-  //         setMessage(
-  //           { type: 'fail', title: 'Connection Lost.', details: "Database Server does not respond.", }
-  //         )
-  //         setIsNotify(true);
-  //       case 'P2002':
-  //         console.log("Existing User.");
-  //         setMessage(
-  //           { type: 'fail', title: 'Creating semester failed!', details: "Semester already exists.", }
-  //         )
-  //         setIsNotify(true);
-  //       default:
-  //         console.log("ERROR CODE", data.error);
-  //     }
-  //   }
-
-  // }, [data])
-
-
   return (
     <Dialog
       as="div"
@@ -112,7 +64,7 @@ export default function CreateSlotModal({ props }) {
       open={action.id == isModalOpen}
       onClose={() => setIsModalOpen(false)}
     >
-      <div className="flex items-end justify-center min-h-screen pt-32 px-4 pb-20 text-center sm:block">
+      <div className="flex items-end justify-center min-h-screen pt-16 px-4 pb-20 text-center sm:block">
         <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-6">
           <div className={classNames("mx-auto flex items-center justify-center h-12 w-12 rounded-full", action.iconBackground)}>
@@ -139,7 +91,7 @@ export default function CreateSlotModal({ props }) {
 
 
             <div className="w-full">
-              <label htmlFor="title" className="text-sm">
+              <label htmlFor="title" className="text-sm font-semibold">
                 Title
               </label>
               <input
@@ -150,23 +102,45 @@ export default function CreateSlotModal({ props }) {
                 name="title"
                 id="title"
                 required
-                className="my-1 shadow-sm focus:ring-cyan-500 focus:border-cyan-500 block w-full border-gray-300 rounded-md"
+                className="my-1 shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full border-gray-300 rounded-md text-sm"
 
               />
             </div>
 
             <div className="w-full">
-              <label htmlFor="title" className="text-sm">
-                Alias
+              <label htmlFor="title" className="text-sm font-semibold">
+                Account Type / Project Number
               </label>
-              <div className="flex items-center">
-                계정번호, 정산여부
+              <div className="relative mt-1 rounded-md shadow-sm">
+                <div className="absolute inset-y-0 left-0 flex items-center">
+                  <label htmlFor="type" className="sr-only">
+                    Account Type
+                  </label>
+                  <select
+                    id="type"
+                    name="type"
+                    autoComplete="type"
+                    className="h-full rounded-l-md border-transparent bg-transparent py-0 pl-3 pr-7 border-r-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                  >
+                    <option>정산</option>
+                    <option>일부정산</option>
+                    <option>비정산</option>
+                  </select>
+                </div>
+                <input
+                  type="text"
+                  name="alias"
+                  id="alias"
+                  className="block w-full rounded-md border-gray-300 pl-24 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                  placeholder="G00000000"
+                />
               </div>
             </div>
 
-            <div className="w-full">
-              <label htmlFor="startDate" className="text-sm">
-                Starts* / Ends*
+
+            <div className="w-full mt-1">
+              <label htmlFor="startDate" className="text-sm font-semibold">
+                Starts / Ends
               </label>
               <div className="flex items-center">
                 <input
@@ -177,7 +151,7 @@ export default function CreateSlotModal({ props }) {
                   name="startDate"
                   id="startDate"
                   required
-                  className="my-1 shadow-sm focus:ring-cyan-500 focus:border-cyan-500 block w-full border-gray-300 rounded-md"
+                  className="my-1 shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full border-gray-300 rounded-md text-sm"
 
                 />
                 <ArrowLongRightIcon className="h-12 w-12 mx-2 text-gray-500" />
@@ -190,55 +164,142 @@ export default function CreateSlotModal({ props }) {
                   name="endDate"
                   id="endDate"
                   required
-                  className="my-1 shadow-sm focus:ring-cyan-500 focus:border-cyan-500 block w-full border-gray-300 rounded-md"
+                  className="my-1 shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full border-gray-300 rounded-md text-sm"
 
                 />
               </div>
             </div>
 
             <div className="w-full">
-              <label htmlFor="title" className="text-sm">
-                Team / Scale
+              <label htmlFor="title" className="text-sm font-semibold">
+                Team / Scale (Include VAT)
               </label>
-              <div className="flex items-center">
-                담당부서 / 프로젝트 규모
+
+
+
+
+              <div className="relative mt-1 rounded-md shadow-sm">
+                <input
+                  type="text"
+                  name="hidden"
+                  id="hidden"
+                  className="block w-full rounded-md border-gray-300 pl-24 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                  disabled
+                />
+
+                <div className="absolute w-1/2 inset-y-0 left-0 flex items-center">
+                  <select
+                    id="type"
+                    name="type"
+                    className="h-full w-full rounded-l-md border-transparent bg-transparent py-0 pl-3 pr-7 border-r-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                  >
+                    <option>ALL</option>
+                    <option>SAT</option>
+                    <option>UAV</option>
+                  </select>
+                </div>
+
+                <div className="absolute w-1/2 inset-y-0 right-0 flex items-center">
+                  <select
+                    id="scale"
+                    name="scale"
+                    className="h-full w-full rounded-r-md border-transparent bg-transparent py-0 pl-2 pr-7 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                  >
+                    <option> &lt; 80M won/year</option>
+                    <option> &lt; 150M won/year</option>
+                    <option> &ge; 150M won/year</option>
+                  </select>
+                </div>
               </div>
+
+
+
             </div>
 
 
             <div className="w-full mt-2">
-              <label className="text-sm">
-                Costs [KRW]
+              <label className="text-sm font-semibold">
+                Planned Costs [KRW]
               </label>
 
-              <div className="relative flex items-start">
-                <div className="flex h-5 items-center">
-                  <input
-                    {...register("isBreak")}
-                    id="isBreak"
-                    aria-describedby="isBreak-description"
-                    name="isBreak"
-                    type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500"
-                  />
+              <div className="mt-1 -space-y-px rounded-md bg-white shadow-sm">
+                <div className="grid grid-cols-2 border border-gray-300 rounded-md">
+                  <div className="border-r border-gray-300">
+                    <input
+                      type="text"
+                      name="mpePlanned"
+                      id="mpePlanned"
+                      className="relative block w-full rounded-none border-transparent rounded-tl-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                      placeholder="재료비"
+                    />
+                  </div>
+                  <div className="">
+                    <input
+                      type="text"
+                      name="cpePlanned"
+                      id="cpePlanned"
+                      className="relative block w-full rounded-none border-transparent rounded-tr-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                      placeholder="전산처리비"
+                    />
+                  </div>
+                  <div className="border-r border-y border-gray-300">
+                    <input
+                      type="text"
+                      name="dtePlanned"
+                      id="dtePlanned"
+                      className="relative block w-full rounded-none border-transparent border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                      placeholder="국내출장비"
+                    />
+                  </div>
+                  <div className="border-y border-gray-300">
+                    <input
+                      type="text"
+                      name="otePlanned"
+                      id="otePlanned"
+                      className="relative block w-full rounded-none border-transparent border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                      placeholder="국외출장비"
+                    />
+                  </div>
+                  <div className="border-r border-gray-300">
+                    <input
+                      type="text"
+                      name="mePlanned"
+                      id="mePlanned"
+                      className="relative block w-full rounded-none border-transparent rounded-bl-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                      placeholder="회의비"
+                    />
+                  </div>
+                  <div className="">
+                    <input
+                      type="text"
+                      name="aePlanned"
+                      id="aePlanned"
+                      className="relative block w-full rounded-none border-transparent rounded-br-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                      placeholder="수용비"
+                    />
+                  </div>
+
                 </div>
-                <div className="flex items-center">
-                재료비 / 국내출장비 / 해외출장비
               </div>
-                <div className="ml-3 text-sm">
-                  <label htmlFor="isBreak" className="font-medium text-gray-700">
-                    휴게시간
-                  </label>
-                  <p id="isBreak-description" className="text-gray-500">
-                    식사시간, 커피타임 등 배정시 체크.
-                  </p>
-                </div>
-              </div>
+
+              <div className="w-full mt-1">
+              <label htmlFor="note" className="text-sm font-semibold">
+                Note (재료비 지출가능 항목 등 과제관련 참고사항 작성)
+              </label>
+              <input
+                {...register("note", {
+                  required: "Note is required.",
+                })}
+                type="text"
+                name="note"
+                id="note"
+                required
+                className="my-1 shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full border-gray-300 rounded-md text-sm"
+
+              />
             </div>
 
-
-
-
+            </div>
 
 
             {isNotify ? <div className="w-full mt-2">
@@ -262,7 +323,6 @@ export default function CreateSlotModal({ props }) {
                 className="mx-1 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2980b9] text-sm"
                 onClick={(e) => {
                   reset();
-                  setValue('semester', semesterAliasToString(currentSemesterData?.semester?.alias))
                   setIsModalOpen(false);
                 }}>
                 Close
@@ -273,12 +333,12 @@ export default function CreateSlotModal({ props }) {
 
 
 
-        </div>
-      </div>
+        </div >
+      </div >
 
       {/* <CustomModal props={{ popup: popups[0], isResultModalOpen, setIsResultModalOpen }} /> */}
 
-    </Dialog>
+    </Dialog >
 
   );
 }

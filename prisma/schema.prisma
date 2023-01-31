@@ -206,15 +206,27 @@ model Project{
 
   teamInCharge    String
 
-  materialCost    Int 
-  materialBalance Int
-  dteCost         Int // DTE: Domestic Traveling Expenses
+  mpePlanned      Int // MPE: Material Purchasing Expenses
+  mpeBalance      Int
+  cpePlanned      Int // CPE: Computer Purchasing Expenses
+  cpeBalance      Int
+  dtePlanned      Int // DTE: Domestic Traveling Expenses
   dteBalance      Int
-  oteCost         Int // OTE: Overseas Traveling Expenses
+  otePlanned      Int // OTE: Overseas Traveling Expenses
   oteBalance      Int
+  mePlanned       Int // ME: Meeting Expenses`
+  meBalance       Int 
+  aePlanned       Int // AE: Accomodation Expenses
+  aeBalance       Int 
+  // 
+
   // Balance는 최초 Create시 Cost와 동일한 값으로 설정됨. 
   // Edit에서 Cost값을 변경하는 경우, 기존 Cost에서의 차액만큼을 Balance에 누산
   // Tooltip: 오차 발생 시, request 기능을 통해 보정할 것.
+  // accomodation cost(수용비)
+
+
+  note            String
 
 // [SET]
   managers        ManagingProjectsTable[]
