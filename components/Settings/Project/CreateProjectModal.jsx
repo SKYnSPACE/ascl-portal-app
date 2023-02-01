@@ -30,7 +30,7 @@ export default function CreateSlotModal({ props }) {
 
   const { data: currentSemesterData, error: getCurrentSemesterError, isLoading: getCurrentSemesterLoading } = useSWR('/api/semester/current');
 
-  const [createSlot, { loading, data, error }] = useMutation("/api/settings/slot/create");
+  const [createProject, { loading, data, error }] = useMutation("/api/settings/project/create");
 
   const startDate = watch('startDate');
   const endDate = watch('endDate');
@@ -48,7 +48,7 @@ export default function CreateSlotModal({ props }) {
     }
 
     console.log(validForm);
-    // createSlot(validForm);
+    createProject(validForm);
   }
   const onInvalid = (errors) => {
     console.log(errors);

@@ -109,7 +109,7 @@ export default function Settings() {
 
   useEffect(() => {
     if (semestersData) {
-      const semesters = semestersData.semesters.map((semester) => semesterAliasToString(semester.alias));
+      const semesters = semestersData?.semesters?.map((semester) => semesterAliasToString(semester.alias));
       // console.log(semesters)
       setSemestersList(semesters);
     }

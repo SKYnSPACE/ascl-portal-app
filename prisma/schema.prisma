@@ -190,34 +190,34 @@ model Request{
 }
 
 model Project{
-  id              Int           @id @default(autoincrement())
-  createdAt	      DateTime      @default(now())
-  updatedAt	      DateTime      @updatedAt
+  id            Int       @id @default(autoincrement())
+  createdA      DateTime  @default(now())
+  updatedAt	    DateTime  @updatedAt
 
 // [CREATE, EDIT]
-  title           String
-  alias           String  //G00000000
-  adjustment      Boolean //정산여부
+  title         String
+  alias         String    @unique //G00000000
+  type          String //정산여부
 
-  startDate	      String
-  endDate	        String
+  startDate	    String
+  endDate	      String
 
-  scale           Int // 100, 200, 300 (소/중/대)
+  teamInCharge  String
 
-  teamInCharge    String
+  scale         Int // 100, 200, 300 (소/중/대)
 
-  mpePlanned      Int // MPE: Material Purchasing Expenses
-  mpeBalance      Int
-  cpePlanned      Int // CPE: Computer Purchasing Expenses
-  cpeBalance      Int
-  dtePlanned      Int // DTE: Domestic Traveling Expenses
-  dteBalance      Int
-  otePlanned      Int // OTE: Overseas Traveling Expenses
-  oteBalance      Int
-  mePlanned       Int // ME: Meeting Expenses`
-  meBalance       Int 
-  aePlanned       Int // AE: Accomodation Expenses
-  aeBalance       Int 
+  mpePlanned    Int // MPE: Material Purchasing Expenses
+  mpeBalance    Int
+  cpePlanned    Int // CPE: Computer Purchasing Expenses
+  cpeBalance    Int
+  dtePlanned    Int // DTE: Domestic Traveling Expenses
+  dteBalance    Int
+  otePlanned    Int // OTE: Overseas Traveling Expenses
+  oteBalance    Int
+  mePlanned     Int // ME: Meeting Expenses`
+  meBalance     Int 
+  aePlanned     Int // AE: Accomodation Expenses
+  aeBalance     Int 
   // 
 
   // Balance는 최초 Create시 Cost와 동일한 값으로 설정됨. 
