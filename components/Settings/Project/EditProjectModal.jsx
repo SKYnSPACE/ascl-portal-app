@@ -13,11 +13,6 @@ import useMutation from "../../../libs/frontend/useMutation";
 import { classNames } from '../../../libs/frontend/utils'
 
 
-const settings = [
-  { name: 'UAV', description: '' },
-  { name: 'BOTH', description: '' },
-  { name: 'SAT', description: '' },
-]
 
 export default function EditProjectModal({ props }) {
   const { action, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage } = { ...props };
@@ -28,7 +23,7 @@ export default function EditProjectModal({ props }) {
     },
   });
 
-  const { data, error, isLoading } = useSWR('/api/settings/project/edit');
+  const { data, mutate, error, isLoading } = useSWR('/api/settings/project/edit');
   const [editProject, { loading: editProjectLoading, data: editProjectData, error: editProjectError }] = useMutation("/api/settings/project/edit");
 
   const projectAlias = watch('projectAlias');
@@ -36,11 +31,47 @@ export default function EditProjectModal({ props }) {
   const startDate = watch('startDate');
   const endDate = watch('endDate');
 
-  const [selected, setSelected] = useState(settings[0])
-
   useEffect(() => {
-    console.log(data)
-  }, [data]);
+    // console.log(data);
+    // console.log(editProjectData);
+
+    if (editProjectData?.ok) {
+      setMessage(
+        { type: 'success', title: 'Successfully Edited!', details: 'Editing project completed. Wait for the page reload.', }
+      )
+      setIsNotify(true);
+      reset();
+      setIsModalOpen(false);
+    }
+    if (editProjectData?.error) {
+      switch (editProjectData.error?.code) {
+        case '403':
+          setMessage(
+            { type: 'fail', title: 'Not allowed.', details: `${editProjectData.error?.message}`, }
+          )
+          setIsNotify(true);
+          return;
+        case 'P1017':
+          setMessage(
+            { type: 'fail', title: 'Connection Lost.', details: "Database Server does not respond.", }
+          )
+          setIsNotify(true);
+          return;
+        case 'P2002':
+          setMessage(
+            { type: 'fail', title: 'Editing project failed!', details: "You may entered duplicated project information.", }
+          )
+          setIsNotify(true);
+          return;
+        default:
+          console.log("ERROR", data.error);
+      }
+    }
+  }, [editProjectData]);
+
+  useEffect(()=>{
+    mutate();
+  },[editProjectLoading]);
 
   useEffect(() => {
     if (data?.currentProjects && projectAlias) {
@@ -79,7 +110,7 @@ export default function EditProjectModal({ props }) {
     }
 
     console.log(validForm);
-    // editProject(validForm);
+    editProject(validForm);
   }
   const onInvalid = (errors) => {
     console.log(errors);
@@ -312,7 +343,7 @@ export default function EditProjectModal({ props }) {
 
             <div className="w-full mt-2">
               <label className="text-sm font-semibold">
-                Planned Costs [KRW]
+                Planned Costs [KRW] (예산변경시 수정. 잔액정정용 아님!)
               </label>
 
               <div className="mt-1 -space-y-px rounded-md bg-white shadow-sm">
@@ -325,6 +356,7 @@ export default function EditProjectModal({ props }) {
                         <NumericFormat
                           className="relative block w-full border-transparent rounded-tl-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                           placeholder="재료비"
+                          prefix={"재료비: "}
                           suffix={" KRW"}
                           thousandSeparator=","
                           value={value}
@@ -345,6 +377,7 @@ export default function EditProjectModal({ props }) {
                         <NumericFormat
                           className="relative block w-full border-transparent rounded-tr-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                           placeholder="전산처리비"
+                          prefix={"전산비: "}
                           suffix={" KRW"}
                           thousandSeparator=","
                           value={value}
@@ -366,6 +399,7 @@ export default function EditProjectModal({ props }) {
                         <NumericFormat
                           className="relative block w-full rounded-none border-transparent border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                           placeholder="국내출장비"
+                          prefix={"국내출: "}
                           suffix={" KRW"}
                           thousandSeparator=","
                           value={value}
@@ -388,6 +422,7 @@ export default function EditProjectModal({ props }) {
                         <NumericFormat
                           className="relative block w-full rounded-none border-transparent border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                           placeholder="국외출장비"
+                          prefix={"국외출: "}
                           suffix={" KRW"}
                           thousandSeparator=","
                           value={value}
@@ -409,6 +444,7 @@ export default function EditProjectModal({ props }) {
                         <NumericFormat
                           className="relative block w-full border-transparent rounded-bl-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                           placeholder="회의비"
+                          prefix={"회의비: "}
                           suffix={" KRW"}
                           thousandSeparator=","
                           value={value}
@@ -436,6 +472,7 @@ export default function EditProjectModal({ props }) {
                         <NumericFormat
                           className="relative block w-full border-transparent rounded-br-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                           placeholder="수용비"
+                          prefix={"수용비: "}
                           suffix={" KRW"}
                           thousandSeparator=","
                           value={value}

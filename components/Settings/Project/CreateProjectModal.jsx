@@ -13,13 +13,6 @@ import useMutation from "../../../libs/frontend/useMutation";
 import { classNames } from '../../../libs/frontend/utils'
 
 
-
-const settings = [
-  { name: 'UAV', description: '' },
-  { name: 'BOTH', description: '' },
-  { name: 'SAT', description: '' },
-]
-
 export default function CreateProjectModal({ props }) {
   const { action, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage } = { ...props };
 
@@ -34,8 +27,6 @@ export default function CreateProjectModal({ props }) {
 
   const startDate = watch('startDate');
   const endDate = watch('endDate');
-
-  const [selected, setSelected] = useState(settings[0])
 
   const onValid = (validForm) => {
     if (loading) return;
@@ -272,6 +263,7 @@ export default function CreateProjectModal({ props }) {
                         <NumericFormat
                           className="relative block w-full border-transparent rounded-tl-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                           placeholder="재료비"
+                          prefix={"재료비: "}
                           suffix={" KRW"}
                           thousandSeparator=","
                           value={value}
@@ -292,6 +284,7 @@ export default function CreateProjectModal({ props }) {
                         <NumericFormat
                           className="relative block w-full border-transparent rounded-tr-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                           placeholder="전산처리비"
+                          prefix={"전산비: "}
                           suffix={" KRW"}
                           thousandSeparator=","
                           value={value}
@@ -313,6 +306,7 @@ export default function CreateProjectModal({ props }) {
                         <NumericFormat
                           className="relative block w-full rounded-none border-transparent border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                           placeholder="국내출장비"
+                          prefix={"국내출: "}
                           suffix={" KRW"}
                           thousandSeparator=","
                           value={value}
@@ -335,6 +329,7 @@ export default function CreateProjectModal({ props }) {
                         <NumericFormat
                           className="relative block w-full rounded-none border-transparent border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                           placeholder="국외출장비"
+                          prefix={"국외출: "}
                           suffix={" KRW"}
                           thousandSeparator=","
                           value={value}
@@ -356,6 +351,7 @@ export default function CreateProjectModal({ props }) {
                         <NumericFormat
                           className="relative block w-full border-transparent rounded-bl-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                           placeholder="회의비"
+                          prefix={"회의비: "}
                           suffix={" KRW"}
                           thousandSeparator=","
                           value={value}
@@ -383,6 +379,7 @@ export default function CreateProjectModal({ props }) {
                         <NumericFormat
                           className="relative block w-full border-transparent rounded-br-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                           placeholder="수용비"
+                          prefix={"수용비: "}
                           suffix={" KRW"}
                           thousandSeparator=","
                           value={value}
