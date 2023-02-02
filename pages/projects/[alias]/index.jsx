@@ -1,13 +1,16 @@
 import { useRouter } from 'next/router';
 
 import Page404 from '../../../components/Page404';
-import Calendar from '../../../components/Workspace/Calendar';
+import Summary from '../../../components/Projects/Summary';
 import Attendance from '../../../components/Workspace/Attendance';
 import BusinessTrip from '../../../components/Workspace/BusinessTrip';
 import Ledger from '../../../components/Workspace/Ledger';
 import Contacts from '../../../components/Workspace/Contacts';
 
 import {
+  Bars2Icon,
+  Bars3Icon,
+  Bars4Icon,
   BellAlertIcon,
   BriefcaseIcon,
   CalendarDaysIcon,
@@ -21,57 +24,32 @@ import Purchasing from '../../../components/Workspace/Purchasing';
 import Requests from '../../../components/Workspace/Requests';
 
 
-
 const subNavigation = [
-  { name: 'Lab. Calendar', href: '/workspace/calendar', icon: CalendarDaysIcon, onDev: true },
-  { name: 'Contacts', href: '/workspace/contacts', icon: IdentificationIcon, onDev:false },
+  { name: 'Summary', href: '/projects/summary', icon: ClipboardDocumentListIcon, onDev: true },
   
-  { name: 'Requests', href: '/workspace/requests', icon: BellAlertIcon, onDev: true },
+  { name: 'Requests', href: '/projects/requests', icon: Bars3Icon, onDev: true },
   
-  { name: 'Purchasing', href: '/workspace/purchasing', icon: CreditCardIcon, onDev:true },
-  { name: 'Ledger', href: '/workspace/ledger', icon: ClipboardDocumentListIcon, onDev:true },
+  { name: 'Purchasing', href: '/projects/purchasing', icon: Bars4Icon, onDev:true },
+  { name: 'Ledger', href: '/projects/ledger', icon: Bars3Icon, onDev:true },
 
-  { name: 'Business Trip', href: '/workspace/trip', icon: BriefcaseIcon, onDev:true },
-  { name: 'Conferences', href: '/workspace/conferences', icon: PresentationChartLineIcon, onDev:true },
+  { name: 'Business Trip', href: '/projects/trip', icon: Bars3Icon, onDev:true },
+  { name: 'Conferences', href: '/projects/conferences', icon: Bars3Icon, onDev:true },
 
-  { name: 'Attendance', href: '/workspace/attendance', icon: UsersIcon, onDev:true },
+  { name: 'Attendance', href: '/projects/attendance', icon: Bars2Icon, onDev:true },
 ]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-function Utility() {
+function Alias() {
   const router = useRouter();
-  const utility = router.query.utility;
+  const alias = router.query.alias;
 
-  switch (utility) {
-    case 'calendar':
+  switch (alias) {
+    case 'summary':
       // return <Page404 />;
-      return <Calendar />;
-
-    case 'requests':
-      return <Page404 />;
-      // return <Requests />;
-
-    case 'attendance':
-      return <Page404 />;
-      // return <Attendance />;
-
-    case 'purchasing':
-      return <Page404 />;
-      // return <Purchasing />;
-
-    case 'trip':
-      return <Page404 />;
-      // return <BusinessTrip />;
-
-    case 'ledger':
-      return <Page404 />;
-      // return <Ledger />;
-
-    case 'contacts':
-      return <Contacts />;
+      return <Summary />;
 
     default:
       return <Page404 />;
@@ -84,7 +62,7 @@ export default function Workspace() {
   return (
     <main className="relative -mt-32">
       <div className="mx-auto max-w-7xl px-4 mb-8 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold tracking-tight text-white">Workspace</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-white">Projects</h1>
       </div>
       <div className="mx-auto max-w-screen-xl px-4 pb-6 sm:px-6 lg:px-8 lg:pb-16">
         <div className="overflow-hidden rounded-lg bg-white shadow">
@@ -126,7 +104,7 @@ export default function Workspace() {
               <div className="py-6 px-4 sm:p-6 lg:pb-8">
 
 
-                <Utility />
+                <Alias />
 
 
 

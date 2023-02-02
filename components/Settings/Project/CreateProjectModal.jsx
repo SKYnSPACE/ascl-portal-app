@@ -20,7 +20,7 @@ const settings = [
   { name: 'SAT', description: '' },
 ]
 
-export default function CreateSlotModal({ props }) {
+export default function CreateProjectModal({ props }) {
   const { action, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage } = { ...props };
 
   const { register, control, watch, handleSubmit, setValue, reset } = useForm({

@@ -34,6 +34,7 @@ import CreateSlotModal from '../components/Settings/Slot/CreateSlotModal';
 import EditSlotModal from '../components/Settings/Slot/EditSlotModal';
 
 import CreateProjectModal from '../components/Settings/Project/CreateProjectModal';
+import EditProjectModal from '../components/Settings/Project/EditProjectModal';
 
 const Semester = {
   spring: 1,
@@ -247,6 +248,7 @@ export default function Settings() {
       <EditSlotModal props={{ action: settings[2].items[1], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }} />
 
       <CreateProjectModal props={{ action: settings[3].items[0], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }} />
+      <EditProjectModal props={{ action: settings[3].items[1], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }} />
 
       <Notification props={{ message, isNotify, setIsNotify }} />
 

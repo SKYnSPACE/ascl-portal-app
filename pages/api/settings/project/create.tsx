@@ -14,15 +14,9 @@ async function handler(
       startDate, endDate,
       scale, teamInCharge,
       mpePlanned, cpePlanned, dtePlanned, otePlanned, mePlanned, aePlanned,
-      note},
+      note },
     session: { user },
   } = req;
-
-  const currentSemester = await client.semester.findFirst({
-    where: {
-      isCurrentSemester: true,
-    }
-  });
 
   const currentUser = await client.user.findUnique({
     where: { id: user.id },
@@ -30,7 +24,7 @@ async function handler(
   const authority = currentUser.position;
 
   if (authority >= 2) {
-    
+
     const newSlot = await client.project.create({
       data: {
 
@@ -39,7 +33,7 @@ async function handler(
         type,
         startDate,
         endDate,
-        scale,
+        scale: +scale,
         teamInCharge,
         mpePlanned,
         mpeBalance: mpePlanned,
@@ -55,14 +49,20 @@ async function handler(
         aeBalance: aePlanned,
         note,
 
-        semester: {
-          connect: {
-            id: currentSemester?.id
-          },
+        managers: {
+          create: [{
+            user: {
+              connect: {
+                id: currentUser?.id,
+              }
+            },
+          }],
         },
 
       },
     });
+
+    console.log(newSlot)
 
     res.json({
       ok: true,
@@ -71,7 +71,7 @@ async function handler(
 
   }
   else {
-    return res.status(403).json({ ok: false, error: {code: "403", message:"Not allowed to create new project." }})
+    return res.status(403).json({ ok: false, error: { code: "403", message: "Not allowed to create new project." } })
   }
 
   // res.json({ok: true,})

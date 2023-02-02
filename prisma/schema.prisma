@@ -40,11 +40,11 @@ model User {
   // writtenReviews Review[]
   // receivedReviews Review[]
 
-  managingProjects   ManagingProjectsTable[]
-  staffingProjects  StaffingProjectsTable[]
+  managingProjects      ManagingProjectsTable[]
+  staffingProjects      StaffingProjectsTable[]
   participatingProjects ParticipatingProjectsTable[]
 
-
+  createdLogs       Log[]     @relation(name:"createdLog")
 }
 
 model Token {
@@ -191,7 +191,7 @@ model Request{
 
 model Project{
   id            Int       @id @default(autoincrement())
-  createdA      DateTime  @default(now())
+  createdAt     DateTime  @default(now())
   updatedAt	    DateTime  @updatedAt
 
 // [CREATE, EDIT]
@@ -229,6 +229,8 @@ model Project{
   note            String
 
 // [SET]
+  isFinished      Boolean     @default(false) //완료된 과제를 리스트에서 제거할수 있도록.
+
   managers        ManagingProjectsTable[]
   staffs          StaffingProjectsTable[]
   participants    ParticipatingProjectsTable[]
@@ -238,13 +240,13 @@ model Project{
 }
 
 model ManagingProjectsTable{ //PIVOT TAVLE
-  user        User     @relation(fields: [userId], references:[id])
-  userId      Int
-  @@index([userId])
-
   project     Project  @relation(fields: [projectId], references:[id])
   projectId   Int
   @@index([projectId])
+
+  user        User     @relation(fields: [userId], references:[id])
+  userId      Int
+  @@index([userId])
 
   createdAt	  DateTime  @default(now())
   updatedAt	  DateTime  @updatedAt
@@ -253,13 +255,13 @@ model ManagingProjectsTable{ //PIVOT TAVLE
 }
 
 model StaffingProjectsTable{ //PIVOT TAVLE
-  user        User     @relation(fields: [userId], references:[id])
-  userId      Int
-  @@index([userId])
-
   project     Project  @relation(fields: [projectId], references:[id])
   projectId   Int
   @@index([projectId])
+
+  user        User     @relation(fields: [userId], references:[id])
+  userId      Int
+  @@index([userId])
 
   createdAt	  DateTime  @default(now())
   updatedAt	  DateTime  @updatedAt
@@ -268,13 +270,13 @@ model StaffingProjectsTable{ //PIVOT TAVLE
 }
 
 model ParticipatingProjectsTable{ //PIVOT TAVLE
-  user        User     @relation(fields: [userId], references:[id])
-  userId      Int
-  @@index([userId])
-
   project     Project  @relation(fields: [projectId], references:[id])
   projectId   Int
   @@index([projectId])
+
+  user        User     @relation(fields: [userId], references:[id])
+  userId      Int
+  @@index([userId])
 
   createdAt	  DateTime  @default(now())
   updatedAt	  DateTime  @updatedAt
@@ -290,4 +292,18 @@ model Settings{
   currentSemesterId    Int
   @@index([currentSemesterId])
   
+}
+
+model Log{
+  id          Int       @id @default(autoincrement())
+  createdAt	  DateTime  @default(now())
+  updatedAt	  DateTime  @updatedAt
+  
+  loggedBy    User      @relation(name:"createdLog", fields:[loggedById], references:[id]) //onDelete:
+  loggedById  Int
+  @@index([loggedById])
+
+  category    String
+  message     String
+  whois       String?
 }
