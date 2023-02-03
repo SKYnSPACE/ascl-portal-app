@@ -18,6 +18,10 @@ export function middleware(req) {
       url.pathname = '/workspace/calendar';
       return NextResponse.redirect(url);
 
+    case '/projects/[alias]':
+      url.pathname = '/projects/summary';
+      return NextResponse.redirect(url);
+
     case '/seminar/[menu]':
       url.pathname = '/seminar/schedule';
       return NextResponse.redirect(url);

@@ -79,9 +79,9 @@ const settings = [
   {
     category: 'Project', 
     items:[
-    {id: 31, positionRequired: 2, name:'Create [WIP]', href:'#', detail:'신규 프로젝트를 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600', icon:CurrencyDollarIcon},
-    {id: 32, positionRequired: 2, name:'Edit [WIP]', href:'#', detail:'프로젝트 정보를 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon:CurrencyDollarIcon},
-    {id: 33, positionRequired: 2, name:'Set [WIP]', href:'#', detail:'프로젝트 참여인력, 과제종료를 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600', icon:CurrencyDollarIcon},
+    {id: 31, positionRequired: 2, name:'Create', href:'#', detail:'신규 프로젝트를 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600', icon:CurrencyDollarIcon},
+    {id: 32, positionRequired: 2, name:'Edit', href:'#', detail:'프로젝트 정보를 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600', icon:CurrencyDollarIcon},
+    {id: 33, positionRequired: 2, name:'Set', href:'#', detail:'프로젝트 참여인력, 과제종료를 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600', icon:CurrencyDollarIcon},
   ],
   }
 ]

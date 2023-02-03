@@ -163,23 +163,37 @@ async function handler(
           updatedData
         });
       }
+      
+      // if (manager && (manager^(isManager ? 1 : 0))) 
+      // //manager를 원하고, mamager가 아니었음.
+      // //기록 전체 삭제 후 메니저로 세팅
+      // if (
+
+
+
 
       if (manager ^ (isManager ? 1 : 0)) { //Want to modify record?
         if (isManager) { //Previously manager?
-          const tableToDelete = await client.managingProjectsTable.deleteMany({
+          await client.managingProjectsTable.deleteMany({
             where:{
               userId: userToEdit.id, 
               projectId: previousData.id,
             }
           })
-
-          return res.json({
-            ok: true,
-            tableToDelete,
-          });
-
         }
         else { //Previously not manager?
+          await client.staffingProjectsTable.deleteMany({
+            where:{
+              userId: userToEdit.id, 
+              projectId: previousData.id,
+            }
+          })
+          await client.participatingProjectsTable.deleteMany({
+            where:{
+              userId: userToEdit.id, 
+              projectId: previousData.id,
+            }
+          })
           const updatedData = await client.project.update({
             where: {
               id: +previousData.id,
@@ -203,22 +217,22 @@ async function handler(
         }
       }
 
-      else if (staff ^ (isStaff ? 1 : 0)) {
+      if (staff ^ (isStaff ? 1 : 0)) {
         if (isStaff) { //Previously staff?
-          const tableToDelete = await client.staffingProjectsTable.deleteMany({
+          await client.staffingProjectsTable.deleteMany({
             where:{
               userId: userToEdit.id, 
               projectId: previousData.id,
             }
           })
-
-          return res.json({
-            ok: true,
-            tableToDelete,
-          });
-
         }
         else { //Previously not staff?
+          await client.participatingProjectsTable.deleteMany({
+            where:{
+              userId: userToEdit.id, 
+              projectId: previousData.id,
+            }
+          })
           const updatedData = await client.project.update({
             where: {
               id: +previousData.id,
@@ -242,20 +256,14 @@ async function handler(
         }
       }
 
-      else if (participant ^ (isParticipant ? 1 : 0)) {
+      if (participant ^ (isParticipant ? 1 : 0)) {
         if (isParticipant) { //Previously participant?
-          const tableToDelete = await client.participatingProjectsTable.deleteMany({
+          await client.participatingProjectsTable.deleteMany({
             where:{
               userId: userToEdit.id, 
               projectId: previousData.id,
             }
           })
-
-          return res.json({
-            ok: true,
-            tableToDelete,
-          });
-
         }
         else { //Previously not participant?
           const updatedData = await client.project.update({
@@ -281,10 +289,9 @@ async function handler(
         }
       }
 
-
       res.json({
         ok: true,
-        message: 'Nothing to change.',
+        message: 'Nothing to change or discharged all assignments.',
       });
     }
     else {

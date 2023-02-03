@@ -35,6 +35,7 @@ async function handler(
             user: {
               select: {
                 name: true,
+                userNumber: true,
               }
             },
           },
@@ -44,6 +45,7 @@ async function handler(
             user: {
               select: {
                 name: true,
+                userNumber: true,
               }
             },
           },
@@ -53,6 +55,7 @@ async function handler(
             user: {
               select: {
                 name: true,
+                userNumber: true,
               }
             },
           },

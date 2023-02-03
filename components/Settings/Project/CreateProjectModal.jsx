@@ -18,6 +18,12 @@ export default function CreateProjectModal({ props }) {
 
   const { register, control, watch, handleSubmit, setValue, reset } = useForm({
     defaultValues: {
+      mpePlanned: 0,
+      cpePlanned: 0,
+      dtePlanned: 0,
+      otePlanned: 0,
+      mePlanned: 0,
+      aePlanned: 0,
     },
   });
 
@@ -27,6 +33,43 @@ export default function CreateProjectModal({ props }) {
 
   const startDate = watch('startDate');
   const endDate = watch('endDate');
+
+  useEffect(() => {
+    // console.log(setProjectData);
+
+    if (data?.ok) {
+      setMessage(
+        { type: 'success', title: 'Successfully Created!', details: 'Creating project completed. Wait for the page reload.', }
+      )
+      setIsNotify(true);
+      reset();
+      setIsModalOpen(false);
+    }
+    if (data?.error) {
+      switch (data.error?.code) {
+        case '403':
+          setMessage(
+            { type: 'fail', title: 'Not allowed.', details: `${data.error?.message}`, }
+          )
+          setIsNotify(true);
+          return;
+        case 'P1017':
+          setMessage(
+            { type: 'fail', title: 'Connection Lost.', details: "Database Server does not respond.", }
+          )
+          setIsNotify(true);
+          return;
+        case 'P2002':
+          setMessage(
+            { type: 'fail', title: 'Editing project failed!', details: "You may entered duplicated project information.", }
+          )
+          setIsNotify(true);
+          return;
+        default:
+          console.log("ERROR", data.error);
+      }
+    }
+  }, [data]);
 
   const onValid = (validForm) => {
     if (loading) return;
