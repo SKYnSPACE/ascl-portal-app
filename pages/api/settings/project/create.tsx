@@ -25,7 +25,7 @@ async function handler(
 
   if (authority >= 2) {
 
-    const newSlot = await client.project.create({
+    const newProject = await client.project.create({
       data: {
 
         title,
@@ -62,11 +62,11 @@ async function handler(
       },
     });
 
-    console.log(newSlot)
+    console.log(newProject)
 
     res.json({
       ok: true,
-      newSlot,
+      newProject,
     });
 
   }

@@ -248,7 +248,7 @@ export default function ReviewAcceptedModal({ props }) {
                             <p className="mx-1 text-sm text-gray-500">Verbosity</p>
                             <RadioGroupStars name="verbosity" control={control} items={[1, 2, 3, 4, 5]} />
                             <span className="absolute hidden group-hover:flex -left-20 -top-2 -translate-y-full w-48 px-2 py-1 bg-gray-700 rounded-lg text-center text-white text-sm after:content-[''] after:absolute after:left-1/2 after:top-[100%] after:-translate-x-1/2 after:border-8 after:border-x-transparent after:border-b-transparent after:border-t-gray-700">
-                              Is this presentation material appropriate for a 20-minute presentation?
+                              Is this presentation material appropriate for a 30-minutes presentation?
                             </span>
                           </div>
                         </div>
