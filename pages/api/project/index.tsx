@@ -21,73 +21,56 @@ async function handler(
     if (authority < 2) {
       return res.status(403).json({ ok: false, error: "Not allowed to access the data." })
     }
-
+    
 //TODO: Show only related projects
 //TODO: (prof. sec. Lab manager: all / team Leader: all )
-    const projects = await client.project.findMany({
+    const myProjects = await client.project.findMany({
       where: {
         NOT:{
           isFinished: true,
         },
+        OR: [
+          {
+            managers: {
+              some: {
+                user: {
+                  id: +user.id,
+                }
+              }
+            }
+          },
+          {
+            staffs: {
+              some: {
+                user: {
+                  id: +user.id,
+                }
+              }
+            }
+          },
+          {
+            participants: {
+              some: {
+                user: {
+                  id: +user.id,
+                }
+              }
+            }
+          },
+        ]
       },
       orderBy: [{ alias: 'asc' }],
       
       select: {
         title: true,
         alias: true,
-        type: true,
-        
-        startDate: true,
-        endDate: true,
         teamInCharge: true,
-        scale: true,
-
-        note: true,
-
-        mpeExeRate:true,
-        cpeExeRate:true,
-        dteExeRate:true,
-        oteExeRate:true,
-        meExeRate:true,
-        aeExeRate:true,
-        
-
-        managers: {
-          select: {
-            user: {
-              select: {
-                name: true,
-                userNumber: true,
-              }
-            },
-          },
-        },
-        staffs: {
-          select: {
-            user: {
-              select: {
-                name: true,
-                userNumber: true,
-              }
-            },
-          },
-        },
-        participants: {
-          select: {
-            user: {
-              select: {
-                name: true,
-                userNumber: true,
-              }
-            },
-          },
-        },
       },
     })
 
     res.json({
       ok: true,
-      projects,
+      myProjects,
     });
   }
 

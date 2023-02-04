@@ -208,16 +208,22 @@ model Project{
 
   mpePlanned    Int // MPE: Material Purchasing Expenses
   mpeBalance    Int
+  mpeExeRate    Int  @default(0) // Execution Rate 0000 (Last number is the first digit after decimal point)
   cpePlanned    Int // CPE: Computer Purchasing Expenses
   cpeBalance    Int
+  cpeExeRate    Int @default(0) 
   dtePlanned    Int // DTE: Domestic Traveling Expenses
   dteBalance    Int
+  dteExeRate    Int @default(0) 
   otePlanned    Int // OTE: Overseas Traveling Expenses
   oteBalance    Int
+  oteExeRate    Int @default(0) 
   mePlanned     Int // ME: Meeting Expenses`
   meBalance     Int 
+  meExeRate     Int @default(0) 
   aePlanned     Int // AE: Accomodation Expenses
   aeBalance     Int 
+  aeExeRate     Int @default(0) 
   // 
 
   // Balance는 최초 Create시 Cost와 동일한 값으로 설정됨. 

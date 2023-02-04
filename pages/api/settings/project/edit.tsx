@@ -53,7 +53,7 @@ async function handler(
 const isManager = false;
 
     if (authority >= 4 || isManager) {
-      const newBalance = {
+      const newBalances = {
         mpeBalance: (previousData?.mpeBalance || 0) + (mpePlanned - (previousData?.mpePlanned || 0)),
         cpeBalance: (previousData?.cpeBalance || 0) + (cpePlanned - (previousData?.cpePlanned || 0)),
         dteBalance: (previousData?.dteBalance || 0) + (dtePlanned - (previousData?.dtePlanned || 0)),
@@ -61,6 +61,14 @@ const isManager = false;
         meBalance: (previousData?.meBalance || 0) + (mePlanned - (previousData?.mePlanned || 0)),
         aeBalance: (previousData?.aeBalance || 0) + (aePlanned - (previousData?.aePlanned || 0)),
       };
+      const newExeRates = {
+        mpeExeRate: +(100*(1-newBalances?.mpeBalance/mpePlanned) || 0).toFixed(0),
+        cpeExeRate: +(100*(1-newBalances?.cpeBalance/cpePlanned) || 0).toFixed(0),
+        dteExeRate: +(100*(1-newBalances?.dteBalance/dtePlanned) || 0).toFixed(0),
+        oteExeRate: +(100*(1-newBalances?.oteBalance/otePlanned) || 0).toFixed(0),
+        meExeRate:  +(100*(1-newBalances?.meBalance/mePlanned) || 0).toFixed(0),
+        aeExeRate:  +(100*(1-newBalances?.aeBalance/aePlanned) || 0).toFixed(0),
+      }
 
       const updatedData = await client.project.update({
         where: {
@@ -81,7 +89,8 @@ const isManager = false;
           otePlanned,
           mePlanned,
           aePlanned,
-          ...newBalance,
+          ...newBalances,
+          ...newExeRates,
           note,
         },
       })

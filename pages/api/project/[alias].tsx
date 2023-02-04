@@ -10,10 +10,14 @@ async function handler(
 
   if (req.method === "GET") {
 
-    const {
-      session: { user }
-    } = req;
+    const { query: { alias },
+      session: { user } } = req;
 
+    if (!alias) {
+      return res.json({ ok: false });
+    }
+
+    //TODO: Restrict user if not participating.
     const currentUser = await client.user.findUnique({
       where: { id: user.id },
     });
@@ -22,36 +26,13 @@ async function handler(
       return res.status(403).json({ ok: false, error: "Not allowed to access the data." })
     }
 
-//TODO: Show only related projects
-//TODO: (prof. sec. Lab manager: all / team Leader: all )
-    const projects = await client.project.findMany({
+    //TODO: Return project info
+    const projectInfo = await client.project.findUnique({
       where: {
-        NOT:{
-          isFinished: true,
-        },
+        alias: alias.toString()
       },
-      orderBy: [{ alias: 'asc' }],
-      
-      select: {
-        title: true,
-        alias: true,
-        type: true,
-        
-        startDate: true,
-        endDate: true,
-        teamInCharge: true,
-        scale: true,
 
-        note: true,
-
-        mpeExeRate:true,
-        cpeExeRate:true,
-        dteExeRate:true,
-        oteExeRate:true,
-        meExeRate:true,
-        aeExeRate:true,
-        
-
+      include: {
         managers: {
           select: {
             user: {
@@ -84,18 +65,22 @@ async function handler(
         },
       },
     })
-
+    //TODO: Return ledger
     res.json({
       ok: true,
-      projects,
+      projectInfo,
     });
+  }
+
+  if (req.method === "POST") {
+    res.json({ ok: false });
   }
 
 }
 
 export default withApiSession(
   withHandler({
-    methods: ["GET"],
+    methods: ["GET", "POST"],
     handler,
   })
 );

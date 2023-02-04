@@ -1,5 +1,8 @@
 import { useRouter } from 'next/router';
 
+import { useState, useEffect } from "react";
+import useSWR from "swr";
+
 import Page404 from '../../../components/Page404';
 import Summary from '../../../components/Projects/Summary';
 import Attendance from '../../../components/Workspace/Attendance';
@@ -22,6 +25,7 @@ import {
 } from '@heroicons/react/24/outline'
 import Purchasing from '../../../components/Workspace/Purchasing';
 import Requests from '../../../components/Workspace/Requests';
+import Bankbook from '../../../components/Projects/Bankbook';
 
 
 const subNavigation = [
@@ -52,12 +56,28 @@ function Alias() {
       return <Summary />;
 
     default:
-      return <Page404 />;
+      return <Bankbook props={{alias}} />;
   }
 }
 
 export default function Workspace() {
   const router = useRouter();
+
+  const { data, mutate, error, isLoading } = useSWR('/api/project');
+  const [subNavigation, setSubNavigation] = useState([
+    { name: 'Summary', href: '/projects/summary', icon: ClipboardDocumentListIcon, onDev: false },
+  ]);
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (data && data.ok) {
+      let subNavigation = [{ name: 'Summary', href: '/projects/summary', icon: ClipboardDocumentListIcon, onDev: false },]
+      data.myProjects?.map((project)=>{
+        subNavigation.push({name: project.title, href: `/projects/${project.alias}`, icon: Bars3Icon, onDev:false})
+      })
+      setSubNavigation(subNavigation);
+    }
+  }, [data])
 
   return (
     <main className="relative -mt-32">
@@ -77,7 +97,7 @@ export default function Workspace() {
                       item.href === router.asPath
                         ? 'bg-sky-50 border-sky-500 text-sky-700 hover:bg-sky-50 hover:text-sky-700'
                         : 'border-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-900',
-                        item.onDev ? 'line-through decoration-double':'underline underline-offset-2',
+                        item.onDev ? 'line-through decoration-double':'',
                       'group border-l-4 px-3 py-2 flex items-center text-sm font-medium'
                     )}
                     aria-current={item.href === router.asPath ? 'page' : undefined}

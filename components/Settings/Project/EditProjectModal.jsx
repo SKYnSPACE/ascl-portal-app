@@ -311,9 +311,9 @@ export default function EditProjectModal({ props }) {
                     defaultValue=""
                   >
                     <option value="" hidden></option>
-                    <option value="all">ALL</option>
-                    <option value="sat">SAT</option>
-                    <option value="uav">UAV</option>
+                    <option value="ALL">ALL</option>
+                    <option value="SAT">SAT</option>
+                    <option value="UAV">UAV</option>
                   </select>
                 </div>
 

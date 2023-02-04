@@ -9,37 +9,36 @@ import { format, differenceInDays, parseISO } from "date-fns";
 const chartData = [
   ["From", "To", "Weight"],
 
-  ["ASCL", "UAV", 100],
-  ["ASCL", "SAT", 20],
+  ["UAV", "무인이동체 고장대응 및...", 100],
+  ["UAV", "디지털지형항법 알고리즘...", 100],
+  ["UAV", "미래 전장 응용을 위한...", 100],
+  ["UAV", "산업수요기반 고효율 안전...", 100],
+  ["UAV", "대전차용 표적조준 알고리즘...", 100],
+  ["UAV", "직격비행체 성능분석도구...", 100],
+  ["UAV", "TA/TF 운용모의 시뮬레이터...", 100],
+  ["UAV", "달탐사 모빌리티 개발을 ...", 100],
+  ["UAV", "FLCC 비행제어법칙 ...", 100],
+  ["UAV", "안보기술연구", 100],
 
-  ["UAV", "무인이동체 고장대응 및...", 10],
-  ["UAV", "디지털지형항법 알고리즘...", 10],
-  ["UAV", "미래 전장 응용을 위한...", 10],
-  ["UAV", "산업수요기반 고효율 안전...", 10],
-  ["UAV", "대전차용 표적조준 알고리즘...", 10],
-  ["UAV", "직격비행체 성능분석도구...", 10],
-  ["UAV", "TA/TF 운용모의 시뮬레이터...", 10],
-  ["UAV", "달탐사 모빌리티 개발을 ...", 10],
-  ["UAV", "FLCC 비행제어법칙 ...", 10],
-  ["UAV", "안보기술연구", 10],
+  ["SAT", "위성개발과제 1", 100],
+  ["SAT", "위성개발과제 2", 100],
 
-  ["SAT", "위성개발과제 1", 10],
-  ["SAT", "위성개발과제 2", 10],
+  ["무인이동체 고장대응 및...", "이성헌", 100],
+  ["디지털지형항법 알고리즘...", "박준우", 100],
+  ["미래 전장 응용을 위한...", "이성헌", 100],
+  ["산업수요기반 고효율 안전...", "박준우", 100],
+  ["대전차용 표적조준 알고리즘...", "이성헌", 100],
+  ["직격비행체 성능분석도구...", "박준우", 100],
+  ["TA/TF 운용모의 시뮬레이터...", "이성헌", 100],
+  ["달탐사 모빌리티 개발을 ...", "박준우", 100],
+  ["FLCC 비행제어법칙 ...", "홍경우", 100],
+  ["안보기술연구", "홍경우", 100],
 
-  ["무인이동체 고장대응 및...", "이성헌", 10],
-  ["디지털지형항법 알고리즘...", "박준우", 10],
-  ["미래 전장 응용을 위한...", "이성헌", 10],
-  ["산업수요기반 고효율 안전...", "박준우", 10],
-  ["대전차용 표적조준 알고리즘...", "이성헌", 10],
-  ["직격비행체 성능분석도구...", "박준우", 10],
-  ["TA/TF 운용모의 시뮬레이터...", "이성헌", 10],
-  ["달탐사 모빌리티 개발을 ...", "박준우", 10],
-  ["FLCC 비행제어법칙 ...", "홍경우", 10],
-  ["안보기술연구", "홍경우", 10],
+  ["위성개발과제 1", "오승렬", 100],
+  ["위성개발과제 2", "오승렬", 100],
 
-  ["위성개발과제 1", "오승렬", 10],
-  ["위성개발과제 2", "오승렬", 10],
-
+  ["ASCL", "UAV", 1000],
+  ["ASCL", "SAT", 200],
 ];
 const options = {
   height: 500,
@@ -57,7 +56,45 @@ export default function Summary() {
 
   const { data, mutate, error, isLoading } = useSWR('/api/project/summary');
 
-  useEffect(() => { console.log(data) }, [data])
+  const [chartData, setChartData] = useState(["From", "To", "Weight"],);
+
+  useEffect(() => { 
+    if(isLoading) return;
+    if (data && data.ok) {
+      console.log(data);
+
+      let chartData = [["From", "To", "Weight"],];
+      let uavTeamWeight = 0;
+      let satTeamWeight = 0;
+      let allTeamWeight = 0;
+
+      data?.projects?.map((project) => {
+        chartData.push([project.teamInCharge, project.title, +project.scale]);
+        if (project.teamInCharge == 'UAV') uavTeamWeight += project.scale;
+        else if (project.teamInCharge == 'SAT') satTeamWeight += project.scale;
+        else allTeamWeight += project.scale;
+
+        const workersDenominator = 2*project.managers?.length + project.staffs?.length;
+        project.managers?.map((manager) => {
+          chartData.push([project.title, manager.user?.name, +2*project.scale/workersDenominator])
+        })
+        project.staffs?.map((staff) => {
+          chartData.push([project.title, staff.user?.name, +project.scale/workersDenominator])
+        })
+        // console.log(workersCount)
+
+      })
+
+      chartData.push(["ASCL", "UAV", +uavTeamWeight],
+      // ["ASCL", "ALL", +allTeamWeight],
+      ["ASCL", "SAT", +satTeamWeight])
+    // UAV, ALL, SAT
+
+    console.log(chartData)
+    setChartData(chartData);
+    
+    }
+   }, [data])
 
   return (
 
@@ -78,9 +115,9 @@ export default function Summary() {
                   To update project information, please contact with the Lab. manager.
                 </p>
               </div>
-
+              {data?.projects ?
               <Chart chartType="Sankey" data={chartData} options={options} />
-
+:<></>}
             </div>
           </div>
 
@@ -88,45 +125,53 @@ export default function Summary() {
 
         {/* Project #1 */}
         {/* TODO: Make multiple sections after inquiring user info. */}
-        {data?.projects?.map((project) =>
-          <section aria-labelledby="plan-heading" key={project.alias}>
-            <div className="relative border shadow sm:overflow-hidden sm:rounded-md">
+        {data?.projects?.map((project) => {
+          const daysLeft = differenceInDays(parseISO(project.endDate), new Date());
+          const projectPeriod = differenceInDays(parseISO(project.endDate), parseISO(project.startDate));
+          const remainingRate = daysLeft / projectPeriod;
+          const elapsedRate = 1 - remainingRate;
 
-{/* //TODO: red <10% yellow <30% green */}
-              <div className="hidden xl:inline absolute top-4 right-4">
-                <span className={classNames(
-                  differenceInDays(parseISO(project.endDate),new Date()) / differenceInDays(parseISO(project.endDate),parseISO(project.startDate)) > 0.3 ?
-                  "bg-sky-100 text-sky-800" : differenceInDays(parseISO(project.endDate),new Date()) / differenceInDays(parseISO(project.endDate),parseISO(project.startDate)) > 0.1 ?
-                  "bg-yellow-100 text-yellow-800" : "bg-red-100 text-red-800" ,
-                  "inline-flex items-center rounded-md px-2 py-2 text-3xl font-bold")}>
-                  D-{differenceInDays(parseISO(project.endDate),new Date())}
-                </span>
-              </div>
+          return (
+            <section aria-labelledby="plan-heading" key={project.alias}>
+              <div className="relative border-2 shadow sm:overflow-hidden sm:rounded-md">
 
-              <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
-                <div>
-                  <h2 id="plan-heading" className="text-lg font-medium leading-6 text-gray-900">
-                    {`[${project.alias}] ${project.title}`}
-                  </h2>
-                  <p className="mt-1 text-sm text-gray-800">
-                    {`${project.managers?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((manager) => manager.user.name).join('*, ')}*,
-                    ${project.staffs?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((staff) => staff.user.name).join(', ')}`}
-                  </p>
-                  <p className="mt-1 text-sm text-gray-500">
-                    {/* {`${project.participants?.map((participant) => participant.user.name).join(', ')}`} */}
-                    {`${project.participants?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((participant) => participant.user.name).join(', ')}`}
-
-                  </p>
+                {/* //TODO: red <10% yellow <30% green */}
+                <div className="hidden xl:inline absolute top-4 right-4">
+                  <span className={classNames(
+                    remainingRate > 0.3 ?
+                      "bg-sky-100 text-sky-800" : remainingRate > 0.1 ?
+                        "bg-yellow-100 text-yellow-800" : "bg-red-100 text-red-800",
+                    "inline-flex items-center rounded-md px-2 py-2 text-3xl font-bold")}>
+                    {daysLeft < 0 ? `D+${-daysLeft}` : `D-${daysLeft}`}
+                  </span>
                 </div>
 
+                <div className="space-y-6 bg-white py-6 px-4 sm:p-6">
+                  <div>
+                    <h2 id="plan-heading" className="text-lg font-medium leading-6 text-gray-900">
+                      {`[${project.alias}] ${project.title}`}
+                    </h2>
+                    <p className="mt-1 text-sm text-gray-800">
 
+                      {`${project.managers?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((manager) => manager.user.name).join('*, ')}*,
+                    ${project.staffs?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((staff) => staff.user.name).join(', ')}`}
+                    </p>
+                    <p className="mt-1 text-sm text-gray-300">
 
-                <div className="mt-6 grid grid-cols-4 gap-6">
-                  <div className="col-span-4 sm:col-span-2 whitespace-pre-wrap">
-                    <p>{project.note}</p>
+                      {/* {`${project.participants?.map((participant) => participant.user.name).join(', ')}`} */}
+                      {`${project.participants?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((participant) => participant.user.name).join(', ')}`}
+
+                    </p>
                   </div>
 
-                  {/* <div className="col-span-4 sm:col-span-2">
+
+
+                  <div className="mt-6 grid grid-cols-4 gap-6">
+                    <div className="col-span-4 sm:col-span-2 whitespace-pre-wrap">
+                      <p>{project.note}</p>
+                    </div>
+
+                    {/* <div className="col-span-4 sm:col-span-2">
                     <p>첨부파일(제안서 등)</p>
                   </div>
 
@@ -135,10 +180,73 @@ export default function Summary() {
                     <p>TODO: 과제 리스트 추가/제거</p>
                     <p>FORM 형식으로 변경</p>
                   </div> */}
-                </div>
+                  </div>
 
+                  <dl className="mt-5 grid grid-cols-2 divide-y divide-gray-200 xl:grid-cols-6 md:grid-cols-4 md:divide-y-0 md:divide-x overflow-hidden rounded-lg bg-white shadow ">
 
-                {/* <div className="mx-auto">
+                    <div className="px-4 py-5 sm:p-6">
+                      <dt className="text-base font-semibold text-gray-900">재료비</dt>
+                      <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
+                        <div className="flex items-baseline text-2xl font-semibold text-sky-600">
+                          {/* {`${(100*(1-project?.mpeBalance/project?.mpePlanned) || 0).toFixed(0)} %`} */}
+                          {`${(project?.mpeExeRate || 0)} %`}
+                          <span className="ml-2 text-sm font-medium text-gray-500">집행</span>
+                        </div>
+                      </dd>
+                    </div>
+                    <div className="px-4 py-5 sm:p-6">
+                      <dt className="text-base font-semibold text-gray-900">전산처리비</dt>
+                      <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
+                        <div className="flex items-baseline text-2xl font-semibold text-sky-600">
+                          {/* {`${(100*(1-project?.cpeBalance/project?.cpePlanned) || 0).toFixed(0)} %`} */}
+                          {`${(project?.cpeExeRate || 0)} %`}
+                          <span className="ml-2 text-sm font-medium text-gray-500">집행</span>
+                        </div>
+                      </dd>
+                    </div>
+                    <div className="px-4 py-5 sm:p-6">
+                      <dt className="text-base font-semibold text-gray-900">국내출장비</dt>
+                      <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
+                        <div className="flex items-baseline text-2xl font-semibold text-sky-600">
+                          {`${(project?.dteExeRate || 0)} %`}
+                          <span className="ml-2 text-sm font-medium text-gray-500">집행</span>
+                        </div>
+                      </dd>
+                    </div>
+                    <div className="px-4 py-5 sm:p-6">
+                      <dt className="text-base font-semibold text-gray-900">해외출장비</dt>
+                      <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
+                        <div className="flex items-baseline text-2xl font-semibold text-sky-600">
+                          {/* {`${(100*(1-project?.oteBalance/project?.otePlanned) || 0).toFixed(0)} %`} */}
+                          {`${(project?.oteExeRate || 0)} %`}
+                          <span className="ml-2 text-sm font-medium text-gray-500">집행</span>
+                        </div>
+                      </dd>
+                    </div>
+                    <div className="px-4 py-5 sm:p-6">
+                      <dt className="text-base font-semibold text-gray-900">회의비</dt>
+                      <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
+                        <div className="flex items-baseline text-2xl font-semibold text-sky-600">
+                          {/* {`${(100*(1-project?.meBalance/project?.mePlanned) || 0).toFixed(0)} %`} */}
+                          {`${(project?.meExeRate || 0)} %`}
+                          <span className="ml-2 text-sm font-medium text-gray-500">집행</span>
+                        </div>
+                      </dd>
+                    </div>
+                    <div className="px-4 py-5 sm:p-6">
+                      <dt className="text-base font-semibold text-gray-900">수용비</dt>
+                      <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
+                        <div className="flex items-baseline text-2xl font-semibold text-sky-600">
+                          {/* {`${(100*(1-project?.aeBalance/project?.aePlanned) || 0).toFixed(0)} %`} */}
+                          {`${(project?.aeExeRate || 0)} %`}
+                          <span className="ml-2 text-sm font-medium text-gray-500">집행</span>
+                        </div>
+                      </dd>
+                    </div>
+
+                  </dl>
+
+                  {/* <div className="mx-auto">
                   <dl className="rounded-lg bg-white shadow-lg grid grid-cols-2 sm:grid sm:grid-cols-6">
                     <div className="flex flex-col border-b border-gray-100 p-6 text-center sm:border-0 sm:border-r">
                       <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">재료비</dt>
@@ -167,19 +275,27 @@ export default function Summary() {
                   </dl>
                 </div> */}
 
-              </div>
+                </div>
 
-
-              <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                <button
-                  type="submit"
-                  className="inline-flex justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
-                >
-                  Details
-                </button>
+                <div className="flex bg-gray-100 px-4 py-3 sm:px-6">
+                  <div className="grow">
+                    {remainingRate < 0 ?
+                      <p className="text-sm text-red-500">과제기한이 경과하였습니다.</p> : <></>}
+                    {((elapsedRate > 0.3) && (100*elapsedRate > project?.aeExeRate + 10 || 0)) ||
+                    ((elapsedRate > 0.9) && (100*elapsedRate > project?.aeExeRate + 5 || 0)) ?
+                      <p className="text-sm text-yellow-500">과제기간 대비 예산집행 실적이 부진합니다. (과제진행도: {(100*elapsedRate).toFixed(1)}%) </p> : <></>}
+                      {/* 평시: 10%허용, 완료기: 5% 차이 */}
+                  </div>
+                  <button
+                    type="submit"
+                    className="justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+                  >
+                    Details
+                  </button>
+                </div>
               </div>
-            </div>
-          </section>)}
+            </section>);
+        })}
 
         {/* Project #2 */}
         {/* TODO: Make multiple sections after inquiring user info. */}
