@@ -58,8 +58,8 @@ export default function Summary() {
 
   const [chartData, setChartData] = useState(["From", "To", "Weight"],);
 
-  useEffect(() => { 
-    if(isLoading) return;
+  useEffect(() => {
+    if (isLoading) return;
     if (data && data.ok) {
       console.log(data);
 
@@ -74,27 +74,26 @@ export default function Summary() {
         else if (project.teamInCharge == 'SAT') satTeamWeight += project.scale;
         else allTeamWeight += project.scale;
 
-        const workersDenominator = 2*project.managers?.length + project.staffs?.length;
+        const workersDenominator = 2 * project.managers?.length + project.staffs?.length;
         project.managers?.map((manager) => {
-          chartData.push([project.title, manager.user?.name, +2*project.scale/workersDenominator])
+          chartData.push([project.title, manager.user?.name, +2 * project.scale / workersDenominator])
         })
         project.staffs?.map((staff) => {
-          chartData.push([project.title, staff.user?.name, +project.scale/workersDenominator])
+          chartData.push([project.title, staff.user?.name, +project.scale / workersDenominator])
         })
         // console.log(workersCount)
 
       })
 
-      chartData.push(["ASCL", "UAV", +uavTeamWeight],
-      // ["ASCL", "ALL", +allTeamWeight],
-      ["ASCL", "SAT", +satTeamWeight])
-    // UAV, ALL, SAT
+      if (uavTeamWeight) chartData.push(["ASCL", "UAV", +uavTeamWeight]);
+      if (allTeamWeight) chartData.push(["ASCL", "ALL", +allTeamWeight])
+      if (satTeamWeight) chartData.push(["ASCL", "SAT", +satTeamWeight])
 
-    console.log(chartData)
-    setChartData(chartData);
-    
+      console.log(chartData)
+      setChartData(chartData);
+
     }
-   }, [data])
+  }, [data])
 
   return (
 
@@ -116,8 +115,8 @@ export default function Summary() {
                 </p>
               </div>
               {data?.projects ?
-              <Chart chartType="Sankey" data={chartData} options={options} />
-:<></>}
+                <Chart chartType="Sankey" data={chartData} options={options} />
+                : <></>}
             </div>
           </div>
 
@@ -135,7 +134,6 @@ export default function Summary() {
             <section aria-labelledby="plan-heading" key={project.alias}>
               <div className="relative border-2 shadow sm:overflow-hidden sm:rounded-md">
 
-                {/* //TODO: red <10% yellow <30% green */}
                 <div className="hidden xl:inline absolute top-4 right-4">
                   <span className={classNames(
                     remainingRate > 0.3 ?
@@ -281,17 +279,20 @@ export default function Summary() {
                   <div className="grow">
                     {remainingRate < 0 ?
                       <p className="text-sm text-red-500">과제기한이 경과하였습니다.</p> : <></>}
-                    {((elapsedRate > 0.3) && (100*elapsedRate > project?.aeExeRate + 10 || 0)) ||
-                    ((elapsedRate > 0.9) && (100*elapsedRate > project?.aeExeRate + 5 || 0)) ?
-                      <p className="text-sm text-yellow-500">과제기간 대비 예산집행 실적이 부진합니다. (과제진행도: {(100*elapsedRate).toFixed(1)}%) </p> : <></>}
-                      {/* 평시: 10%허용, 완료기: 5% 차이 */}
+                    {((elapsedRate > 0.3) && (100 * elapsedRate > project?.aeExeRate + 10 || 0)) ||
+                      ((elapsedRate > 0.9) && (100 * elapsedRate > project?.aeExeRate + 5 || 0)) ?
+                      <p className="text-sm text-yellow-500">과제기간 대비 예산집행 실적이 부진합니다. (과제진행도: {(100 * elapsedRate).toFixed(1)}%) </p> : <></>}
+                    {/* 평시: 10%허용, 완료기: 5% 차이 */}
                   </div>
+                  <a href={`/projects/${project.alias}`}>
                   <button
-                    type="submit"
+                    type="button"
                     className="justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+                    
                   >
                     Details
                   </button>
+                  </a>
                 </div>
               </div>
             </section>);

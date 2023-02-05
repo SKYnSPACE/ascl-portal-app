@@ -26,7 +26,6 @@ async function handler(
       return res.status(403).json({ ok: false, error: "Not allowed to access the data." })
     }
 
-    //TODO: Return project info
     const projectInfo = await client.project.findUnique({
       where: {
         alias: alias.toString()
@@ -65,6 +64,19 @@ async function handler(
         },
       },
     })
+
+    //TODO: Restrict user if not participating.
+    if (
+      !projectInfo?.managers?.find((manager) => +manager.user.userNumber === +currentUser.userNumber)
+      && !projectInfo?.staffs?.find((staff) => +staff.user.userNumber === +currentUser.userNumber)
+      && !projectInfo?.participants?.find((participant) => +participant.user.userNumber === +currentUser.userNumber)
+      && authority < 3
+    )
+      return res.status(403).json({ ok: false, error: "Not allowed to access the data." })
+
+
+
+
     //TODO: Return ledger
     res.json({
       ok: true,
