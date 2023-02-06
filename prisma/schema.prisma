@@ -206,8 +206,8 @@ model Project{
 
   scale         Int // 100, 200, 300 (소/중/대)
 
-  mpePlanned    BigInt // MPE: Material Purchasing Expenses
-  mpeBalance    BigInt 
+  mpePlanned    Int // MPE: Material Purchasing Expenses
+  mpeBalance    Int 
   mpeExeRate    Int @default(0) // Execution Rate 000 (Last number is the first digit after decimal point)
   cpePlanned    Int // CPE: Computer Purchasing Expenses
   cpeBalance    Int
