@@ -69,7 +69,7 @@ function sortUsers(users) {
 
 export default function Contacts() {
   const { data: usersData, error: getUsersError, isLoading: getUsersLoading } = useSWR(
-    typeof window === "undefined" ? null : "/api/settings/user"
+    typeof window === "undefined" ? null : "/api/workspace/contacts"
   );
 
 
