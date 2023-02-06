@@ -302,6 +302,11 @@ export default function CreateProjectModal({ props }) {
                     <Controller
                       control={control}
                       name="mpePlanned"
+                      rules={{
+                        required: true,
+                        max: 40000000000,
+                        min: 0
+                      }}
                       render={({ field: { onChange, name, value } }) => (
                         <NumericFormat
                           className="relative block w-full border-transparent rounded-tl-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
@@ -323,6 +328,11 @@ export default function CreateProjectModal({ props }) {
                     <Controller
                       control={control}
                       name="cpePlanned"
+                      rules={{
+                        required: true,
+                        max: 2147483647,
+                        min: 0,
+                      }}
                       render={({ field: { onChange, name, value } }) => (
                         <NumericFormat
                           className="relative block w-full border-transparent rounded-tr-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
@@ -345,6 +355,11 @@ export default function CreateProjectModal({ props }) {
                     <Controller
                       control={control}
                       name="dtePlanned"
+                      rules={{
+                        required: true,
+                        max: 2147483647,
+                        min: 0,
+                      }}
                       render={({ field: { onChange, name, value } }) => (
                         <NumericFormat
                           className="relative block w-full rounded-none border-transparent border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
@@ -368,6 +383,11 @@ export default function CreateProjectModal({ props }) {
                     <Controller
                       control={control}
                       name="otePlanned"
+                      rules={{
+                        required: true,
+                        max: 2147483647,
+                        min: 0,
+                      }}
                       render={({ field: { onChange, name, value } }) => (
                         <NumericFormat
                           className="relative block w-full rounded-none border-transparent border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
@@ -390,6 +410,11 @@ export default function CreateProjectModal({ props }) {
                     <Controller
                       control={control}
                       name="mePlanned"
+                      rules={{
+                        required: true,
+                        max: 2147483647,
+                        min: 0,
+                      }}
                       render={({ field: { onChange, name, value } }) => (
                         <NumericFormat
                           className="relative block w-full border-transparent rounded-bl-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
@@ -418,6 +443,11 @@ export default function CreateProjectModal({ props }) {
                     <Controller
                       control={control}
                       name="aePlanned"
+                      rules={{
+                        required: true,
+                        max: 2147483647,
+                        min: 0,
+                      }}
                       render={({ field: { onChange, name, value } }) => (
                         <NumericFormat
                           className="relative block w-full border-transparent rounded-br-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"

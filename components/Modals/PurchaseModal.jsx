@@ -16,11 +16,19 @@ function classNames(...classes) {
 export default function PurchaseModal({ props }) {
   const { action, isModalOpen, setIsModalOpen } = { ...props };
 
-  const { register, control, watch, handleSubmit, setValue, reset } = useForm({});
+  const { register, control, watch, handleSubmit, setValue, reset } = useForm({
+    defaultValues: {
+      projectAlias: null,
+    },
+  });
 
   const projectAlias = watch('projectAlias');
 
-  const { data, mutate, error, isLoading } = useSWR('/api/settings/project/set');
+  const { data, mutate, error, isLoading } = useSWR(
+    projectAlias ? `/api/purchase?projectAlias=${projectAlias}` :
+      '/api/purchase');
+
+  useEffect(() => { console.log(data) }, [data]);
 
   return (
     <Dialog
@@ -70,16 +78,18 @@ export default function PurchaseModal({ props }) {
 
 
                 <div className="absolute w-2/3 inset-y-0 left-0 flex items-center">
-                  {data?.currentProjects ?
+                  {data?.myProjects ?
                     <select
                       id="projectAlias"
                       name="projectAlias"
                       className="h-full w-full rounded-l-md border-transparent bg-transparent py-0 pl-3 pr-7 border-r-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                      defaultValue=""
+                      required
                       {...register("projectAlias", {
                         required: "Project to edit is required.",
                       })}
                     >
-                      {data?.currentProjects?.map((item) => (<option key={item.alias} value={item.alias}>{item.title}</option>)
+                      {data?.myProjects?.map((item) => (<option key={item.alias} value={item.alias}>{item.title}</option>)
                       )}
 
                     </select> : <></>}
@@ -88,16 +98,15 @@ export default function PurchaseModal({ props }) {
                 <div className="absolute w-1/3 inset-y-0 right-0 flex items-center">
 
                   <select
-                    {...register("type", {
-                      required: "Account type is required.",
-                    })}
                     id="type"
                     name="type"
                     autoComplete="type"
                     className="h-full w-full rounded-r-md border-transparent bg-transparent py-0 pl-2 pr-7 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                     required
-                    placeholder="test"
                     defaultValue=""
+                    {...register("type", {
+                      required: "Account type is required.",
+                    })}
                   >
                     <option value="" hidden></option>
                     <option value="mpePlanned">재료비</option>
