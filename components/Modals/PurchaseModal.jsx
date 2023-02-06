@@ -25,10 +25,29 @@ export default function PurchaseModal({ props }) {
   const projectAlias = watch('projectAlias');
 
   const { data, mutate, error, isLoading } = useSWR(
-    projectAlias ? `/api/purchase?projectAlias=${projectAlias}` :
+    projectAlias ? `/api/purchase/${projectAlias}` :
       '/api/purchase');
 
+
+
   useEffect(() => { console.log(data) }, [data]);
+
+  const onValid = (validForm) => {
+    if (isLoading || false) return;
+    console.log(validForm);
+
+    // editProject(validForm);
+  }
+  const onInvalid = (errors) => {
+    console.log(errors);
+    // setMessage(
+    //   {
+    //     type: 'fail', title: 'Creating project failed.',
+    //     details: `${Object.values(errors)[0]?.message}`,
+    //   }
+    // )
+    // setIsNotify(true);
+  }
 
   return (
     <Dialog
@@ -39,7 +58,7 @@ export default function PurchaseModal({ props }) {
     >
       <div className="flex items-end justify-center min-h-screen pt-32 px-4 pb-20 text-center sm:block">
         <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
+        <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle max-w-md sm:w-full sm:p-6">
           <div className={classNames("mx-auto flex items-center justify-center h-12 w-12 rounded-full", action.iconBackground)}>
 
             <action.icon
@@ -60,7 +79,7 @@ export default function PurchaseModal({ props }) {
             {action.detail}
           </Dialog.Description>
 
-          <div className="mt-5 flex flex-col items-center">
+          <form className="mt-3 flex flex-col items-center" onSubmit={handleSubmit(onValid, onInvalid)}>
 
             <div className="w-full">
               <label htmlFor="title" className="text-sm font-semibold">
@@ -89,8 +108,10 @@ export default function PurchaseModal({ props }) {
                         required: "Project to edit is required.",
                       })}
                     >
+                      <option value="" hidden></option>
                       {data?.myProjects?.map((item) => (<option key={item.alias} value={item.alias}>{item.title}</option>)
                       )}
+                      <option value="INQUIRE">X. Inquire for the suitable account</option>
 
                     </select> : <></>}
                 </div>
@@ -98,30 +119,28 @@ export default function PurchaseModal({ props }) {
                 <div className="absolute w-1/3 inset-y-0 right-0 flex items-center">
 
                   <select
-                    id="type"
-                    name="type"
-                    autoComplete="type"
+                    id="category"
+                    name="category"
+                    autoComplete="category"
                     className="h-full w-full rounded-r-md border-transparent bg-transparent py-0 pl-2 pr-7 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                     required
                     defaultValue=""
-                    {...register("type", {
-                      required: "Account type is required.",
+                    {...register("category", {
+                      required: "Account category is required.",
                     })}
                   >
                     <option value="" hidden></option>
-                    <option value="mpePlanned">재료비</option>
-                    <option value="cpePlanned">전산처리비</option>
-                    <option value="dtePlanned">국내출장비</option>
-                    <option value="otePlanned">해외출장비</option>
-                    <option value="mePlanned">회의비</option>
-                    <option value="aePlanned">수용비</option>
+                    <option value="MPE">재료비</option>
+                    <option value="CPE">전산처리비</option>
+                    <option value="DTE">국내출장비</option>
+                    <option value="OTE">해외출장비</option>
+                    <option value="ME">회의비</option>
+                    <option value="AE">수용비</option>
+                    <option value="NS">X. Not sure</option>
                   </select>
                 </div>
               </div>
             </div>
-
-
-
 
 
             <div className="w-full">
@@ -133,29 +152,15 @@ export default function PurchaseModal({ props }) {
                 <div className="border-r border-gray-300 col-span-2">
 
                   <input
-                    {...register("alias", {
-                      required: "Account number is required.",
-                      minLength: {
-                        value: 9,
-                        message: "Project code length should be 9.",
-                      },
-                      maxLength: {
-                        value: 9,
-                        message: "Project code length should be 9.",
-                      },
-                      pattern: {
-                        value: /^[G|N]{1}\d{8}/,
-                        message: "Invalid project code. It should be /^[G|N]{1}\d{8}/"
-                      }
-                    }
-                    )}
+                    {...register("item", {
+                      required: "Item to purchase is required.",
+                    })}
                     type="text"
-                    name="alias"
-                    id="alias"
+                    name="item"
+                    id="item"
                     className="block w-full border-transparent rounded-l-md  focus:border-sky-500 focus:ring-sky-500 text-sm"
                     placeholder="Item"
                     required
-                    onChange={(e) => { e.target.value = e.target.value.toUpperCase() }}
                   />
 
 
@@ -164,12 +169,14 @@ export default function PurchaseModal({ props }) {
                   <Controller
                     control={control}
                     name="quantity"
+                    rules={{ required: true }}
                     render={({ field: { onChange, name, value } }) => (
                       <NumericFormat
                         className="relative block w-full border-transparent rounded-r-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                         placeholder="Quantity"
                         thousandSeparator=","
                         value={value}
+                        required
                         // onChange={onChange} 
                         onValueChange={(target) => {
                           onChange();
@@ -180,37 +187,31 @@ export default function PurchaseModal({ props }) {
                   />
                 </div>
               </div>
-
-
-            </div>
-
-            <div className="w-full">
-              <label htmlFor="details" className="text-sm font-semibold">
-                Details
-              </label>
-              <textarea
-                type="text"
-                name="details"
-                id="details"
-                className="my-1 shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full border-gray-300 rounded-md text-sm"
-                placeholder="Detailed information regarding the purchase."
-              />
             </div>
 
             <div className="w-full">
               <label htmlFor="title" className="text-sm font-semibold">
-                Payment method / Price
+                Payment Method / Total Price (Type the best estimate)
               </label>
               <div className="relative mt-1 rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 flex items-center">
-                  <label htmlFor="type" className="sr-only">
-                    Account Type
-                  </label>
+
+                <input
+                  type="text"
+                  name="hidden"
+                  id="hidden"
+                  className="block w-full rounded-md border-gray-300 pl-24 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                  disabled
+                />
+
+                <div className="absolute w-1/3 inset-y-0 left-0 flex items-center">
                   <select
-                    id="type"
-                    name="type"
-                    autoComplete="type"
-                    className="h-full rounded-l-md border-transparent bg-transparent py-0 pl-3 pr-8 border-r-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                    {...register("paymentMethod", {
+                      required: "Payment method is required.",
+                    })}
+                    id="paymentMethod"
+                    name="paymentMethod"
+                    autoComplete="paymentMethod"
+                    className="h-full w-full rounded-l-md bg-transparent border-transparent border-r-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                     required
                     placeholder="test"
                     defaultValue=""
@@ -218,7 +219,7 @@ export default function PurchaseModal({ props }) {
                     <option value="" hidden></option>
                     <option value="C">Credit Card</option>
                     <option value="T">Tax Invoice</option>
-                    <option value="P">PR</option>
+                    <option value="P">Purchasing Team</option>
                   </select>
                 </div>
                 {/* <input
@@ -230,18 +231,20 @@ export default function PurchaseModal({ props }) {
                 /> */}
                 <Controller
                   control={control}
-                  name="cpePlanned"
+                  name="totalPrice"
+                  rules={{ required: true }}
                   render={({ field: { onChange, name, value } }) => (
                     <NumericFormat
-                      className="block w-full rounded-md border-gray-300 pl-32 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                      className="absolute right-0 w-2/3 inset-y-0 flex items-center rounded-r-md border-gray-300 border-l-0 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
                       placeholder="Price"
                       suffix={" KRW"}
                       thousandSeparator=","
                       value={value}
                       // onChange={onChange} 
+                      required
                       onValueChange={(target) => {
                         onChange();
-                        setValue("cpePlanned", target.floatValue);
+                        setValue("totalPrice", target.floatValue);
                       }}
                     />
                   )}
@@ -249,19 +252,64 @@ export default function PurchaseModal({ props }) {
               </div>
             </div>
 
-
+            <div className="w-full">
+              <label htmlFor="details" className="text-sm font-semibold">
+                Details (purpose, product descriptions, overseas, etc.)
+              </label>
+              <textarea
+                {...register("details", {
+                  required: "Purchase details field is empty.",
+                  maxLength: {
+                    message: "Maximum length of the details is 1000.",
+                    value: 1000
+                  }
+                })}
+                type="text"
+                name="details"
+                id="details"
+                rows={3}
+                required
+                className="my-1 shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full border-gray-300 rounded-md text-sm"
+                placeholder="Detailed information regarding the purchase. Purpose of this purchase? Product descriptions? Domestic/Overseas purchase? etc.?"
+              />
+            </div>
 
             <div className="w-full">
-              <label htmlFor="approval" className="text-sm font-semibold">
+              <label htmlFor="requestFor" className="text-sm font-semibold">
                 Approval
               </label>
-              <input
-                type="text"
-                name="approval"
-                id="approval"
-                className="my-1 shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full border-gray-300 rounded-md"
-
-              />
+              {data?.managers || data?.directors ?
+                <select
+                  {...register("requestFor", {
+                    required: "Approval is required.",
+                  })}
+                  id="requestFor"
+                  name="requestFor"
+                  className="h-full w-full rounded-md bg-transparent border-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                  required
+                  placeholder="test"
+                  defaultValue=""
+                >
+                  <option value="" hidden></option>
+                  {data?.managers?.map((manager) => {
+                    return <option key={manager.id} value={manager.id}>Project Manager ({manager.name})</option>
+                  })}
+                  {data?.directors?.map((director) => {
+                    switch (director.position) {
+                      case 3:
+                        return <option key={director.id} value={director.id}>Account Manager ({director.name})</option>
+                      case 4:
+                        return <option key={director.id} value={director.id}>Team Leader ({director.name})</option>
+                      case 5:
+                        return <option key={director.id} value={director.id}>Lab. Manager ({director.name})</option>
+                      case 6:
+                        return <option key={director.id} value={director.id}>Secretary ({director.name})</option>
+                      case 7:
+                        return <option key={director.id} value={director.id}>Professor ({director.name})</option>
+                    }
+                  })}
+                </select> :
+                <></>}
             </div>
 
 
@@ -269,7 +317,7 @@ export default function PurchaseModal({ props }) {
             <div className="mt-5 sm:mt-6">
               <button
                 className="mx-1 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#2980b9] text-base font-medium text-white hover:bg-[#aacae6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2980b9] sm:text-sm"
-                onClick={(e) => { }}
+                type="submit"
               >
                 Send
               </button>
@@ -281,7 +329,7 @@ export default function PurchaseModal({ props }) {
               </button>
             </div>
 
-          </div>
+          </form>
 
 
 

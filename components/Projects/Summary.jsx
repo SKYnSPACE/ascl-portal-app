@@ -43,7 +43,10 @@ const chartData = [
 const options = {
   height: 500,
   sankey: {
-    node: { width: 4 },
+    node: {
+      width: 4,
+      nodePadding: 20,
+    },
     // link: { colorMode: 'gradient' },
   },
 };
@@ -288,13 +291,13 @@ export default function Summary() {
                     {/* 평시: 10%허용, 완료기: 5% 차이 */}
                   </div>
                   <a href={`/projects/${project.alias}`}>
-                  <button
-                    type="button"
-                    className="justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
-                    
-                  >
-                    Details
-                  </button>
+                    <button
+                      type="button"
+                      className="justify-center rounded-md border border-transparent bg-gray-800 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+
+                    >
+                      Details
+                    </button>
                   </a>
                 </div>
               </div>
