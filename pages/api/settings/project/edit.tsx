@@ -46,13 +46,25 @@ async function handler(
     const previousData = await client.project.findUnique({
       where: {
         alias: projectAlias,
+      },
+      include:{
+        managers: {
+          select: {
+            user: {
+              select: {
+                name: true,
+              }
+            },
+            userId: true
+          },
+        },
       }
     });
 
-//TODO: get manager info from previous data.
-const isManager = false;
+    //TODO: get manager info from previous data.
+    const isCurrentUserManager = !!previousData?.managers?.find(manager => manager.userId === +currentUser.id);
 
-    if (authority >= 4 || isManager) {
+    if (authority >= 4 || isCurrentUserManager) {
       const newBalances = {
         mpeBalance: (previousData?.mpeBalance || 0) + (mpePlanned - (previousData?.mpePlanned || 0)),
         cpeBalance: (previousData?.cpeBalance || 0) + (cpePlanned - (previousData?.cpePlanned || 0)),

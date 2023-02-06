@@ -54,7 +54,7 @@ const actions = [
     id: 4,
     icon: BanknotesIcon,
     name: 'Purchasing',
-    detail: 'Inquiry for an account to handle expenses. ',
+    detail: 'Inquiry for an account to handle expenses. Please separate each purchase.',
     href: '#',
     iconForeground: 'text-yellow-700',
     iconBackground: 'bg-yellow-50',
