@@ -232,7 +232,7 @@ export default function Home() {
                         </div>
                         <div className="mt-5 flex justify-center sm:mt-0">
                           <a
-                            href="#"
+                            href="/profile"
                             className="flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
                           >
                             View profile
