@@ -23,7 +23,12 @@ export default function useMutation<T = any>(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: 
+      JSON.stringify(
+        this,
+        (key, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
+      )
+      // JSON.stringify(data),
     })
       .then((response) => response.json().catch(() => { }))
       .then((data) => setState((prev) => ({ ...prev, data, loading: false })))
