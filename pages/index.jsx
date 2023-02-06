@@ -28,6 +28,7 @@ const actions = [
     href: '#',
     iconForeground: 'text-teal-700',
     iconBackground: 'bg-teal-50',
+    onDev: true,
   },
   {
     id: 2,
@@ -37,6 +38,7 @@ const actions = [
     href: '#',
     iconForeground: 'text-purple-700',
     iconBackground: 'bg-purple-50',
+    onDev: true,
   },
   {
     id: 3,
@@ -46,15 +48,17 @@ const actions = [
     href: '#',
     iconForeground: 'text-sky-700',
     iconBackground: 'bg-sky-50',
+    onDev: true,
   },
   {
     id: 4,
     icon: BanknotesIcon,
-    name: 'Spending Plan',
-    detail: 'Inquiry for an account to handle expenses',
+    name: 'Purchasing',
+    detail: 'Inquiry for an account to handle expenses. ',
     href: '#',
     iconForeground: 'text-yellow-700',
     iconBackground: 'bg-yellow-50',
+    onDev: false,
   },
   {
     id: 5,
@@ -64,6 +68,7 @@ const actions = [
     href: '#',
     iconForeground: 'text-rose-700',
     iconBackground: 'bg-rose-50',
+    onDev: true,
   },
   {
     id: 6,
@@ -73,6 +78,7 @@ const actions = [
     href: '#',
     iconForeground: 'text-indigo-700',
     iconBackground: 'bg-indigo-50',
+    onDev: true,
   },
 ]
 //TODO: MOVE DATA BELOW TO THE DB.
@@ -259,7 +265,8 @@ export default function Home() {
                           actionIdx === 1 ? 'sm:rounded-tr-lg' : '',
                           actionIdx === actions.length - 2 ? 'sm:rounded-bl-lg' : '',
                           actionIdx === actions.length - 1 ? 'rounded-bl-lg rounded-br-lg sm:rounded-bl-none' : '',
-                          'relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-cyan-500'
+                          action.onDev? 'bg-gray-100':'bg-white',
+                          'relative group p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-cyan-500'
                         )}
                       >
                         <div>
@@ -275,8 +282,12 @@ export default function Home() {
                         </div>
                         <div className="mt-8">
                           <h3 className="text-lg font-medium">
-                            <a href={action.href} className="focus:outline-none" onClick={(evt) => {
+                            <a href={action.href} className={classNames(
+                              action.onDev?'cursor-not-allowed':'',
+                              "focus:outline-none"
+                            )} onClick={(evt) => {
                               evt.preventDefault();
+                              if(action.onDev) return;
                               setIsModalOpen(action.id);
                             }}>
                               {/* Extend touch target to entire panel */}

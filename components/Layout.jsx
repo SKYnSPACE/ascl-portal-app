@@ -16,7 +16,7 @@ import LocalDatabase from './LocalDatabase'
 const navigation = [
   { name: 'Home', href: '/', current: true, onDev:false },
   { name: 'Workspace', href: '/workspace/[utility]', current: false, onDev:false },
-  { name: 'Projects', href: '/projects/[alias]', current: false, onDev:true },
+  { name: 'Projects', href: '/projects/[alias]', current: false, onDev:false },
   { name: 'Seminar', href: '/seminar/[menu]', current: false, onDev:false },
   { name: 'Handbook', href: '/handbook/[item]', current: false, onDev:true },
   // { name: 'Chats', href: '/', current: false },

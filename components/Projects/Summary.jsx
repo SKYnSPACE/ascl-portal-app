@@ -180,7 +180,7 @@ export default function Summary() {
                   </div> */}
                   </div>
 
-                  <dl className="mt-5 grid grid-cols-2 divide-y divide-gray-200 xl:grid-cols-6 md:grid-cols-4 md:divide-y-0 md:divide-x overflow-hidden rounded-lg bg-white shadow ">
+                  <dl className="mt-5 grid grid-cols-2 border divide-y divide-gray-200 xl:grid-cols-6 md:grid-cols-4 md:divide-y-0 md:divide-x overflow-hidden rounded-lg bg-white shadow ">
 
                     <div className="px-4 py-5 sm:p-6">
                       <dt className="text-base font-semibold text-gray-900">재료비</dt>
@@ -241,7 +241,10 @@ export default function Summary() {
                         </div>
                       </dd>
                     </div>
-
+                    <div className="">
+                    </div>
+                    <div className="">
+                    </div>
                   </dl>
 
                   {/* <div className="mx-auto">
