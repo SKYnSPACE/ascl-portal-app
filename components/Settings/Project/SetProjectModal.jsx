@@ -68,15 +68,13 @@ export default function SetProjectModal({ props }) {
   }, [data]);
 
   useEffect(() => {
-    // console.log(setProjectData);
-
-    if (setProjectData?.ok) {
-      // setMessage(
-      //   { type: 'success', title: 'Successfully Edited!', details: 'Editing project completed. Wait for the page reload.', }
-      // )
-      // setIsNotify(true);
-      // reset();
-      // setIsModalOpen(false);
+    if (setProjectData?.finishedProject) {
+      setMessage(
+        { type: 'success', title: 'Successfully Closed!', details: 'Project successfully closed. Wait for the page reload.', }
+      )
+      setIsNotify(true);
+      reset();
+      setIsModalOpen(false);
     }
     if (setProjectData?.error) {
       switch (setProjectData.error?.code) {
@@ -132,8 +130,12 @@ export default function SetProjectModal({ props }) {
   const onValid = (validForm) => {
     if (setProjectLoading) return;
 
-    console.log({ ...validForm, isFinished });
+    // console.log({ ...validForm, isFinished });
     setProject({ ...validForm, isFinished });
+    if(isFinished){
+      setValue('projectAlias', null);
+      setValue('userId', null);
+    } 
   }
   const onInvalid = (errors) => {
     console.log(errors);
@@ -204,15 +206,15 @@ export default function SetProjectModal({ props }) {
                 <dl className="sm:divide-y sm:divide-gray-200">
                   <div className="py-2 sm:grid sm:grid-cols-4 sm:gap-4">
                     <dt className="text-sm font-medium text-gray-500">Managers</dt>
-                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">{selectedProject.managers?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((manager) => manager.user.name).join(', ')}</dd>
+                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">{selectedProject?.managers?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((manager) => manager.user.name).join(', ')}</dd>
                   </div>
                   <div className="py-2 sm:grid sm:grid-cols-4 sm:gap-4">
                     <dt className="text-sm font-medium text-gray-500">Staffs</dt>
-                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">{selectedProject.staffs?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((staff) => staff.user.name).join(', ')}</dd>
+                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">{selectedProject?.staffs?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((staff) => staff.user.name).join(', ')}</dd>
                   </div>
                   <div className="py-2 sm:grid sm:grid-cols-4 sm:gap-4">
                     <dt className="text-sm font-medium text-gray-500">Participants</dt>
-                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">{selectedProject.participants?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((participant) => participant.user.name).join(', ')}</dd>
+                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">{selectedProject?.participants?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((participant) => participant.user.name).join(', ')}</dd>
                   </div>
 
                   <div className="py-2 sm:grid sm:grid-cols-4 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200">

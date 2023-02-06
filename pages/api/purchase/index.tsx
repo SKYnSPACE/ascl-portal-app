@@ -11,7 +11,7 @@ async function handler(
   if (req.method === "GET") {
 
     const {
-      query: {projectAlias},
+      query: { projectAlias },
       session: { user }
     } = req;
 
@@ -40,6 +40,14 @@ async function handler(
           title: true,
           alias: true,
         },
+      })
+
+      const approval = await client.user.findMany({
+        where: {
+          position: {
+            lte: 3,
+          }
+        }
       })
 
       res.json({

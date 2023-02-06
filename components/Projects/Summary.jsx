@@ -61,7 +61,7 @@ export default function Summary() {
   useEffect(() => {
     if (isLoading) return;
     if (data && data.ok) {
-      console.log(data);
+      // console.log(data);
 
       let chartData = [["From", "To", "Weight"],];
       let uavTeamWeight = 0;
@@ -89,7 +89,7 @@ export default function Summary() {
       if (allTeamWeight) chartData.push(["ASCL", "ALL", +allTeamWeight])
       if (satTeamWeight) chartData.push(["ASCL", "SAT", +satTeamWeight])
 
-      console.log(chartData)
+      // console.log(chartData)
       setChartData(chartData);
 
     }
