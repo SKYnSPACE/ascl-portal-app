@@ -16,8 +16,9 @@ import AnnouncementModal from '../components/Modals/AnnouncementModal';
 import CarryoutModal from '../components/Modals/CarryoutModal';
 import CreditcardModal from '../components/Modals/CreditcardModal';
 import PurchaseModal from '../components/Modals/PurchaseModal';
-import BusinestripModal from '../components/Modals/BusinesstripModal';
+import BusinessTripModal from '../components/Modals/BusinessTripModal';
 import SteppingoutModal from '../components/Modals/SteppingoutModal';
+import Notification from '../components/Notification';
 
 const actions = [
   {
@@ -68,7 +69,7 @@ const actions = [
     href: '#',
     iconForeground: 'text-rose-700',
     iconBackground: 'bg-rose-50',
-    onDev: true,
+    onDev: false,
   },
   {
     id: 6,
@@ -171,6 +172,8 @@ export default function Home() {
   // console.log(user)
 
   const [isModalOpen, setIsModalOpen] = useState(0)
+  const [isNotify, setIsNotify] = useState(false);
+  const [message, setMessage] = useState({ type: 'success', title: 'Confirmed!', details: 'Test message initiated.', });
 
   const [stats, setStats] = useState([
     { label: 'Requested actions', value: 0 },
@@ -408,10 +411,12 @@ export default function Home() {
           <AnnouncementModal props={{ action: actions[0], isModalOpen, setIsModalOpen }} />
           <CarryoutModal props={{ action: actions[1], isModalOpen, setIsModalOpen }} />
           <CreditcardModal props={{ action: actions[2], isModalOpen, setIsModalOpen }} />
-          <PurchaseModal props={{ action: actions[3], isModalOpen, setIsModalOpen }} />
-          <BusinestripModal props={{ action: actions[4], isModalOpen, setIsModalOpen }} />
+          <PurchaseModal props={{ action: actions[3], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }} />
+          <BusinessTripModal props={{ action: actions[4], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }} />
           <SteppingoutModal props={{ action: actions[5], isModalOpen, setIsModalOpen }} />
 
+        
+          <Notification props={{ message, isNotify, setIsNotify }} />
 
         </main>
         : <>Session expired.<br />Refresh the page to sign in.</>}

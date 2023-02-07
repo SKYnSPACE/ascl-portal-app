@@ -96,13 +96,13 @@ export default function Contacts() {
                     <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-bold text-gray-900 sm:pl-6">
                       Name
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-bold text-gray-900">
+                    <th scope="col" className="px-2 py-3.5 text-left text-sm font-bold text-gray-900">
                       Phone Number
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-bold text-gray-900">
+                    <th scope="col" className="px-2 py-3.5 text-left text-sm font-bold text-gray-900">
                       Email
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-bold text-gray-900">
+                    <th scope="col" className="px-2 py-3.5 text-left text-sm font-bold text-gray-900">
                       Location*
                     </th>
                     <th scope="col" className="py-3.5 text-center text-sm font-bold text-gray-900">
@@ -130,9 +130,9 @@ export default function Contacts() {
                           <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-600 sm:pl-6">
                             {person?.name}&ensp;({person?.userNumber})
                           </td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person?.phone}</td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person?.email}</td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"> M ----</td>
+                          <td className="whitespace-nowrap px-2 py-4 text-sm text-gray-500">{person?.phone}</td>
+                          <td className="whitespace-nowrap px-2 py-4 text-sm text-gray-500">{person?.email}</td>
+                          <td className="whitespace-nowrap px-2 py-4 text-sm text-gray-500"> M ----</td>
                           <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm text-gray-500 sm:pr-6">
                             {getDutiesNames(person?.duties)}
                           </td>

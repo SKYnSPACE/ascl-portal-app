@@ -35,19 +35,19 @@ async function handler(
       where: { id: user.id },
     });
 
-    const allPurchaseRequests = await client.request.findMany({
+    const allTripRequests = await client.request.findMany({
       where: {
-        kind: 30,
+        kind: 35,
         requestedFor: {
           id: +currentUser.id,
         },
       },
     });
 
-    const pendingList = allPurchaseRequests.filter(request => request.status === 0);
-    const acceptedList = allPurchaseRequests.filter(request => request.status === 1);
-    const completedList = allPurchaseRequests.filter(request => request.status === 2);
-    const declinedList = allPurchaseRequests.filter(request => request.status === -1);
+    const pendingList = allTripRequests.filter(request => request.status === 0);
+    const acceptedList = allTripRequests.filter(request => request.status === 1);
+    const completedList = allTripRequests.filter(request => request.status === 2);
+    const declinedList = allTripRequests.filter(request => request.status === -1);
 
     res.json({
       ok: true,
@@ -64,14 +64,12 @@ async function handler(
 
     const {
       body: { projectAlias, category,
-        item, quantity,
-        paymentMethod, totalPrice,
+        destination, expense,
+        startDate, endDate,
         details,
         requestFor },
       session: { user }
     } = req;
-
-    console.log(req.body)
 
     const requestedUser = await client.user.findUnique({
       where: { id: user.id },
@@ -99,15 +97,15 @@ async function handler(
           },
         },
 
-        kind: 30,
+        kind: 35,
         payload1: requestedUser.id.toString(),
         payload2: requestedUser.name.toString(),
         payload3: requestedProject.title.toString(),
         payload4: Categories[category].toString(),
-        payload5: item.toString(),
-        payload6: quantity.toString(),
-        payload7: PayMethods[paymentMethod].toString(),
-        payload8: totalPrice.toString(),
+        payload5: destination.toString(),
+        payload6: expense?.toString(),
+        payload7: startDate.toString(),
+        payload8: endDate.toString(),
         payload9: details.toString(),
         due: dueDate,
         status: 0,
@@ -118,18 +116,18 @@ async function handler(
 
     postMail(
       `${requestee.email}`,
-      `Account usage (purchase) Request from ${requestedUser.name.toString()}`,
-      "You have a new account usage request. Please check the request from the ASCL Portal.",
-      `<p>You have a new account usage request. <br /> 
+      `Business trip account Request from ${requestedUser.name.toString()}`,
+      "You have a new business trip account request. Please check the request from the ASCL Portal.",
+      `<p>You have a new business trip account request. <br /> 
       Please check the request from the
       <a href="http://ascl.kaist.ac.kr/portal" target="_blank" rel="noopener noreferrer">ASCL Portal</a>.<br />
       </p>
       <p>
       <b>계정(Account): </b> ${requestedProject.title.toString()} <br />
-      <b>세목(Category): </b> ${Categories[category].toString()} <br />
-      <b>품목/수량 Item (qty.):</b> ${item.toString()} (x${quantity.toString()})<br />
-      <b>결제방법(Payment method):</b> ${PayMethods[paymentMethod].toString()}<br />
-      <b>금액(Price):</b> ${totalPrice.toString()}</p>
+      <b>유형(Category): </b> ${Categories[category].toString()} <br />
+      <b>목적지(Destination):</b> ${destination.toString()} <br />
+      <b>예상비용(Expense):</b> ${expense ? expense.toString() : 'Unknown'}</p>
+      <b>출장기간:</b> ${startDate.toString()} ~ ${startDate.toString()}<br />
       <b>상세(Details):</b> ${details.toString()}</p>
       `,
       true);

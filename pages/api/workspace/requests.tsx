@@ -37,12 +37,15 @@ async function handler(
 
     const requests = await client.request.findMany({
       where: {
-        kind: 30,
+        OR: [
+          { kind: 30 },
+          { kind: 35 }
+        ],
         requestedFor: {
           id: +currentUser.id,
         },
       },
-      orderBy:[{createdAt:'desc'}]
+      orderBy: [{ createdAt: 'desc' }]
     });
 
     res.json({

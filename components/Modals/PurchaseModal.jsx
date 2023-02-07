@@ -15,7 +15,7 @@ function classNames(...classes) {
 }
 
 export default function PurchaseModal({ props }) {
-  const { action, isModalOpen, setIsModalOpen } = { ...props };
+  const { action, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage } = { ...props };
 
   const { register, control, watch, handleSubmit, setValue, reset } = useForm({
     defaultValues: {
@@ -24,14 +24,42 @@ export default function PurchaseModal({ props }) {
   });
 
   const projectAlias = watch('projectAlias');
+  const category = watch('category');
 
   const { data, mutate, error, isLoading } = useSWR(
     projectAlias ? `/api/purchase/${projectAlias}` :
       '/api/purchase');
-      
+
   const [purchaseRequest, { loading: purchaseRequestLoading, data: purchaseRequestData, error: purchaseRequestError }] = useMutation("/api/request/purchase");
 
-  // useEffect(() => { console.log(data) }, [data]);
+  useEffect(() => {
+    if(purchaseRequestLoading) return;
+    if (purchaseRequestData?.ok) {
+      setMessage(
+        { type: 'success', title: 'Successfully Sent!', details: 'Request for an account usage completed. Wait for the page reload.', }
+      )
+      setIsNotify(true);
+      reset();
+      setIsModalOpen(false);
+    }
+    if (purchaseRequestData?.error) {
+      switch (purchaseRequestData.error?.code) {
+        case '403':
+          setMessage(
+            { type: 'fail', title: 'Not allowed.', details: `${purchaseRequestData.error?.message}`, }
+          )
+          setIsNotify(true);
+          return;
+        default:
+          console.log("ERROR", data.error);
+          setMessage(
+            { type: 'fail', title: `${purchaseRequestData.error?.code}`, details: `${purchaseRequestData.error?.message}`, }
+          )
+          setIsNotify(true);
+          return;
+      }
+    }
+  },[purchaseRequestData]);
 
   const onValid = (validForm) => {
     if (isLoading || purchaseRequestLoading) return;
@@ -41,13 +69,13 @@ export default function PurchaseModal({ props }) {
   }
   const onInvalid = (errors) => {
     console.log(errors);
-    // setMessage(
-    //   {
-    //     type: 'fail', title: 'Creating project failed.',
-    //     details: `${Object.values(errors)[0]?.message}`,
-    //   }
-    // )
-    // setIsNotify(true);
+    setMessage(
+      {
+        type: 'fail', title: 'Request failed.',
+        details: `${Object.values(errors)[0]?.message}`,
+      }
+    )
+    setIsNotify(true);
   }
 
   return (
@@ -83,9 +111,23 @@ export default function PurchaseModal({ props }) {
           <form className="mt-3 flex flex-col items-center" onSubmit={handleSubmit(onValid, onInvalid)}>
 
             <div className="w-full">
-              <label htmlFor="title" className="text-sm font-semibold">
-                Account / Category
-              </label>
+              <div className="flex justify-between">
+                <label htmlFor="title" className="text-sm font-semibold">
+                  Account / Category
+                </label>
+                {data?.selectedProject ?
+                  <div className="text-right text-sm">
+                    <p className="text-gray-400">
+                      Balance:&nbsp;
+                      {category == "MPE" ? `${data.selectedProject.mpeBalance.toLocaleString()}` :
+                        category == "CPE" ? `${data.selectedProject.cpeBalance.toLocaleString()}` :
+                          category == "ME" ? `${data.selectedProject.meBalance.toLocaleString()}` :
+                            category == "AE" ? `${data.selectedProject.aeBalance.toLocaleString()}` : "?"}
+                      KRW
+                    </p>
+                  </div> :
+                  <></>}
+              </div>
               <div className="relative mt-1 rounded-md shadow-sm">
 
                 <input
@@ -133,8 +175,6 @@ export default function PurchaseModal({ props }) {
                     <option value="" hidden></option>
                     <option value="MPE">재료비</option>
                     <option value="CPE">전산처리비</option>
-                    <option value="DTE">국내출장비</option>
-                    <option value="OTE">해외출장비</option>
                     <option value="ME">회의비</option>
                     <option value="AE">수용비</option>
                     <option value="NS">X. Not sure</option>
@@ -320,7 +360,13 @@ export default function PurchaseModal({ props }) {
                 className="mx-1 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#2980b9] text-base font-medium text-white hover:bg-[#aacae6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2980b9] sm:text-sm"
                 type="submit"
               >
-                Send
+                {purchaseRequestLoading ?
+                  <span className="flex items-center text-center">
+                    <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-sky-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>processing...</span>
+                  : <span>Send</span>}
               </button>
               <button
                 className="mx-1 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2980b9]   sm:text-sm"

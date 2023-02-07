@@ -9,6 +9,7 @@ import {
   CheckCircleIcon,
   ChevronRightIcon,
   CreditCardIcon,
+  ExclamationTriangleIcon,
   PaperAirplaneIcon,
   PencilSquareIcon,
   QuestionMarkCircleIcon,
@@ -25,37 +26,46 @@ import Notification from '../Notification';
 
 const modals = [
   {
-    id: 'requests',
+    id: 'pending',
     icon: QuestionMarkCircleIcon,
-    name: 'Seminar Review Request',
+    name: 'Pending',
     detail: 'Press accept or decline. Press outside of the pop-up to withhold your decision.',
+    href: '#',
+    iconForeground: 'text-sky-700',
+    iconBackground: 'bg-sky-50',
+  },
+  {
+    id: 'completed',
+    icon: PencilSquareIcon,
+    name: 'Processing',
+    detail: 'Waiting for the next action.',
     href: '#',
     iconForeground: 'text-yellow-700',
     iconBackground: 'bg-yellow-50',
   },
   {
     id: 'completed',
-    icon: PencilSquareIcon,
-    name: 'Seminar Review Request',
-    detail: 'Please write a review for the request!',
-    href: '#',
-    iconForeground: 'text-green-700',
-    iconBackground: 'bg-green-50',
-  },
-  {
-    id: 'completed',
     icon: CheckCircleIcon,
-    name: 'Review Completed',
+    name: 'Completed',
     detail: 'Thank you for your efforts',
     href: '#',
     iconForeground: 'text-green-700',
     iconBackground: 'bg-green-50',
   },
   {
+    id: 'delayed',
+    icon: ExclamationTriangleIcon,
+    name: 'Delayed',
+    detail: '.',
+    href: '#',
+    iconForeground: 'text-red-700',
+    iconBackground: 'bg-red-50',
+  },
+  {
     id: 'declined',
     icon: XCircleIcon,
-    name: 'Seminar Review Request',
-    detail: 'This is the seminar information you declined to review.',
+    name: 'Declined',
+    detail: 'This is the request information you declined.',
     href: '#',
     iconForeground: 'text-red-700',
     iconBackground: 'bg-red-50',
@@ -107,11 +117,11 @@ const statusStyles = {
   declined: 'bg-gray-100 text-gray-800',
 }
 
-const Status={
-  '-1':'declined',
-  '0':'pending',
-  '1':'processing',
-  '2':'completed',
+const Status = {
+  '-1': 'declined',
+  '0': 'pending',
+  '1': 'processing',
+  '2': 'completed',
 }
 
 function classNames(...classes) {
@@ -157,14 +167,28 @@ function parseRequests(requests) {
       case 30:
         return {
           id: +`${request.id}`,
+          icon: BanknotesIcon,
           name: `${request.payload2}`,
           detail: `${request.payload3}`,
           href: '#',
-          amount: `${request.payload8}`,
-          currency: 'KRW',
+          amount: `${(+request.payload8).toLocaleString()}`,
+          currency: ' ￦',
           status: Status[`${request.status}`],
-          date: `${format(parseISO(request.updatedAt), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
-          datetime: `${format(parseISO(request.updatedAt), "yyyy-MM-dd")}`,//datetime: '2020-07-11',
+          date: `${format(parseISO(request.due), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
+          datetime: `${format(parseISO(request.due), "yyyy-MM-dd")}`,//datetime: '2020-07-11',
+        };
+      case 35:
+        return {
+          id: +`${request.id}`,
+          icon: BriefcaseIcon,
+          name: `${request.payload2}`,
+          detail: `${request.payload3}`,
+          href: '#',
+          amount: `${(+request.payload6).toLocaleString()}`,
+          currency: ' ￦',
+          status: Status[`${request.status}`],
+          date: `${format(parseISO(request.due), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
+          datetime: `${format(parseISO(request.due), "yyyy-MM-dd")}`,//datetime: '2020-07-11',
         };
     }
   })
@@ -216,7 +240,7 @@ export default function Requests() {
     <div className="px-4">
 
       <h2 className="text-lg font-medium leading-6 text-gray-900">
-        Recent requests
+        Received Requests
       </h2>
 
       {/* Activity list (smallest breakpoint only) */}
@@ -226,8 +250,8 @@ export default function Requests() {
             <li key={request.id}>
               <a href={request.href} className="block bg-white px-4 py-4 hover:bg-gray-50">
                 <span className="flex items-center space-x-4">
-                  <span className="flex flex-1 space-x-2 truncate">
-                    <BanknotesIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                  <span className="flex flex-1 grow space-x-2 truncate">
+                    <request.icon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                     <span className="flex flex-col truncate text-sm text-gray-500">
                       <span className="truncate">{request.name}</span>
                       <span className="truncate">{request.detail}</span>
@@ -292,8 +316,9 @@ export default function Requests() {
                     className="bg-gray-50 py-3 text-left text-sm font-semibold text-gray-900"
                     scope="col"
                   >
-                    Details
+                    From
                   </th>
+
                   <th
                     className="hidden md:block bg-gray-50 px-4 py-3 text-right text-sm font-semibold text-gray-900"
                     scope="col"
@@ -316,25 +341,32 @@ export default function Requests() {
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
                 {requests?.map((request) => (
-                  <tr key={request.id} className="bg-white">
-                    <td className="max-w-xs whitespace-nowrap px-4 py-4 text-sm text-gray-900">
-                      <div className="flex">
-                        <a href={request.href} className="group inline-flex space-x-2 truncate text-sm">
-                          <BanknotesIcon
-                            className="h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                            aria-hidden="true"
-                          />
-                          <p className="truncate text-gray-500 group-hover:text-gray-900">
-                            {request.name}
-                          </p>
-                        </a>
-                      </div>
-                    </td>
-                    <td className="w-full max-w-0 truncate py-4 text-sm text-gray-500">
-                      <span className="whitespace-nowrap py-4 text-right text-sm text-gray-500">
+
+                  <tr key={request.id} className="bg-white hover:bg-gray-100">
+                    <td className="w-full max-w-0 truncate px-4 py-4 text-sm text-gray-500">
+                    <a href={request.href} className="group space-x-2 truncate text-sm">
+
+                    <request.icon
+                              className="inline h-5 w-5 text-gray-500 group-hover:text-sky-600"
+                              aria-hidden="true"
+                            />
+                      <span className="whitespace-nowrap py-4 text-right text-sm text-gray-500 group-hover:text-sky-600">
+
                         {request.detail}
                       </span>
+                      </a>
                     </td>
+                    <td className="max-w-xs whitespace-nowrap py-4 text-sm text-gray-900">
+                      <div className="flex">
+                        <div className="group inline-flex space-x-2 truncate text-sm">
+
+                            <p className="truncate text-gray-500">
+                              {request.name}
+                            </p>
+                        </div>
+                      </div>
+                    </td>
+
                     <td className="hidden md:block whitespace-nowrap px-4 py-4 text-right text-sm text-gray-500">
                       <span className="font-medium text-gray-900">{request.amount}</span>
                       {request.currency}

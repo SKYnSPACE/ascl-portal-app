@@ -32,10 +32,8 @@ async function handler(
       },
       select: {
         id: true,
-        mpeBalance: true,
-        cpeBalance: true,
-        meBalance: true,
-        aeBalance: true,
+        dteBalance: true,
+        oteBalance: true,
       }
     })
 

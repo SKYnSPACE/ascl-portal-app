@@ -11,11 +11,8 @@ async function handler(
   if (req.method === "GET") {
 
     const {
-      query: { alias },
       session: { user }
     } = req;
-
-    console.log(alias)
 
     const currentUser = await client.user.findUnique({
       where: { id: user.id },
@@ -26,20 +23,8 @@ async function handler(
     }
 
 
-    const selectedProject = await client.project.findUnique({
-      where: {
-        alias: alias?.toString(),
-      },
-      select: {
-        id: true,
-        mpeBalance: true,
-        cpeBalance: true,
-        meBalance: true,
-        aeBalance: true,
-      }
-    })
-
-
+    //TODO: Show only related projects
+    //TODO: (prof. sec. Lab manager: all / team Leader: all )
     if (authority >= 6) {
       const myProjects = await client.project.findMany({
         where: {
@@ -55,58 +40,9 @@ async function handler(
         },
       })
 
-      let managers = [];
-      if (selectedProject)
-        managers = await client.user.findMany({
-          where: {
-            managingProjects: {
-              some: {
-                projectId: +selectedProject?.id
-              }
-            }
-          }
-        })
-
-      const directors = await client.user.findMany({
-        where: {
-          position: {
-            gte: 3,
-            lte: 7,
-          },
-        },
-        orderBy: [{
-          position: 'asc',
-        },
-        {
-          userNumber: 'desc',
-        }]
-      })
-
-      // const approval = await client.user.findMany({
-      //   where: {
-      //     OR: [{
-      //       position: {
-      //         gte: 3,
-      //         lte: 7,
-      //       },
-      //     },
-      //     {
-      //       managingProjects: {
-      //         some: {
-      //           projectId: +selectedProject?.id
-      //         }
-      //       }
-      //     }
-      //     ],
-      //   }
-      // })
-
       res.json({
         ok: true,
         myProjects,
-        selectedProject,
-        managers,
-        directors,
       });
     }
     else {
@@ -153,40 +89,9 @@ async function handler(
         },
       })
 
-      
-      let managers = [];
-      if (selectedProject)
-        managers = await client.user.findMany({
-          where: {
-            managingProjects: {
-              some: {
-                projectId: +selectedProject?.id
-              }
-            }
-          }
-        })
-
-      const directors = await client.user.findMany({
-        where: {
-          position: {
-            gte: 3,
-            lte: 7,
-          },
-        },
-        orderBy: [{
-          position: 'asc',
-        },
-        {
-          userNumber: 'desc',
-        }]
-      })
-
       res.json({
         ok: true,
         myProjects,
-        selectedProject,
-        managers,
-        directors,
       });
     }
   }
