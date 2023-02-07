@@ -3,6 +3,7 @@ import withHandler, { ResponseType } from "../../../../libs/backend/withHandler"
 import client from "../../../../libs/backend/client";
 import { withApiSession } from "../../../../libs/backend/withSession";
 
+// return the review written by current user.
 async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
@@ -11,8 +12,6 @@ async function handler(
   if (req.method === "GET") {
 
     const {
-      //TODO?: alias가 함께 들어오면, review 내용을 반환할것
-      // query:{alias},
       query: {seminarId},
       session: { user }
     } = req;

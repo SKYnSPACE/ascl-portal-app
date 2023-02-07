@@ -15,7 +15,7 @@ export function middleware(req) {
   // console.log(url)
   switch (url.pathname) {
     case '/workspace/[utility]':
-      url.pathname = '/workspace/calendar';
+      url.pathname = '/workspace/requests';
       return NextResponse.redirect(url);
 
     case '/projects/[alias]':

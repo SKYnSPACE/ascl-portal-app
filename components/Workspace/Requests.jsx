@@ -1,231 +1,390 @@
-import { useState, Fragment } from 'react'
+import { useState, Fragment, useEffect } from 'react'
+import useSWR from "swr";
+
 import { CalendarIcon, TagIcon, UserIcon } from '@heroicons/react/20/solid'
 import {
   ArrowRightOnRectangleIcon,
   BanknotesIcon,
   BriefcaseIcon,
+  CheckCircleIcon,
+  ChevronRightIcon,
   CreditCardIcon,
   PaperAirplaneIcon,
+  PencilSquareIcon,
   QuestionMarkCircleIcon,
+  XCircleIcon,
 } from '@heroicons/react/24/outline'
 
-import ReviewPendingModal from '../Seminar/Modals/ReviewPendingModal'
+import { format, parseISO } from "date-fns";
 
-// TODO:
-// Seminar Review Request
-// Purchasing Request
-// Card usage Request
-//etc.
+import ReviewPendingModal from './Modals/ReviewPendingModal';
+import ReviewAcceptedModal from './Modals/ReviewAcceptedModal';
+import ReviewCompletedModal from './Modals/ReviewCompletedModal';
+import ReviewDeclinedModal from './Modals/ReviewDeclinedModal';
+import Notification from '../Notification';
 
-const items = [
+const modals = [
   {
-    category: 'requests',
-    descriptions: 'Please accept or decline the requests.',
-    list: [
-      {
-        name: 'Seongheon Lee',
-        title: 'Dynamic modeling and control of mechanical systems using machine learning approaches and their applications to a quadrotor UAV',
-        semester: '2022-F',
-        tags: 'UAV, AI, quadrotor, modeling, control',
-        requestedDate: '2022-12-29 23:00',
-      },
-      {
-        name: 'Hyochoong Bang',
-        title: '프로젝트 담당자 할당 및 바람직한 랩 생활을 위한 조언',
-        semester: '2022-F',
-        tags: 'ASCL',
-        requestedDate: '2022-12-29 23:00',
-      },
-    ],
-  },
-  {
-    category: 'accepted',
-    descriptions: 'Please write a review for the presentation!',
-    list: [
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...1', semester: '2022-F',},
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...2', semester: '2022-F',},
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...3', semester: '2022-F',},
-    ],
-  },
-  {
-    category: 'finished',
-    descriptions: 'Thanks for your efforts :)',
-    list: [
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...1', semester: '2022-F',},
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...2', semester: '2022-F',},
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...3', semester: '2022-F',},
-    ],
-  },
-  {
-    category: 'declined',
-    descriptions: 'List of declined presentations.',
-    list: [
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...1', semester: '2022-F',},
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...2', semester: '2022-F',},
-      { name: '홍길동', title: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...3', semester: '2022-F',},
-    ],
-  },
-]
-
-const actions = [
-  {
-    id: 1,
+    id: 'requests',
     icon: QuestionMarkCircleIcon,
-    name: 'Accept/Decline',
-    detail: '아래 내용에 대한 리뷰 요청을 수락하시겠습니까?',
+    name: 'Seminar Review Request',
+    detail: 'Press accept or decline. Press outside of the pop-up to withhold your decision.',
     href: '#',
     iconForeground: 'text-yellow-700',
     iconBackground: 'bg-yellow-50',
+  },
+  {
+    id: 'completed',
+    icon: PencilSquareIcon,
+    name: 'Seminar Review Request',
+    detail: 'Please write a review for the request!',
+    href: '#',
+    iconForeground: 'text-green-700',
+    iconBackground: 'bg-green-50',
+  },
+  {
+    id: 'completed',
+    icon: CheckCircleIcon,
+    name: 'Review Completed',
+    detail: 'Thank you for your efforts',
+    href: '#',
+    iconForeground: 'text-green-700',
+    iconBackground: 'bg-green-50',
+  },
+  {
+    id: 'declined',
+    icon: XCircleIcon,
+    name: 'Seminar Review Request',
+    detail: 'This is the seminar information you declined to review.',
+    href: '#',
+    iconForeground: 'text-red-700',
+    iconBackground: 'bg-red-50',
+  },
+]
+
+const requests = [
+  {
+    id: 1,
+    name: 'Seongheon Lee',
+    detail: '미래 전장 응용을 위한 고신뢰성의 다목적 호버바이크 개발(2019년도)',
+    href: '#',
+    amount: '20,000',
+    currency: 'KRW',
+    status: 'pending',
+    date: 'July 11, 2020',
+    datetime: '2020-07-11',
   },
   {
     id: 2,
-    icon: ArrowRightOnRectangleIcon,
-    name: 'Carry-out report',
-    detail: '실험실 물품 반출/반납 대장',
+    name: 'Seongheon Lee',
+    detail: '미래 전장 응용을 위한 고신뢰성의 다목적 호버바이크 개발(2019년도)',
     href: '#',
-    iconForeground: 'text-purple-700',
-    iconBackground: 'bg-purple-50',
+    amount: '20,000',
+    currency: 'KRW',
+    status: 'processing',
+    date: 'July 11, 2020',
+    datetime: '2020-07-11',
   },
   {
     id: 3,
-    icon: CreditCardIcon,
-    name: 'Credit-card Use',
-    detail: '법인카드 사용을 위한 일정 문의',
+    name: 'Seongheon Lee',
+    detail: '미래 전장 응용을 위한 고신뢰성의 다목적 호버바이크 개발(2019년도)',
     href: '#',
-    iconForeground: 'text-sky-700',
-    iconBackground: 'bg-sky-50',
+    amount: '20,000',
+    currency: 'KRW',
+    status: 'declined',
+    date: 'July 11, 2020',
+    datetime: '2020-07-11',
   },
-  {
-    id: 4,
-    icon: BanknotesIcon,
-    name: 'Purchase Request',
-    detail: '공동구매를 위한 물품 기록',
-    href: '#',
-    iconForeground: 'text-yellow-700',
-    iconBackground: 'bg-yellow-50',
-  },
-  {
-    id: 5,
-    icon: BriefcaseIcon,
-    name: 'Business Trip',
-    detail: 'Request account information for a business trip.',
-    href: '#',
-    iconForeground: 'text-rose-700',
-    iconBackground: 'bg-rose-50',
-  },
-  {
-    id: 6,
-    icon: PaperAirplaneIcon,
-    name: 'Stepping Out',
-    detail: 'Report for a temporary absence from a office, vacation, etc.',
-    href: '#',
-    iconForeground: 'text-indigo-700',
-    iconBackground: 'bg-indigo-50',
-  },
+  // More requests...
 ]
+
+const statusStyles = {
+  pending: 'bg-sky-100 text-sky-800',
+  processing: 'bg-yellow-100 text-yellow-800', //accepted, yet incomplete
+  completed: 'bg-green-100 text-green-800',
+  delayed: 'bg-red-100 text-red-800',
+  declined: 'bg-gray-100 text-gray-800',
+}
+
+const Status={
+  '-1':'declined',
+  '0':'pending',
+  '1':'processing',
+  '2':'completed',
+}
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-// function DateTimeDisplay({ category, presentationInfo }) {
+// function DateTimeDisplay({ category, requestInfo }) {
 //   switch (category) {
 //     case 'requests':
 //       return (
 //         <p>
-//           requests on <time dateTime={presentationInfo.requestedDate}>{presentationInfo.requestedDate}</time>
+//           requests on <time dateTime={requestInfo.requestedAt}>{requestInfo.requestedAt}</time>
 //         </p>
 //       );
 
-//     case 'accepted':
+//     case 'completed':
 //       return (
 //         <p>
-//           Accepted on <time dateTime={presentationInfo.acceptedDate}>{presentationInfo.acceptedDate}</time>
+//           completed on <time dateTime={requestInfo.acceptedDate}>{requestInfo.acceptedDate}</time>
 //         </p>
 //       );
 
 //     case 'finished':
 //       return (
 //         <p>
-//           Finished on <time dateTime={presentationInfo.finishedDate}>{presentationInfo.finishedDate}</time>
+//           Finished on <time dateTime={requestInfo.finishedDate}>{requestInfo.finishedDate}</time>
 //         </p>
 //       );
 
 //     case 'declined':
 //       return (
 //         <p>
-//           Declined on <time dateTime={presentationInfo.declinedDate}>{presentationInfo.declinedDate}</time>
+//           Declined on <time dateTime={requestInfo.declinedDate}>{requestInfo.declinedDate}</time>
 //         </p>
 //       );
 //     default: return (<p>---</p>);
 //   }
 // }
 
+function parseRequests(requests) {
+  const parsedList = requests?.map((request) => {
+    switch (request.kind) {
+      case 30:
+        return {
+          id: +`${request.id}`,
+          name: `${request.payload2}`,
+          detail: `${request.payload3}`,
+          href: '#',
+          amount: `${request.payload8}`,
+          currency: 'KRW',
+          status: Status[`${request.status}`],
+          date: `${format(parseISO(request.updatedAt), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
+          datetime: `${format(parseISO(request.updatedAt), "yyyy-MM-dd")}`,//datetime: '2020-07-11',
+        };
+    }
+  })
+
+  return parsedList;
+}
+
 export default function Requests() {
-  const [isModalOpen, setIsModalOpen] = useState(0); //0: None, 1: Accept/Decline, 2: Write Review, 3: Modify Review, 4: Presentation Info
+  const [isModalOpen, setIsModalOpen] = useState(0);
+  const [isNotify, setIsNotify] = useState(false);
+  const [message, setMessage] = useState({ type: 'success', title: 'Confirmed!', details: 'Test message initiated.', });
+
+  const [reviewItems, setReviewItems] = useState([]);
+
+  const { data, error, isLoading } = useSWR(`/api/workspace/requests`);
+
+  const [requests, setRequests] = useState(null);
+
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    if (data && data.ok) {
+      let requests = [];
+
+      const purchaseRequests = parseRequests(data.requests);
+      requests.push(purchaseRequests)
+
+      console.log(requests)
+
+      setRequests(...requests);
+    }
+  }, [data])
+
+  // useEffect(() => {
+  //   // console.log(seminarAlias)
+  // }, [seminarAlias])
+
+  // useEffect(() => {
+  //   console.log(seminarData?.seminar)
+  //   console.log(requestId)
+  // }, [seminarData])
+
+  // useEffect(() => {
+  //   console.log(requestId)
+  // }, [requestId])
 
   return (
     <div className="px-4">
 
-      {/* <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto">
-          <h1 className="text-xl font-semibold text-gray-900">Peer Review</h1>
-          <p className="mt-2 text-sm text-gray-700">
-            Check the list below:
-          </p>
-        </div>
-      </div> */}
+      <h2 className="text-lg font-medium leading-6 text-gray-900">
+        Recent requests
+      </h2>
 
+      {/* Activity list (smallest breakpoint only) */}
+      <div className="shadow md:hidden">
+        <ul role="list" className="mt-2 divide-y divide-gray-200 overflow-hidden shadow md:hidden">
+          {requests?.map((request) => (
+            <li key={request.id}>
+              <a href={request.href} className="block bg-white px-4 py-4 hover:bg-gray-50">
+                <span className="flex items-center space-x-4">
+                  <span className="flex flex-1 space-x-2 truncate">
+                    <BanknotesIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                    <span className="flex flex-col truncate text-sm text-gray-500">
+                      <span className="truncate">{request.name}</span>
+                      <span className="truncate">{request.detail}</span>
+                      <span>
+                        <span className="font-medium text-gray-900">{request.amount}</span>{' '}
+                        {request.currency}
+                      </span>
+                      <time dateTime={request.datetime} className="flex justify-between">{request.date}
+                        <span
+                          className={classNames(
+                            statusStyles[request.status],
+                            'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                          )}
+                        >
+                          {request.status}
+                        </span>
+                      </time>
+                    </span>
+                  </span>
+                  <ChevronRightIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
 
-      {items.map((item) => (
-        <div className="overflow-hidden bg-white border border-gray-300 shadow-lg sm:rounded-md mt-4">
-          <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">{item.list.length} {item.category}</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              {item.descriptions}
-            </p>
+        <nav
+          className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3"
+          aria-label="Pagination"
+        >
+          <div className="flex flex-1 justify-between">
+            <a
+              href="#"
+              className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500"
+            >
+              Previous
+            </a>
+            <a
+              href="#"
+              className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500"
+            >
+              Next
+            </a>
           </div>
-          <ul role="list" className="divide-y divide-gray-200">
-            {item.list.map((presentation) => (
-              <li key={item.category}>
-                <a href="#" className="block hover:bg-gray-50" onClick={(evt) => {
-                  evt.preventDefault();
-                  setIsModalOpen(1);
-                }}>
-                  <div className="px-4 py-4 sm:px-6">
-                    <div className="flex items-center justify-between">
-                      <p className="truncate text-sm font-medium text-sky-600">[{presentation.semester}] {presentation.title}</p>
-                      <div className="ml-2 flex flex-shrink-0">
-                        <p className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
-                          {/* {presentation.name} */}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="mt-2 sm:flex sm:justify-between">
-                      <div className="sm:flex">
-                        <p className="flex items-center text-sm text-gray-500">
-                          <UserIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                          {presentation.name}
-                        </p>
-                        <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
-                          <TagIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                          {presentation.tags}
-                        </p>
-                      </div>
-                      <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                        <CalendarIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                        {/* <DateTimeDisplay category={item.category} presentationInfo={presentation} /> */}
-                        <p>requests on <time dateTime={presentation.requestedDate}>{presentation.requestedDate}</time></p>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>))}
+        </nav>
+      </div>
 
-      <ReviewPendingModal props={{ action: actions[0], isModalOpen, setIsModalOpen }} />
+      {/* Activity table (small breakpoint and up) */}
+      <div className="hidden md:block">
+        <div className="mt-2 flex flex-col">
+          <div className="min-w-full overflow-hidden overflow-x-auto align-middle shadow sm:rounded-lg">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead>
+                <tr>
+                  <th
+                    className="bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-900"
+                    scope="col"
+                  >
+                    Request
+                  </th>
+                  <th
+                    className="bg-gray-50 py-3 text-left text-sm font-semibold text-gray-900"
+                    scope="col"
+                  >
+                    Details
+                  </th>
+                  <th
+                    className="hidden md:block bg-gray-50 px-4 py-3 text-right text-sm font-semibold text-gray-900"
+                    scope="col"
+                  >
+                    Amount
+                  </th>
+                  <th
+                    className=" bg-gray-50 px-4 py-3 text-center text-sm font-semibold text-gray-900"
+                    scope="col"
+                  >
+                    Status
+                  </th>
+                  <th
+                    className="hidden md:block bg-gray-50 px-4 py-3 text-right text-sm font-semibold text-gray-900"
+                    scope="col"
+                  >
+                    Due Date
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {requests?.map((request) => (
+                  <tr key={request.id} className="bg-white">
+                    <td className="max-w-xs whitespace-nowrap px-4 py-4 text-sm text-gray-900">
+                      <div className="flex">
+                        <a href={request.href} className="group inline-flex space-x-2 truncate text-sm">
+                          <BanknotesIcon
+                            className="h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                            aria-hidden="true"
+                          />
+                          <p className="truncate text-gray-500 group-hover:text-gray-900">
+                            {request.name}
+                          </p>
+                        </a>
+                      </div>
+                    </td>
+                    <td className="w-full max-w-0 truncate py-4 text-sm text-gray-500">
+                      <span className="whitespace-nowrap py-4 text-right text-sm text-gray-500">
+                        {request.detail}
+                      </span>
+                    </td>
+                    <td className="hidden md:block whitespace-nowrap px-4 py-4 text-right text-sm text-gray-500">
+                      <span className="font-medium text-gray-900">{request.amount}</span>
+                      {request.currency}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
+                      <span
+                        className={classNames(
+                          statusStyles[request.status],
+                          'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                        )}
+                      >
+                        {request.status}
+                      </span>
+                    </td>
+                    <td className="hidden md:block whitespace-nowrap px-4 py-4 text-right text-sm text-gray-500">
+                      <time dateTime={request.datetime}>{request.date}</time>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {/* Pagination */}
+            <nav
+              className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-4"
+              aria-label="Pagination"
+            >
+              <div className="hidden sm:block">
+                <p className="text-sm text-gray-700">
+                  Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of{' '}
+                  <span className="font-medium">20</span> results
+                </p>
+              </div>
+              <div className="flex flex-1 justify-between sm:justify-end">
+                <a
+                  href="#"
+                  className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  Previous
+                </a>
+                <a
+                  href="#"
+                  className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  Next
+                </a>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
 
     </div>
   )

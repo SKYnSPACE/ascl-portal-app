@@ -182,6 +182,8 @@ model Request{
   payload6    String? //reserved.
   payload7    String? //reserved.
   payload8    String? //reserved.
+  payload9    String? //reserved.
+  payload10   String? //reserved.
 
   due         DateTime
   status      Int //(Enum. Pending, Accepted(Processing), Delayed, Rejected)

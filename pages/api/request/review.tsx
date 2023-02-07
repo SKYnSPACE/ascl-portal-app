@@ -26,6 +26,7 @@ async function handler(
 
     const allReviewRequests = await client.request.findMany({
       where: {
+        kind: 90,
         requestedFor: {
           id: +currentUser.id,
         },
@@ -53,7 +54,7 @@ async function handler(
 
   if (req.method === "POST") {
     let dueDate = new Date();
-    dueDate.setDate(dueDate.getDate() + 15);
+    dueDate.setDate(dueDate.getDate() + 4);
 
     const {
       body: { requestFor, alias },
@@ -124,9 +125,11 @@ async function handler(
       postMail(
       `${user.email}`,
       `Peer Review Request from ${currentUser.name.toString()}`,
-      "You have new seminar review request. Please check the request from the ASCL Portal.",
-      `<p>You have new seminar review request. <br /> 
-      Please check the request from the ASCL Portal.</p>
+      "You have a new seminar review request. Please check the request from the ASCL Portal.",
+      `<p>You have a new seminar review request. <br /> 
+      Please check the request from the
+      <a href="http://ascl.kaist.ac.kr/portal" target="_blank" rel="noopener noreferrer">ASCL Portal</a>
+      .<br /></p>
       <p>
       <b>Title: </b> ${currentSeminar.title.toString()} <br />
       <b>Presented by:</b> ${currentUser.name.toString()} (${currentUser.email.toString()})<br />

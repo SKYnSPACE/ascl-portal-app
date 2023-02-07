@@ -8,6 +8,7 @@ import { Dialog } from "@headlessui/react";
 import { CheckIcon, ExclamationCircleIcon, HomeIcon, LocationMarkerIcon, RefreshIcon, PlusIcon, PlusSmIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 import { NumericFormat } from 'react-number-format';
+import useMutation from "../../libs/frontend/useMutation";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -27,16 +28,16 @@ export default function PurchaseModal({ props }) {
   const { data, mutate, error, isLoading } = useSWR(
     projectAlias ? `/api/purchase/${projectAlias}` :
       '/api/purchase');
+      
+  const [purchaseRequest, { loading: purchaseRequestLoading, data: purchaseRequestData, error: purchaseRequestError }] = useMutation("/api/request/purchase");
 
-
-
-  useEffect(() => { console.log(data) }, [data]);
+  // useEffect(() => { console.log(data) }, [data]);
 
   const onValid = (validForm) => {
-    if (isLoading || false) return;
+    if (isLoading || purchaseRequestLoading) return;
     console.log(validForm);
 
-    // editProject(validForm);
+    purchaseRequest(validForm);
   }
   const onInvalid = (errors) => {
     console.log(errors);

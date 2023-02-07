@@ -23,18 +23,21 @@ import Requests from '../../../components/Workspace/Requests';
 
 
 const subNavigation = [
-  { name: 'Lab. Calendar', href: '/workspace/calendar', icon: CalendarDaysIcon, onDev: true },
-  { name: 'Contacts', href: '/workspace/contacts', icon: IdentificationIcon, onDev:false },
-  
-  { name: 'Requests', href: '/workspace/requests', icon: BellAlertIcon, onDev: true },
-  
-  { name: 'Purchasing', href: '/workspace/purchasing', icon: CreditCardIcon, onDev:true },
-  { name: 'Ledger', href: '/workspace/ledger', icon: ClipboardDocumentListIcon, onDev:true },
+  { id: 0, name: 'Requests', href: '/workspace/requests', icon: BellAlertIcon, onDev: false },
+  { id: 30, name: 'Purchasing', href: '/workspace/purchasing', icon: CreditCardIcon, onDev: false },
+  { id: 31, name: 'Business Trip', href: '/workspace/trip', icon: BriefcaseIcon, onDev: true },
+  { id: 100, name:''},
 
-  { name: 'Business Trip', href: '/workspace/trip', icon: BriefcaseIcon, onDev:true },
-  { name: 'Conferences', href: '/workspace/conferences', icon: PresentationChartLineIcon, onDev:true },
+  { id: 4, name: 'Lab. Calendar', href: '/workspace/calendar', icon: CalendarDaysIcon, onDev: true },
+  { id: 5, name: 'Contacts', href: '/workspace/contacts', icon: IdentificationIcon, onDev: false },
+  { id: 8, name: 'Attendance', href: '/workspace/attendance', icon: UsersIcon, onDev: true },
+  
+  { id: 101, name:''},
+  
+  { id: 6, name: 'Ledger', href: '/workspace/ledger', icon: ClipboardDocumentListIcon, onDev: true },
+  { id: 7, name: 'Conferences', href: '/workspace/conferences', icon: PresentationChartLineIcon, onDev: true },
 
-  { name: 'Attendance', href: '/workspace/attendance', icon: UsersIcon, onDev:true },
+  
 ]
 
 function classNames(...classes) {
@@ -51,24 +54,24 @@ function Utility() {
       return <Calendar />;
 
     case 'requests':
-      return <Page404 />;
-      // return <Requests />;
+      // return <Page404 />;
+      return <Requests />;
 
     case 'attendance':
       return <Page404 />;
-      // return <Attendance />;
+    // return <Attendance />;
 
     case 'purchasing':
       return <Page404 />;
-      // return <Purchasing />;
+    // return <Purchasing />;
 
     case 'trip':
       return <Page404 />;
-      // return <BusinessTrip />;
+    // return <BusinessTrip />;
 
     case 'ledger':
       return <Page404 />;
-      // return <Ledger />;
+    // return <Ledger />;
 
     case 'contacts':
       return <Contacts />;
@@ -92,29 +95,32 @@ export default function Workspace() {
             <aside className="py-6 lg:col-span-3">
               <nav className="space-y-1">
                 {subNavigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className={classNames(
-                      item.href === router.asPath
-                        ? 'bg-sky-50 border-sky-500 text-sky-700 hover:bg-sky-50 hover:text-sky-700'
-                        : 'border-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-900',
-                        item.onDev ? 'line-through decoration-double':'underline underline-offset-2',
-                      'group border-l-4 px-3 py-2 flex items-center text-sm font-medium'
-                    )}
-                    aria-current={item.href === router.asPath ? 'page' : undefined}
-                  >
-                    <item.icon
+                  <div key={item.id}>
+                    {item.name ?
+                    <a
+                      href={item.href}
                       className={classNames(
                         item.href === router.asPath
-                          ? 'text-sky-500 group-hover:text-sky-500'
-                          : 'text-gray-400 group-hover:text-gray-500',
-                        'flex-shrink-0 -ml-1 mr-3 h-6 w-6'
+                          ? 'bg-sky-50 border-sky-500 text-sky-700 hover:bg-sky-50 hover:text-sky-700'
+                          : 'border-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-900',
+                        item.onDev ? 'line-through decoration-double' : '',
+                        'group border-l-4 px-3 py-2 flex items-center text-sm font-medium'
                       )}
-                      aria-hidden="true"
-                    />
-                    <span className="truncate">{item.name}</span>
-                  </a>
+                      aria-current={item.href === router.asPath ? 'page' : undefined}
+                    >
+                      <item.icon
+                        className={classNames(
+                          item.href === router.asPath
+                            ? 'text-sky-500 group-hover:text-sky-500'
+                            : 'text-gray-400 group-hover:text-gray-500',
+                          'flex-shrink-0 -ml-1 mr-3 h-6 w-6'
+                        )}
+                        aria-hidden="true"
+                      />
+                      <span className="truncate">{item.name}</span>
+                    </a>
+                     :<hr className="bg-gray-200" />}
+                  </div>
                 ))}
               </nav>
             </aside>
