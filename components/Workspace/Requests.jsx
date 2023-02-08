@@ -18,27 +18,38 @@ import {
 
 import { format, parseISO } from "date-fns";
 
-import ReviewPendingModal from './Modals/ReviewPendingModal';
-import ReviewAcceptedModal from './Modals/ReviewAcceptedModal';
-import ReviewCompletedModal from './Modals/ReviewCompletedModal';
-import ReviewDeclinedModal from './Modals/ReviewDeclinedModal';
-import Notification from '../Notification';
+import PurchaseRequestModal from './Modals/PurchaseRequestModal';
+// import TripRequestModal from './Modals/TripRequestModal';
+// import ReviewCompletedModal from './Modals/ReviewCompletedModal';
+// import ReviewDeclinedModal from './Modals/ReviewDeclinedModal';
+// import Notification from '../Notification';
 
 const modals = [
+  {
+    id: 30,
+    name: 'Purchasing Request',
+  },
+  {
+    id: 35,
+    name: 'Business Trip Request'
+  }
+];
+
+const modals_by_category = [
   {
     id: 'pending',
     icon: QuestionMarkCircleIcon,
     name: 'Pending',
-    detail: 'Press accept or decline. Press outside of the pop-up to withhold your decision.',
+    title: 'Press accept or decline. Press outside of the pop-up to withhold your decision.',
     href: '#',
     iconForeground: 'text-sky-700',
     iconBackground: 'bg-sky-50',
   },
   {
-    id: 'completed',
+    id: 'processing',
     icon: PencilSquareIcon,
     name: 'Processing',
-    detail: 'Waiting for the next action.',
+    title: 'Waiting for the next action.',
     href: '#',
     iconForeground: 'text-yellow-700',
     iconBackground: 'bg-yellow-50',
@@ -47,7 +58,7 @@ const modals = [
     id: 'completed',
     icon: CheckCircleIcon,
     name: 'Completed',
-    detail: 'Thank you for your efforts',
+    title: 'Thank you for your efforts',
     href: '#',
     iconForeground: 'text-green-700',
     iconBackground: 'bg-green-50',
@@ -56,7 +67,7 @@ const modals = [
     id: 'delayed',
     icon: ExclamationTriangleIcon,
     name: 'Delayed',
-    detail: '.',
+    title: '.',
     href: '#',
     iconForeground: 'text-red-700',
     iconBackground: 'bg-red-50',
@@ -65,18 +76,19 @@ const modals = [
     id: 'declined',
     icon: XCircleIcon,
     name: 'Declined',
-    detail: 'This is the request information you declined.',
+    title: 'This is the request information you declined.',
     href: '#',
     iconForeground: 'text-red-700',
     iconBackground: 'bg-red-50',
   },
 ]
 
+
 const requests = [
   {
     id: 1,
     name: 'Seongheon Lee',
-    detail: '미래 전장 응용을 위한 고신뢰성의 다목적 호버바이크 개발(2019년도)',
+    title: '미래 전장 응용을 위한 고신뢰성의 다목적 호버바이크 개발(2019년도)',
     href: '#',
     amount: '20,000',
     currency: 'KRW',
@@ -87,7 +99,7 @@ const requests = [
   {
     id: 2,
     name: 'Seongheon Lee',
-    detail: '미래 전장 응용을 위한 고신뢰성의 다목적 호버바이크 개발(2019년도)',
+    title: '미래 전장 응용을 위한 고신뢰성의 다목적 호버바이크 개발(2019년도)',
     href: '#',
     amount: '20,000',
     currency: 'KRW',
@@ -98,7 +110,7 @@ const requests = [
   {
     id: 3,
     name: 'Seongheon Lee',
-    detail: '미래 전장 응용을 위한 고신뢰성의 다목적 호버바이크 개발(2019년도)',
+    title: '미래 전장 응용을 위한 고신뢰성의 다목적 호버바이크 개발(2019년도)',
     href: '#',
     amount: '20,000',
     currency: 'KRW',
@@ -108,6 +120,8 @@ const requests = [
   },
   // More requests...
 ]
+
+
 
 const statusStyles = {
   pending: 'bg-sky-100 text-sky-800',
@@ -167,11 +181,17 @@ function parseRequests(requests) {
       case 30:
         return {
           id: +`${request.id}`,
+          kind: 30,
           icon: BanknotesIcon,
           name: `${request.payload2}`,
-          detail: `${request.payload3}`,
+          title: `${request.payload3}`,
+          category: `${request.payload4}`,
+          item: `${request.payload5}`,
+          quantity: `${request.payload6}`,
+          payMethod: `${request.payload7}`,
           href: '#',
           amount: `${(+request.payload8).toLocaleString()}`,
+          details: `${request.payload9}`,
           currency: ' ￦',
           status: Status[`${request.status}`],
           date: `${format(parseISO(request.due), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
@@ -180,9 +200,11 @@ function parseRequests(requests) {
       case 35:
         return {
           id: +`${request.id}`,
+          kind: 35,
           icon: BriefcaseIcon,
           name: `${request.payload2}`,
-          detail: `${request.payload3}`,
+          title: `${request.payload3}`,
+          category: `${request.payload4}`,
           href: '#',
           amount: `${(+request.payload6).toLocaleString()}`,
           currency: ' ￦',
@@ -206,7 +228,7 @@ export default function Requests() {
   const { data, error, isLoading } = useSWR(`/api/workspace/requests`);
 
   const [requests, setRequests] = useState(null);
-
+  const [selectedRequest, setSelectedRequest] = useState({});
 
   useEffect(() => {
     if (isLoading) return;
@@ -254,7 +276,7 @@ export default function Requests() {
                     <request.icon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                     <span className="flex flex-col truncate text-sm text-gray-500">
                       <span className="truncate">{request.name}</span>
-                      <span className="truncate">{request.detail}</span>
+                      <span className="truncate">{request.title}</span>
                       <span>
                         <span className="font-medium text-gray-900">{request.amount}</span>{' '}
                         {request.currency}
@@ -344,25 +366,30 @@ export default function Requests() {
 
                   <tr key={request.id} className="bg-white hover:bg-gray-100">
                     <td className="w-full max-w-0 truncate px-4 py-4 text-sm text-gray-500">
-                    <a href={request.href} className="group space-x-2 truncate text-sm">
+                      <a href={request.href} className="group space-x-2 truncate text-sm"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelectedRequest(request);
+                          setIsModalOpen(+request.kind);
+                        }}>
 
-                    <request.icon
-                              className="inline h-5 w-5 text-gray-500 group-hover:text-sky-600"
-                              aria-hidden="true"
-                            />
-                      <span className="whitespace-nowrap py-4 text-right text-sm text-gray-500 group-hover:text-sky-600">
+                        <request.icon
+                          className="inline h-5 w-5 text-gray-500 group-hover:text-sky-600"
+                          aria-hidden="true"
+                        />
+                        <span className="whitespace-nowrap py-4 text-right text-sm text-gray-500 group-hover:text-sky-600">
 
-                        {request.detail}
-                      </span>
+                          {request.title}
+                        </span>
                       </a>
                     </td>
                     <td className="max-w-xs whitespace-nowrap py-4 text-sm text-gray-900">
                       <div className="flex">
                         <div className="group inline-flex space-x-2 truncate text-sm">
 
-                            <p className="truncate text-gray-500">
-                              {request.name}
-                            </p>
+                          <p className="truncate text-gray-500">
+                            {request.name}
+                          </p>
                         </div>
                       </div>
                     </td>
@@ -417,6 +444,11 @@ export default function Requests() {
           </div>
         </div>
       </div>
+
+      <PurchaseRequestModal props={{
+        modal: modals[0], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+        selectedRequest,
+      }} />
 
     </div>
   )

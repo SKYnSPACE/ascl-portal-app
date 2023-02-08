@@ -5,7 +5,19 @@ import { Dialog } from "@headlessui/react";
 
 import { format, parseISO } from "date-fns";
 
-import { CheckIcon, ExclamationCircleIcon, HomeIcon, LocationMarkerIcon, RefreshIcon, PlusIcon, PlusSmIcon, TrashIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowRightOnRectangleIcon,
+  BanknotesIcon,
+  BriefcaseIcon,
+  CheckCircleIcon,
+  ChevronRightIcon,
+  CreditCardIcon,
+  ExclamationTriangleIcon,
+  PaperAirplaneIcon,
+  PencilSquareIcon,
+  QuestionMarkCircleIcon,
+  XCircleIcon,
+} from '@heroicons/react/24/outline';
 
 import useMutation from "../../../libs/frontend/useMutation";
 
@@ -13,12 +25,11 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function ReviewPendingModal({ props }) {
-  const { modal, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage, requestId, seminarData } = { ...props };
+export default function PurchaseRequestModal({ props }) {
+  const { modal, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage, selectedRequest } = { ...props };
 
   const [acceptRequest, { loading: acceptRequestLoading, data: acceptRequestData, error: acceptRequestError }] = useMutation("/api/request/accept");
   const [declineRequest, { loading: declineRequestLoading, data: declineRequestData, error: declineRequestError }] = useMutation("/api/request/decline");
-
 
   // useEffect(()=>{
   //   console.log(isModalOpen?.pid)
@@ -26,6 +37,23 @@ export default function ReviewPendingModal({ props }) {
   //   console.log(data.seminar);
   //   }
   // },[data]);
+
+
+  const statusIcons = {
+    pending: QuestionMarkCircleIcon,
+    processing: PencilSquareIcon,
+    completed: CheckCircleIcon,
+    delayed: ExclamationTriangleIcon,
+    declined: XCircleIcon,
+  }
+
+  const statusStyles = {
+    pending: 'bg-sky-50 text-sky-700',
+    processing: 'bg-yellow-50 text-yellow-700', //accepted, yet incomplete
+    completed: 'bg-green-50 text-green-700',
+    delayed: 'bg-red-50 text-red-700',
+    declined: 'bg-gray-50 text-gray-700',
+  }
 
   const onClickAccept = (id) => {
     if (!id) return;
@@ -108,13 +136,14 @@ export default function ReviewPendingModal({ props }) {
     >
       <div className="flex items-end justify-center min-h-screen pt-32 px-4 pb-20 text-center sm:block">
         <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6">
-          <div className={classNames("mx-auto flex items-center justify-center h-12 w-12 rounded-full", modal.iconBackground)}>
-
-            <modal.icon
-              className={classNames("h-6 w-6", modal.iconForeground)}
-              aria-hidden="true"
-            />
+        <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle max-w-lg sm:w-full sm:p-6">
+          <div className={classNames("mx-auto flex items-center justify-center h-12 w-12 rounded-full", statusStyles[selectedRequest.status])}>
+            {selectedRequest?.icon ?
+              <selectedRequest.icon
+                className={classNames("h-6 w-6")}
+                aria-hidden="true"
+              />
+              : <></>}
           </div>
 
           <div className="mt-3 text-center sm:mt-5">
@@ -126,39 +155,53 @@ export default function ReviewPendingModal({ props }) {
             </Dialog.Title>
           </div>
           <Dialog.Description className="mt-4">
-            {modal.detail}
+            {/* {modal.detail} */}
           </Dialog.Description>
 
           <div className="mt-5 flex flex-col items-center">
 
             <div className="w-full overflow-hidden bg-white shadow sm:rounded-lg">
               <div className="px-4 py-3 sm:px-4">
-                <h3 className="text-lg font-medium leading-6 text-gray-900">{seminarData?.title}</h3>
-                <p className="mt-1 max-w-2xl text-sm text-gray-500">{seminarData?.tags}</p>
+                <h3 className="text-lg font-medium leading-6 text-gray-900">{selectedRequest?.title}</h3>
+                {/* <p className="mt-1 text-sm text-gray-500">Category:{selectedRequest?.category} ---- Due: {selectedRequest?.date}</p> */}
               </div>
               <div className="border-t border-gray-200 px-4 py-2 sm:p-0">
                 <dl className="sm:divide-y sm:divide-gray-200">
-                  <div className="py-2 sm:grid sm:grid-cols-4 sm:gap-2 sm:px-4 sm:py-3">
-                    <dt className="text-sm font-medium text-gray-500">Presenter</dt>
-                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-3 sm:mt-0">{seminarData?.presentedBy?.name}</dd>
+
+                  <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4 sm:py-3">
+                    <dt className="text-sm font-medium text-gray-500">Requested by(신청인)</dt>
+                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.name}</dd>
                   </div>
-                  <div className="py-2 sm:grid sm:grid-cols-4 sm:gap-2 sm:px-4 sm:py-3">
-                    <dt className="text-sm font-medium text-gray-500">Category</dt>
-                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-3 sm:mt-0">{seminarData?.category}</dd>
+                  <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4 sm:py-3">
+                    <dt className="text-sm font-medium text-gray-500">Category(세목)</dt>
+                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.category}</dd>
                   </div>
-                  <div className="py-2 sm:grid sm:grid-cols-4 sm:gap-2 sm:px-4 sm:py-3">
-                    <dt className="text-sm font-medium text-gray-500">Last Modified</dt>
-                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-3 sm:mt-0">{seminarData?.updatedAt ? format(parseISO(seminarData?.updatedAt), "yyyy-MM-dd HH:mm:ss") : ""}</dd>
+                  <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4 sm:py-3">
+                    <dt className="text-sm font-medium text-gray-500">Item/Qty.(품목/수량)</dt>
+                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.item} / x{selectedRequest?.quantity}</dd>
                   </div>
-                  <div className="py-2 sm:grid sm:grid-cols-4 sm:gap-2 sm:px-4 sm:py-3">
-                    <dt className="text-sm font-medium text-gray-500">Abstract</dt>
-                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-3 sm:mt-0">
-                      {seminarData?.abstract}
-                    </dd>
+                  <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4 sm:py-3">
+                    <dt className="text-sm font-medium text-gray-500">Details(상세)</dt>
+                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.details}</dd>
+                  </div>
+                  <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4 sm:py-3">
+                    <dt className="text-sm font-medium text-gray-500">Total Price(총액)</dt>
+                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.amount} {selectedRequest?.currency}</dd>
+                  </div>
+                  <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4 sm:py-3">
+                    <dt className="text-sm font-medium text-gray-500">Due(처리기한)</dt>
+                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.date}</dd>
                   </div>
 
                 </dl>
               </div>
+            </div>
+
+            <div className="w-full">
+              TODO: 계정정보 변경 필요한경우 입력 / 사이드노트(참고사항, 반려사유 등 기입) --&gt; useForm --&gt; createAction.
+              (accept 처리 전에 create action api 실행할 것.)
+              <br/>
+              Message(Notes, cause of decline, etc.)
             </div>
 
 
@@ -201,7 +244,7 @@ export default function ReviewPendingModal({ props }) {
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>processing...</span>
                   : <span>Decline</span>}
-                
+
               </button>
             </div>
 

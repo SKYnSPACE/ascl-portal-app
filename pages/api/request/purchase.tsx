@@ -19,7 +19,7 @@ const Categories = {
   OTE: "해외출장비",
   ME: "회의비",
   AE: "수용비",
-  NS: "모름",
+  NS: "지정요망",
 }
 
 async function handler(
