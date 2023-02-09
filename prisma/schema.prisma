@@ -189,6 +189,8 @@ model Request{
   status      Int //(Enum. Pending, Accepted(Processing), Delayed, Rejected)
   // 세미나 관련 request 및 status는 모두 유지
   // 나머지의 경우 처리 완료되면 레코드 삭제.
+
+  relatedAction Action?
 }
 
 model Project{
@@ -292,6 +294,31 @@ model ParticipatingProjectsTable{ //PIVOT TAVLE
   @@id([userId, projectId])
 }
 
+model Action{
+  id             Int       @id @default(autoincrement()) 
+
+  createdAt      DateTime  @default(now())
+  updatedAt	     DateTime  @updatedAt
+
+  relatedRequest Request   @relation(fields:[requestId], references:[id], onDelete: Cascade)
+  requestId      Int       @unique
+  @@index([requestId])
+
+  kind        Int
+  payload1    String  //action created by user id
+  payload2    String? //action created by user name
+  payload3    String? //relatedProject Alias
+  payload4    String? //relatedProject Title
+  payload5    String? //Category to use
+  payload6    String? //Item to purchase
+  payload7    String? //Qty.
+  payload8    String? //Payment method.
+  payload9    String? //Total Price to pay.
+  payload10   String? //Message.
+
+  due         DateTime
+  status      Int //(Enum. Pending, Accepted(Processing), Delayed, Rejected)
+}
 
 model Settings{
   id          Int       @id @default(autoincrement())

@@ -75,7 +75,7 @@ async function handler(
       where: { id: user.id },
     });
 
-    let requestedProject = { title: "Inquire for the suitable account." };
+    let requestedProject = { title: "Inquire for the suitable account.", alias:"INQUIRE`" };
     if (projectAlias != "INQUIRE")
       requestedProject = await client.project.findUnique({
         where: { alias: projectAlias }
@@ -100,13 +100,14 @@ async function handler(
         kind: 35,
         payload1: requestedUser.id.toString(),
         payload2: requestedUser.name.toString(),
-        payload3: requestedProject.title.toString(),
-        payload4: Categories[category].toString(),
-        payload5: destination.toString(),
-        payload6: expense?.toString(),
-        payload7: startDate.toString(),
-        payload8: endDate.toString(),
-        payload9: details.toString(),
+        payload3: requestedProject.alias.toString(),
+        payload4: requestedProject.title.toString(),
+        payload5: Categories[category].toString(),
+        payload6: destination.toString(),
+        payload7: expense?.toString(),
+        payload8: startDate.toString(),
+        payload9: endDate.toString(),
+        payload10: details.toString(),
         due: dueDate,
         status: 0,
       },

@@ -21,46 +21,113 @@ async function handler(
     if (authority < 2) {
       return res.status(403).json({ ok: false, error: "Not allowed to access the data." })
     }
-    
-//TODO: Show only related projects
-//TODO: (prof. sec. Lab manager: all / team Leader: all )
-    const myProjects = await client.project.findMany({
+
+    //TODO: Show only related projects
+    //TODO: (prof. sec. Lab manager: all / team Leader: all )
+
+    let editableProjects = [];
+    if (authority >= 3) {
+      editableProjects = await client.project.findMany({
+        where: {
+          NOT: {
+            isFinished: true,
+          },
+          AND: [
+            {
+              managers: {
+                none: {
+                  user: {
+                    id: +user.id,
+                  }
+                }
+              }
+            },
+            {
+              staffs: {
+                none: {
+                  user: {
+                    id: +user.id,
+                  }
+                }
+              }
+            },
+            {
+              participants: {
+                none: {
+                  user: {
+                    id: +user.id,
+                  }
+                }
+              }
+            },
+          ],
+        },
+        orderBy: [{ alias: 'asc' }],
+
+        select: {
+          title: true,
+          alias: true,
+          teamInCharge: true,
+        },
+      })
+    }
+
+    const managingProjects = await client.project.findMany({
       where: {
-        NOT:{
+        NOT: {
           isFinished: true,
         },
-        OR: [
-          {
-            managers: {
-              some: {
-                user: {
-                  id: +user.id,
-                }
-              }
+        managers: {
+          some: {
+            user: {
+              id: +user.id,
             }
-          },
-          {
-            staffs: {
-              some: {
-                user: {
-                  id: +user.id,
-                }
-              }
-            }
-          },
-          {
-            participants: {
-              some: {
-                user: {
-                  id: +user.id,
-                }
-              }
-            }
-          },
-        ]
+          }
+        }
       },
       orderBy: [{ alias: 'asc' }],
-      
+      select: {
+        title: true,
+        alias: true,
+        teamInCharge: true,
+      },
+    })
+
+    const staffingProjects = await client.project.findMany({
+      where: {
+        NOT: {
+          isFinished: true,
+        },
+        staffs: {
+          some: {
+            user: {
+              id: +user.id,
+            }
+          }
+        }
+      },
+      orderBy: [{ alias: 'asc' }],
+      select: {
+        title: true,
+        alias: true,
+        teamInCharge: true,
+      },
+    })
+
+    const participatingProjects = await client.project.findMany({
+      where: {
+        NOT: {
+          isFinished: true,
+        },
+        participants: {
+          some: {
+            user: {
+              id: +user.id,
+            }
+          }
+        }
+      },
+      orderBy: [{ alias: 'asc' }],
       select: {
         title: true,
         alias: true,
@@ -70,7 +137,10 @@ async function handler(
 
     res.json({
       ok: true,
-      myProjects,
+      managingProjects,
+      staffingProjects,
+      participatingProjects,
+      editableProjects,
     });
   }
 

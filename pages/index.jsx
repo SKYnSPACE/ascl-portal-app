@@ -176,8 +176,8 @@ export default function Home() {
   const [message, setMessage] = useState({ type: 'success', title: 'Confirmed!', details: 'Test message initiated.', });
 
   const [stats, setStats] = useState([
-    { label: 'Requested actions', value: 0 },
-    { label: 'Upcoming events', value: 0 },
+    { label: 'Requests waiting', value: 0 },
+    { label: 'Actions required', value: 0 },
     { label: 'Vacation days left', value: 0 },]);
 
   
@@ -188,11 +188,11 @@ export default function Home() {
 
     if(user?.requests)
     {
-      stats.push({ label: 'Requested actions', value:user.requests.length })
+      stats.push({ label: 'Requests waiting', value:user.requests.length })
     }
 
     stats.push(
-      { label: 'Upcoming events', value: 0 },
+      { label: 'Actions required', value: 0 },
       { label: 'Vacation days left', value: 0 },
     )
     setStats(stats)

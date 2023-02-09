@@ -64,7 +64,7 @@ async function handler(
     //TODO: get manager info from previous data.
     const isCurrentUserManager = !!previousData?.managers?.find(manager => manager.userId === +currentUser.id);
 
-    if (authority >= 4 || isCurrentUserManager) {
+    if (authority >= 3 || isCurrentUserManager) {
       const newBalances = {
         mpeBalance: (previousData?.mpeBalance || 0) + (mpePlanned - (previousData?.mpePlanned || 0)),
         cpeBalance: (previousData?.cpeBalance || 0) + (cpePlanned - (previousData?.cpePlanned || 0)),

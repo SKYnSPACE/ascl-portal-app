@@ -11,9 +11,11 @@ import Ledger from '../../../components/Workspace/Ledger';
 import Contacts from '../../../components/Workspace/Contacts';
 
 import {
+  MinusIcon,
   Bars2Icon,
   Bars3Icon,
   Bars4Icon,
+  AdjustmentsHorizontalIcon,
   BellAlertIcon,
   BriefcaseIcon,
   CalendarDaysIcon,
@@ -72,8 +74,17 @@ export default function Workspace() {
     if (isLoading) return;
     if (data && data.ok) {
       let subNavigation = [{ name: 'Summary', href: '/projects/summary', icon: ClipboardDocumentListIcon, onDev: false },]
-      data.myProjects?.map((project)=>{
+      data.managingProjects?.map((project)=>{
         subNavigation.push({name: project.title, href: `/projects/${project.alias}`, icon: Bars3Icon, onDev:false})
+      })
+      data.staffingProjects?.map((project)=>{
+        subNavigation.push({name: project.title, href: `/projects/${project.alias}`, icon: Bars2Icon, onDev:false})
+      })
+      data.participatingProjects?.map((project)=>{
+        subNavigation.push({name: project.title, href: `/projects/${project.alias}`, icon: MinusIcon, onDev:false})
+      })
+      data.editableProjects?.map((project)=>{
+        subNavigation.push({name: project.title, href: `/projects/${project.alias}`, icon: AdjustmentsHorizontalIcon, onDev:false})
       })
       setSubNavigation(subNavigation);
     }

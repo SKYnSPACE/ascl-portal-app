@@ -26,7 +26,7 @@ async function handler(
       return res.status(403).json({ ok: false, error: "Not allowed to access the data." })
     }
 
-    const projectInfo = await client.project.findUnique({
+    const selectedProject = await client.project.findUnique({
       where: {
         alias: alias.toString()
       },
@@ -67,20 +67,136 @@ async function handler(
 
     //TODO: Restrict user if not participating.
     if (
-      !projectInfo?.managers?.find((manager) => +manager.user.userNumber === +currentUser.userNumber)
-      && !projectInfo?.staffs?.find((staff) => +staff.user.userNumber === +currentUser.userNumber)
-      && !projectInfo?.participants?.find((participant) => +participant.user.userNumber === +currentUser.userNumber)
+      !selectedProject?.managers?.find((manager) => +manager.user.userNumber === +currentUser.userNumber)
+      && !selectedProject?.staffs?.find((staff) => +staff.user.userNumber === +currentUser.userNumber)
+      && !selectedProject?.participants?.find((participant) => +participant.user.userNumber === +currentUser.userNumber)
       && authority < 3
     )
-      return res.status(403).json({ ok: false, error: "Not allowed to access the data." })
+      return res.status(403).json({ ok: false, 
+        error: {code:403, message:"Not allowed to access the selected project."}
+      })
 
+
+    let editableProjects = [];
+    if (authority >= 3) {
+      editableProjects = await client.project.findMany({
+        where: {
+          NOT: {
+            isFinished: true,
+          },
+          AND: [
+            {
+              managers: {
+                none: {
+                  user: {
+                    id: +user.id,
+                  }
+                }
+              }
+            },
+            {
+              staffs: {
+                none: {
+                  user: {
+                    id: +user.id,
+                  }
+                }
+              }
+            },
+            {
+              participants: {
+                none: {
+                  user: {
+                    id: +user.id,
+                  }
+                }
+              }
+            },
+          ],
+        },
+        orderBy: [{ alias: 'asc' }],
+
+        select: {
+          title: true,
+          alias: true,
+          teamInCharge: true,
+        },
+      })
+    }
+
+    const managingProjects = await client.project.findMany({
+      where: {
+        NOT: {
+          isFinished: true,
+        },
+        managers: {
+          some: {
+            user: {
+              id: +user.id,
+            }
+          }
+        }
+      },
+      orderBy: [{ alias: 'asc' }],
+      select: {
+        title: true,
+        alias: true,
+        teamInCharge: true,
+      },
+    })
+
+    const staffingProjects = await client.project.findMany({
+      where: {
+        NOT: {
+          isFinished: true,
+        },
+        staffs: {
+          some: {
+            user: {
+              id: +user.id,
+            }
+          }
+        }
+      },
+      orderBy: [{ alias: 'asc' }],
+      select: {
+        title: true,
+        alias: true,
+        teamInCharge: true,
+      },
+    })
+
+    const participatingProjects = await client.project.findMany({
+      where: {
+        NOT: {
+          isFinished: true,
+        },
+        participants: {
+          some: {
+            user: {
+              id: +user.id,
+            }
+          }
+        }
+      },
+      orderBy: [{ alias: 'asc' }],
+      select: {
+        title: true,
+        alias: true,
+        teamInCharge: true,
+      },
+    })
 
 
 
     //TODO: Return ledger
     res.json({
       ok: true,
-      projectInfo,
+      selectedProject,
+      managingProjects,
+      staffingProjects,
+      participatingProjects,
+      editableProjects,
     });
   }
 

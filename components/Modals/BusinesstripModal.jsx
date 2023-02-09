@@ -143,7 +143,7 @@ export default function BusinessTripModal({ props }) {
                   type="text"
                   name="hidden"
                   id="hidden"
-                  className="block w-full rounded-md border-gray-300 pl-24 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                  className="block w-full rounded-md border-gray-300 pl-24 focus:border-sky-500 focus:ring-sky-500 text-sm"
                   disabled
                 />
 
@@ -153,7 +153,7 @@ export default function BusinessTripModal({ props }) {
                     <select
                       id="projectAlias"
                       name="projectAlias"
-                      className="h-full w-full rounded-l-md border-transparent bg-transparent py-0 pl-3 pr-7 border-r-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                      className="h-full w-full rounded-l-md border-transparent bg-transparent py-0 pl-3 pr-7 border-r-gray-300 focus:border-sky-500 focus:ring-sky-500 text-sm"
                       defaultValue=""
                       required
                       {...register("projectAlias", {
@@ -174,7 +174,7 @@ export default function BusinessTripModal({ props }) {
                     id="category"
                     name="category"
                     autoComplete="category"
-                    className="h-full w-full rounded-r-md border-transparent bg-transparent py-0 pl-2 pr-7 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                    className="h-full w-full rounded-r-md border-transparent bg-transparent py-0 pl-2 pr-7 focus:border-sky-500 focus:ring-sky-500 text-sm"
                     required
                     defaultValue=""
                     {...register("category", {
@@ -221,7 +221,7 @@ export default function BusinessTripModal({ props }) {
                     // rules={{ required: true }}
                     render={({ field: { onChange, name, value } }) => (
                       <NumericFormat
-                        className="relative block w-full border-transparent rounded-r-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                        className="relative block w-full border-transparent rounded-r-md border-gray-300 bg-transparent focus:z-10 focus:border-sky-500 focus:ring-sky-500 text-sm"
                         placeholder="Expense (optional)"
                         suffix={" KRW"}
                         thousandSeparator=","
@@ -302,7 +302,7 @@ export default function BusinessTripModal({ props }) {
                   })}
                   id="requestFor"
                   name="requestFor"
-                  className="h-full w-full rounded-md bg-transparent border-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm"
+                  className="h-full w-full rounded-md bg-transparent border-gray-300 focus:border-sky-500 focus:ring-sky-500 text-sm"
                   required
                   placeholder="test"
                   defaultValue=""
@@ -335,7 +335,7 @@ export default function BusinessTripModal({ props }) {
             </div> : <></>}
             <div className="mt-5 sm:mt-6">
               <button
-                className="mx-1 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#2980b9] text-base font-medium text-white hover:bg-[#aacae6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2980b9] sm:text-sm"
+                className="mx-1 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#2980b9] font-medium text-white hover:bg-[#aacae6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2980b9] text-sm"
                 type="submit"
               >
 
@@ -349,7 +349,7 @@ export default function BusinessTripModal({ props }) {
 
               </button>
               <button
-                className="mx-1 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2980b9]   sm:text-sm"
+                className="mx-1 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2980b9] text-sm"
                 onClick={(e) => setIsModalOpen(false)}
               >
                 Cancel

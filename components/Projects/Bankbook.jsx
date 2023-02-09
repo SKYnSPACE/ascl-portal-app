@@ -18,18 +18,18 @@ export default function Bankbook({ props }) {
 
   // useEffect(() => { console.log(data) }, [data])
 
-  const daysLeft = differenceInDays(parseISO(data?.projectInfo?.endDate), new Date());
-  const projectPeriod = differenceInDays(parseISO(data?.projectInfo?.endDate), parseISO(data?.projectInfo?.startDate));
+  const daysLeft = differenceInDays(parseISO(data?.selectedProject?.endDate), new Date());
+  const projectPeriod = differenceInDays(parseISO(data?.selectedProject?.endDate), parseISO(data?.selectedProject?.startDate));
   const remainingRate = daysLeft / projectPeriod;
   const elapsedRate = 1 - remainingRate;
 
   const cards = [
-    { name: '재료비 잔액', href: '#', icon: Square3Stack3DIcon, amount: data?.projectInfo?.mpeBalance?.toLocaleString() },
-    { name: '전산처리비 잔액', href: '#', icon: CpuChipIcon, amount: data?.projectInfo?.cpeBalance?.toLocaleString() },
-    { name: '국내출장비 잔액', href: '#', icon: TruckIcon, amount: data?.projectInfo?.dteBalance?.toLocaleString() },
-    { name: '해외출장비 잔액', href: '#', icon: GlobeAltIcon, amount: data?.projectInfo?.oteBalance?.toLocaleString() },
-    { name: '회의비 잔액', href: '#', icon: UserGroupIcon, amount: data?.projectInfo?.meBalance?.toLocaleString() },
-    { name: '수용비 잔액', href: '#', icon: BanknotesIcon, amount: data?.projectInfo?.aeBalance?.toLocaleString() },
+    { name: '재료비 잔액', href: '#', icon: Square3Stack3DIcon, amount: data?.selectedProject?.mpeBalance?.toLocaleString() },
+    { name: '전산처리비 잔액', href: '#', icon: CpuChipIcon, amount: data?.selectedProject?.cpeBalance?.toLocaleString() },
+    { name: '국내출장비 잔액', href: '#', icon: TruckIcon, amount: data?.selectedProject?.dteBalance?.toLocaleString() },
+    { name: '해외출장비 잔액', href: '#', icon: GlobeAltIcon, amount: data?.selectedProject?.oteBalance?.toLocaleString() },
+    { name: '회의비 잔액', href: '#', icon: UserGroupIcon, amount: data?.selectedProject?.meBalance?.toLocaleString() },
+    { name: '수용비 잔액', href: '#', icon: BanknotesIcon, amount: data?.selectedProject?.aeBalance?.toLocaleString() },
     // More items...
   ]
 
@@ -43,11 +43,11 @@ export default function Bankbook({ props }) {
         </div> :
         <>
           {/* Project summary */}
-          {data?.projectInfo ?
+          {data?.selectedProject ?
             <div className="space-y-4 sm:px-6 lg:col-span-9 lg:px-0">
               <div className="relative">
-                <h3 className="text-lg font-medium leading-6 text-gray-900">[{data?.projectInfo?.alias}] {data?.projectInfo?.title}</h3>
-                <p className="mt-1 max-w-2xl text-sm text-gray-500">{data?.projectInfo?.startDate} ~ {data?.projectInfo?.endDate}</p>
+                <h3 className="text-lg font-medium leading-6 text-gray-900">[{data?.selectedProject?.alias}] {data?.selectedProject?.title}</h3>
+                <p className="mt-1 max-w-2xl text-sm text-gray-500">{data?.selectedProject?.startDate} ~ {data?.selectedProject?.endDate}</p>
 
                 <div className="hidden sm:inline absolute top-0 right-0">
                   <span className={classNames(
@@ -72,8 +72,8 @@ export default function Bankbook({ props }) {
                     <dt className="text-sm font-medium text-gray-500">Working group</dt>
                     <dd className="mt-1 flex text-sm text-gray-900 sm:col-span-3 sm:mt-0">
                       <span className="flex-grow">
-                        {`${data?.projectInfo?.managers?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((manager) => manager.user.name).join('*, ')}*,
-                    ${data?.projectInfo?.staffs?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((staff) => staff.user.name).join(', ')}`}
+                        {`${data?.selectedProject?.managers?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((manager) => manager.user.name).join('*, ')}*,
+                    ${data?.selectedProject?.staffs?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((staff) => staff.user.name).join(', ')}`}
 
                       </span>
 
@@ -83,7 +83,7 @@ export default function Bankbook({ props }) {
                     <dt className="text-sm font-medium text-gray-500">Participating</dt>
                     <dd className="mt-1 flex text-sm text-gray-900 sm:col-span-3 sm:mt-0">
                       <span className="flex-grow">
-                        {`${data?.projectInfo?.participants?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((participant) => participant.user.name).join(', ')}`}
+                        {`${data?.selectedProject?.participants?.sort((firstItem, secondItem) => firstItem.user.userNumber - secondItem.user.userNumber).map((participant) => participant.user.name).join(', ')}`}
                       </span>
 
                     </dd>
@@ -92,7 +92,7 @@ export default function Bankbook({ props }) {
                     <dt className="text-sm font-medium text-gray-500">Note</dt>
                     <dd className="mt-1 flex text-sm text-gray-900 sm:col-span-3 sm:mt-0">
                       <span className="flex-grow whitespace-pre-wrap">
-                        {data?.projectInfo?.note}
+                        {data?.selectedProject?.note}
                       </span>
 
                     </dd>
@@ -105,7 +105,7 @@ export default function Bankbook({ props }) {
                         <li className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
                           <div className="flex w-0 flex-1 items-center">
                             <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                            <span className="ml-2 w-0 flex-1 truncate">[{data?.projectInfo?.alias}] Proposal.zip</span>
+                            <span className="ml-2 w-0 flex-1 truncate">[{data?.selectedProject?.alias}] Proposal.zip</span>
                           </div>
                           <div className="ml-4 flex flex-shrink-0 space-x-4">
                             <button

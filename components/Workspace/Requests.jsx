@@ -19,6 +19,7 @@ import {
 import { format, parseISO } from "date-fns";
 
 import PurchaseRequestModal from './Modals/PurchaseRequestModal';
+import Notification from '../Notification';
 // import TripRequestModal from './Modals/TripRequestModal';
 // import ReviewCompletedModal from './Modals/ReviewCompletedModal';
 // import ReviewDeclinedModal from './Modals/ReviewDeclinedModal';
@@ -184,14 +185,15 @@ function parseRequests(requests) {
           kind: 30,
           icon: BanknotesIcon,
           name: `${request.payload2}`,
-          title: `${request.payload3}`,
-          category: `${request.payload4}`,
-          item: `${request.payload5}`,
-          quantity: `${request.payload6}`,
-          payMethod: `${request.payload7}`,
+          projectAlias: `${request.payload3}`,
+          title: `${request.payload4}`,
+          category: `${request.payload5}`,
+          item: `${request.payload6}`,
+          quantity: `${request.payload7}`,
+          payMethod: `${request.payload8}`,
           href: '#',
-          amount: `${(+request.payload8).toLocaleString()}`,
-          details: `${request.payload9}`,
+          amount: `${(+request.payload9).toLocaleString()}`,
+          details: `${request.payload10}`,
           currency: ' ￦',
           status: Status[`${request.status}`],
           date: `${format(parseISO(request.due), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
@@ -203,10 +205,11 @@ function parseRequests(requests) {
           kind: 35,
           icon: BriefcaseIcon,
           name: `${request.payload2}`,
-          title: `${request.payload3}`,
-          category: `${request.payload4}`,
+          projectAlias: `${request.payload3}`,
+          title: `${request.payload4}`,
+          category: `${request.payload5}`,
           href: '#',
-          amount: `${(+request.payload6).toLocaleString()}`,
+          amount: `${(+request.payload7).toLocaleString()}`,
           currency: ' ￦',
           status: Status[`${request.status}`],
           date: `${format(parseISO(request.due), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
@@ -239,7 +242,7 @@ export default function Requests() {
       const purchaseRequests = parseRequests(data.requests);
       requests.push(purchaseRequests)
 
-      console.log(requests)
+      // console.log(requests)
 
       setRequests(...requests);
     }
@@ -270,7 +273,12 @@ export default function Requests() {
         <ul role="list" className="mt-2 divide-y divide-gray-200 overflow-hidden shadow md:hidden">
           {requests?.map((request) => (
             <li key={request.id}>
-              <a href={request.href} className="block bg-white px-4 py-4 hover:bg-gray-50">
+              <a href={request.href} className="block bg-white px-4 py-4 hover:bg-gray-50"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelectedRequest(request);
+                  setIsModalOpen(+request.kind);
+                }}>
                 <span className="flex items-center space-x-4">
                   <span className="flex flex-1 grow space-x-2 truncate">
                     <request.icon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
@@ -449,6 +457,8 @@ export default function Requests() {
         modal: modals[0], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
       }} />
+
+      <Notification props={{ message, isNotify, setIsNotify }} />
 
     </div>
   )
