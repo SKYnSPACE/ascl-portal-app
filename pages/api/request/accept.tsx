@@ -11,7 +11,7 @@ const Requests = {
   seminar: 90,
 }
 
-const getRequestString = (kind:number) => {
+const getRequestString = (kind: number) => {
   switch (kind) {
     case Requests.purchase:
       return "Purchase";
@@ -31,7 +31,7 @@ async function handler(
 ) {
 
   const {
-    body: { requestId, message },
+    body: { requestId, message, notify },
     session: { user }
   } = req;
 
@@ -49,7 +49,7 @@ async function handler(
 
   if (currentUser.id != currentRequest.userId)
     return res.status(403).json({ ok: false, error: "Not allowed to." });
-  
+
 
   let dueDate = new Date();
   dueDate.setDate(dueDate.getDate() + 7);
@@ -65,14 +65,15 @@ async function handler(
     },
   });
 
-  postMail(
-    `${requestedUser.email}`,
-    `${currentUser.name.toString()} accepted your [${getRequestString(currentRequest.kind)}] request.`,
-    "Request accepted. Please check the details from the ASCL Portal.",
-    `<p>Your <b>${getRequestString(currentRequest.kind)}</b> request to <b>${currentUser.name.toString()}</b> (${currentUser.email.toString()}) has been accepted. <br /> 
+  if (notify)
+    postMail(
+      `${requestedUser.email}`,
+      `${currentUser.name.toString()} accepted your [${getRequestString(currentRequest.kind)}] request.`,
+      "Request accepted. Please check the details from the ASCL Portal.",
+      `<p>Your <b>${getRequestString(currentRequest.kind)}</b> request to <b>${currentUser.name.toString()}</b> (${currentUser.email.toString()}) has been accepted. <br /> 
     Please check the details from the ASCL Portal.</p>
     <p><b>Message:</b> ${message?.toString()}</p>`,
-    false);
+      false);
 
   res.json({
     ok: true,

@@ -9,7 +9,7 @@ const Requests = {
   seminar: 90,
 }
 
-const getRequestString = (kind:number) => {
+const getRequestString = (kind: number) => {
   switch (kind) {
     case Requests.seminar:
       return "Seminar Review";
@@ -23,7 +23,7 @@ async function handler(
 ) {
 
   const {
-    body: { requestId },
+    body: { requestId, message, notify },
     session: { user }
   } = req;
 
@@ -43,22 +43,29 @@ async function handler(
     return res.status(403).json({ ok: false, error: "Not allowed to." });
 
 
+  let dueDate = new Date();
+  dueDate.setDate(dueDate.getDate() + 7);
+
   const declined = await client.request.update({
     where: {
       id: +requestId,
     },
     data: {
       status: -1,
+      payload11: message?.toString(),
+      due: dueDate,
     },
   });
 
-  postMail(
-    `${requestedUser.email}`,
-    `${currentUser.name.toString()} declined your [${getRequestString(currentRequest.kind)}] request.`,
-    "Request declined. Please check the details from the ASCL Portal.",
-    `<p>Your <b>${getRequestString(currentRequest.kind)}</b> request to <b>${currentUser.name.toString()}</b> (${currentUser.email.toString()}) has been declined. <br /> 
-    Please check the details from the ASCL Portal.</p>`,
-    false);
+  if (notify)
+    postMail(
+      `${requestedUser.email}`,
+      `${currentUser.name.toString()} declined your [${getRequestString(currentRequest.kind)}] request.`,
+      "Request declined. Please check the details from the ASCL Portal.",
+      `<p>Your <b>${getRequestString(currentRequest.kind)}</b> request to <b>${currentUser.name.toString()}</b> (${currentUser.email.toString()}) has been declined. <br /> 
+    Please check the details from the ASCL Portal.</p>
+    <p><b>Message:</b> ${message?.toString()}</p>`,
+      false);
 
   res.json({
     ok: true,
