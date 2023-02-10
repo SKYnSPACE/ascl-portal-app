@@ -6,11 +6,19 @@ import { withApiSession } from "../../../libs/backend/withSession";
 import { postMail } from "../../../libs/backend/postMail";
 
 const Requests = {
+  purchase: 30,
+  businessTrip: 35,
   seminar: 90,
 }
 
 const getRequestString = (kind:number) => {
   switch (kind) {
+    case Requests.purchase:
+      return "Purchase";
+
+    case Requests.businessTrip:
+      return "Business Trip";
+
     case Requests.seminar:
       return "Seminar Review";
     default: return "";
@@ -23,7 +31,7 @@ async function handler(
 ) {
 
   const {
-    body: { requestId },
+    body: { requestId, message },
     session: { user }
   } = req;
 
@@ -43,12 +51,17 @@ async function handler(
     return res.status(403).json({ ok: false, error: "Not allowed to." });
   
 
+  let dueDate = new Date();
+  dueDate.setDate(dueDate.getDate() + 7);
+
   const accepted = await client.request.update({
     where: {
       id: +requestId,
     },
     data: {
       status: 1,
+      payload11: message?.toString(),
+      due: dueDate,
     },
   });
 
@@ -57,7 +70,8 @@ async function handler(
     `${currentUser.name.toString()} accepted your [${getRequestString(currentRequest.kind)}] request.`,
     "Request accepted. Please check the details from the ASCL Portal.",
     `<p>Your <b>${getRequestString(currentRequest.kind)}</b> request to <b>${currentUser.name.toString()}</b> (${currentUser.email.toString()}) has been accepted. <br /> 
-    Please check the details from the ASCL Portal.</p>`,
+    Please check the details from the ASCL Portal.</p>
+    <p><b>Message:</b> ${message?.toString()}</p>`,
     false);
 
   res.json({

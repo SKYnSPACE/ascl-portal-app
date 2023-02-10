@@ -264,12 +264,15 @@ export default function Requests() {
   return (
     <div className="px-4">
 
-      <h2 className="text-lg font-medium leading-6 text-gray-900">
+      <h2 className="text-xl font-medium leading-6 text-gray-900">
         Received Requests
       </h2>
+      <p className="mt-2 text-sm text-gray-700">
+        All requests received within two months. (Pagination is not supported yet.)
+      </p>
 
       {/* Activity list (smallest breakpoint only) */}
-      <div className="shadow md:hidden">
+      <div className="mt-4 shadow md:hidden">
         <ul role="list" className="mt-2 divide-y divide-gray-200 overflow-hidden shadow md:hidden">
           {requests?.map((request) => (
             <li key={request.id}>
@@ -282,7 +285,7 @@ export default function Requests() {
                 <span className="flex items-center space-x-4">
                   <span className="flex flex-1 grow space-x-2 truncate">
                     <request.icon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                    <span className="flex flex-col truncate text-sm text-gray-500">
+                    <span className="flex flex-col grow truncate text-sm text-gray-500">
                       <span className="truncate">{request.name}</span>
                       <span className="truncate">{request.title}</span>
                       <span>
@@ -330,20 +333,20 @@ export default function Requests() {
       </div>
 
       {/* Activity table (small breakpoint and up) */}
-      <div className="hidden md:block">
+      <div className="mt-4 hidden md:block">
         <div className="mt-2 flex flex-col">
           <div className="min-w-full overflow-hidden overflow-x-auto align-middle shadow sm:rounded-lg">
             <table className="min-w-full divide-y divide-gray-200">
               <thead>
                 <tr>
                   <th
-                    className="bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-900"
+                    className="bg-gray-50 px-4 py-3 text-center text-sm font-semibold text-gray-900"
                     scope="col"
                   >
                     Request
                   </th>
                   <th
-                    className="bg-gray-50 py-3 text-left text-sm font-semibold text-gray-900"
+                    className="bg-gray-50 py-3 text-center text-sm font-semibold text-gray-900"
                     scope="col"
                   >
                     From
@@ -382,10 +385,10 @@ export default function Requests() {
                         }}>
 
                         <request.icon
-                          className="inline h-5 w-5 text-gray-500 group-hover:text-sky-600"
+                          className="inline h-5 w-5 text-gray-700 group-hover:text-sky-600"
                           aria-hidden="true"
                         />
-                        <span className="whitespace-nowrap py-4 text-right text-sm text-gray-500 group-hover:text-sky-600">
+                        <span className="whitespace-nowrap py-4 text-right text-sm text-gray-900 group-hover:text-sky-600">
 
                           {request.title}
                         </span>

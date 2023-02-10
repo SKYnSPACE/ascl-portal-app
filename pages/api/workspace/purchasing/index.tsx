@@ -35,8 +35,34 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   if (req.method === "GET") {
+    const {
+      session: { user }
+    } = req;
+
+    const currentUser = await client.user.findUnique({
+      where: { id: user.id },
+    });
+
+    const createdPurchaseActions = await client.action.findMany({
+      where:{
+        kind: 30,
+        payload1: currentUser.id.toString(),
+      }
+    })
+
+    const myPurchaseActions = await client.action.findMany({
+      where:{
+        kind: 30,
+        relatedRequest:{
+          payload1: currentUser.id.toString(),
+        }
+      }
+    })
+
     res.json({
-      ok: false,
+      ok: true,
+      createdPurchaseActions,
+      myPurchaseActions,
     });
   }
 
@@ -49,8 +75,6 @@ async function handler(
       },
       session: { user }
     } = req;
-
-    console.log(req.body)
 
     let dueDate = new Date();
     // Request Approved -> set action status 0 (due: +7)
@@ -91,19 +115,17 @@ async function handler(
           payload5: category.toString(),
           payload6: selectedRequest.item.toString(),
           payload7: selectedRequest.quantity.toString(),
-          payload8: selectedRequest.paymentMethod.toString(),
-          payload9: selectedRequest.totalPrice.toString(),
+          payload8: selectedRequest.payMethod.toString(),
+          payload9: selectedRequest.amount.replaceAll(',', '').toString(),
           payload10: message.toString(),
           due: dueDate,
           status: 0,
         },
       });
 
-//TODO: UPDATE REQUEST AS PROCESSING!
-
       postMail(
         `${requestedUser.email}`,
-        `Account usage (purchase) Request Approved by ${approvedBy.name.toString()}`,
+        `Account usage (purchase) Request Approved by ${approvedBy.name.toString()}.`,
         `Your account usage request has been approved by ${approvedBy.name.toString()} Please make an action from the ASCL Portal.`,
         `<p>Your account usage request has been approved by ${approvedBy.name.toString()} <br /> 
         Please proceed your purchasing action from the
@@ -113,9 +135,9 @@ async function handler(
         <b>계정(Account): </b> ${projectToUse.title.toString()} <br />
         <b>세목(Category): </b> ${Categories[category].toString()} <br />
         <b>품목/수량 Item (qty.):</b> ${selectedRequest.item.toString()} (x${selectedRequest.quantity.toString()})<br />
-        <b>결제방법(Payment method):</b> ${PayMethods[selectedRequest.paymentMethod].toString()}<br />
-        <b>금액(Price):</b> ${selectedRequest.totalPrice.toString()}</p>
-        <b>추가안내(Message):</b> ${message.toString()}</p>
+        <b>결제방법(Payment method):</b> ${PayMethods[selectedRequest.payMethod].toString()}<br />
+        <b>금액(Price):</b> ${selectedRequest.amount.toString()}${selectedRequest.currency.toString()}</p>
+        <b>안내사항(Message):</b> ${message.toString()}</p>
         `,
         true);
 

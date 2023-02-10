@@ -62,8 +62,8 @@ function Utility() {
     // return <Attendance />;
 
     case 'purchasing':
-      return <Page404 />;
-    // return <Purchasing />;
+      // return <Page404 />;
+    return <Purchasing />;
 
     case 'trip':
       return <Page404 />;

@@ -184,6 +184,7 @@ model Request{
   payload8    String? //reserved.
   payload9    String? //reserved.
   payload10   String? //reserved.
+  payload11   String? //reserved.
 
   due         DateTime
   status      Int //(Enum. Pending, Accepted(Processing), Delayed, Rejected)
@@ -315,6 +316,7 @@ model Action{
   payload8    String? //Payment method.
   payload9    String? //Total Price to pay.
   payload10   String? //Message.
+  payload11   String? //reserved.
 
   due         DateTime
   status      Int //(Enum. Pending, Accepted(Processing), Delayed, Rejected)

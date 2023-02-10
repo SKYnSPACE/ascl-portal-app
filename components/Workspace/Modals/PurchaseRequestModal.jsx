@@ -45,7 +45,7 @@ const Categories = {
 export default function PurchaseRequestModal({ props }) {
   const { modal, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage, selectedRequest } = { ...props };
 
-  const [createAction, { loading: createActionLoading, data: createActionData, error: createActionError }] = useMutation("/api/workspace/purchasing");
+  const [createPurchaseAction, { loading: createPurchaseActionLoading, data: createPurchaseActionData, error: createPurchaseActionError }] = useMutation("/api/workspace/purchasing");
   const [acceptRequest, { loading: acceptRequestLoading, data: acceptRequestData, error: acceptRequestError }] = useMutation("/api/request/accept");
   const [declineRequest, { loading: declineRequestLoading, data: declineRequestData, error: declineRequestError }] = useMutation("/api/request/decline");
 
@@ -117,17 +117,12 @@ export default function PurchaseRequestModal({ props }) {
 
   const onClickAccept = (id) => {
     if (!id) return;
-    if (isLoading || acceptRequestLoading || declineRequestLoading) return;
+    if (isLoading || createPurchaseActionLoading) return;
     
     trigger();
     if(isFormValid){
-      console.log({selectedRequest,
-      response:"ACCEPT", ...getValues()})
-
-      createAction({selectedRequest,
+      createPurchaseAction({selectedRequest,
         response:"ACCEPT", ...getValues()});
-      // createAction();
-      // acceptRequest({ requestId: id });
     }
     else{
       setMessage(
@@ -139,20 +134,25 @@ export default function PurchaseRequestModal({ props }) {
 
   const onClickDecline = (id) => {
     if (!id) return;
-    declineRequest({ requestId: id })
+    if (isLoading || createPurchaseActionLoading) return;
+
+    console.log({selectedRequest,
+      response:"DECLINE", ...getValues()})
+
+    // declineRequest({ requestId: id })
   }
 
   useEffect(() => {
-    if (acceptRequestData?.ok) {
+    if (createPurchaseActionData?.ok) {
       setMessage(
-        { type: 'success', title: 'Accepted!', details: 'Thank you for your decision. Wait for the page reload.', }
+        { type: 'success', title: 'Accepted!', details: 'Thank you for your response. Wait for the page reload.', }
       )
       setIsNotify(true);
       setIsModalOpen(false);
     }
 
-    if (acceptRequestData?.error) {
-      switch (acceptRequestData.error?.code) {
+    if (createPurchaseActionData?.error) {
+      switch (createPurchaseActionData.error?.code) {
         case 'P1017':
           console.log("Connection Lost.")
           setMessage(
@@ -171,7 +171,7 @@ export default function PurchaseRequestModal({ props }) {
       }
     }
 
-  }, [acceptRequestData])
+  }, [createPurchaseActionData])
 
   useEffect(() => {
     if (declineRequestData?.ok) {
@@ -211,7 +211,7 @@ export default function PurchaseRequestModal({ props }) {
       open={modal.id == isModalOpen}
       onClose={() => setIsModalOpen(false)}
     >
-      <div className="flex items-end justify-center min-h-screen pt-32 px-4 pb-20 text-center sm:block">
+      <div className="flex items-end justify-center min-h-screen pt-20 px-4 pb-20 text-center sm:block">
         <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle max-w-lg sm:w-full sm:p-6">
           <div className={classNames("mx-auto flex items-center justify-center h-12 w-12 rounded-full", statusStyles[selectedRequest.status])}>
@@ -274,15 +274,9 @@ export default function PurchaseRequestModal({ props }) {
               </div>
             </div>
 
-            <div className="w-full">
-              TODO: 계정정보 변경 필요한경우 입력 / 사이드노트(참고사항, 반려사유 등 기입) --&gt; useForm --&gt; createAction.
-              (accept 처리 전에 create action api 실행할 것.)
-              <br />
-              {/* <hr className="bg-gray-200"><span>test</span></hr> */}
-            </div>
 
             <div className="inline-flex items-center justify-center w-full">
-              <hr className="w-11/12 border-1 my-4 bg-white border-gray-600 border-dashed" />
+              <hr className="w-full border-1 my-6 bg-white border-gray-600 border-dashed" />
               <span className="absolute px-3 font-medium text-gray-800 -translate-x-1/2 bg-white left-1/2"> R E S P O N S E </span>
             </div>
 
@@ -388,14 +382,14 @@ export default function PurchaseRequestModal({ props }) {
             <div className="mt-5 sm:mt-6">
               <button
                 className="mx-1 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-sky-600 text-base font-medium text-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:text-sm"
-                disabled={createActionLoading || acceptRequestLoading}
+                disabled={createPurchaseActionLoading}
                 onClick={(e) => {
                   onClickAccept(selectedRequest.id);
                   // setIsModalOpen(false);
                 }}
 
               >
-                {createActionLoading || acceptRequestLoading ?
+                {createPurchaseActionLoading ?
                   <span className="flex items-center text-center">
                     <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-sky-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
