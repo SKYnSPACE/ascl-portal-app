@@ -123,6 +123,7 @@ export default function PurchaseRequestModal({ props }) {
     if(isFormValid){
       createPurchaseAction({selectedRequest,
         response:"ACCEPT", ...getValues()});
+      acceptRequest({ requestId: id, notify: false, ...getValues() })
     }
     else{
       setMessage(
@@ -139,13 +140,13 @@ export default function PurchaseRequestModal({ props }) {
     console.log({selectedRequest,
       response:"DECLINE", ...getValues()})
 
-    // declineRequest({ requestId: id })
+    declineRequest({ requestId: id, notify: true, ...getValues() })
   }
 
   useEffect(() => {
     if (createPurchaseActionData?.ok) {
       setMessage(
-        { type: 'success', title: 'Accepted!', details: 'Thank you for your response. Wait for the page reload.', }
+        { type: 'success', title: 'Successfully Accepted!', details: 'Wait for the page reload.', }
       )
       setIsNotify(true);
       setIsModalOpen(false);

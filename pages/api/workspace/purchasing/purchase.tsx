@@ -43,7 +43,7 @@ async function handler(
   if (req.method === "POST") {
     const {
       body: { selectedAction,
-        response, totalPrice,
+        response, purchasedFrom, totalPrice,
       },
       session: { user }
     } = req;
@@ -106,6 +106,8 @@ async function handler(
         where: { id: +selectedAction.id },
         data: {
           status: 1,
+          payload9: totalPrice.toString(),
+          payload11: purchasedFrom?.toString(),
           due: dueDate,
         },
       })

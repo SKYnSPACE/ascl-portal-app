@@ -143,9 +143,17 @@ export default function Purchasing() {
 
       purchases.push(
         {
-          category: 'Pending (Make a purchase action)', //계정문의 대기중
+          category: 'Pending (Make a purchase action)', //결제 대기중
           status: 'pending',
           lists: purchaseActions.filter(action => action.status == 'pending')
+        },
+      )
+
+      purchases.push(
+        {
+          category: 'Processing (Please submit the reference documents)', //결제완료. 서류처리중
+          status: 'processing',
+          lists: purchaseActions.filter(action => action.status == 'processing')
         },
       )
 
@@ -190,6 +198,7 @@ export default function Purchasing() {
                     <action.icon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                     <span className="flex flex-col grow truncate text-sm text-gray-500">
                       <span className="truncate">{action.name}</span>
+                      <span className="truncate text-gray-900">{action.item}</span>
                       <span className="truncate">{action.title} / {Categories[action.category]}</span>
                       <span>
                         <span className="font-medium text-gray-900">{action.amount}</span>{' '}
@@ -246,7 +255,7 @@ export default function Purchasing() {
                 <tr>
                   <th className="bg-gray-50 px-4 py-3 text-center text-sm font-semibold text-gray-900"
                     scope="col">
-                    Account
+                    Item
                   </th>
                   <th className="hidden xl:block bg-gray-50 py-3 text-center text-sm font-semibold text-gray-900"
                     scope="col"
@@ -254,7 +263,7 @@ export default function Purchasing() {
                   </th>
                   <th className="bg-gray-50 py-3 text-center text-sm font-semibold text-gray-900"
                     scope="col">
-                    Item
+                    Account
                   </th>
                   <th className="hidden xl:block bg-gray-50 py-3 text-center text-sm font-semibold text-gray-900"
                     scope="col">
@@ -294,11 +303,13 @@ export default function Purchasing() {
                           key={action.id}
                           className={classNames(itemIdx === 0 ? 'border-gray-300' : 'border-gray-200', 'border-t')}
                         >
-                          <td className="w-full max-w-[100px] truncate whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                            {action.title}
+                          <td className="w-full max-w-0 truncate whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                            {action.item}
                           </td>
                           <td className="hidden xl:block whitespace-nowrap px-3 py-4 text-sm text-gray-500">{Categories[action.category]}</td>
-                          <td className="w-full max-w-[200px] truncate whitespace-nowrap px-3 py-4 text-sm text-gray-500">{action.item}</td>
+                          <td className="w-full max-w-[200px] truncate whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {action.title}
+                          </td>
 
                           <td className="hidden xl:block whitespace-nowrap px-3 py-4 text-sm text-gray-500">{PayMethods[action.payMethod]}</td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">

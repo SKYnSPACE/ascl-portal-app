@@ -125,9 +125,9 @@ async function handler(
 
       postMail(
         `${requestedUser.email}`,
-        `Account usage (purchase) Request Approved by ${approvedBy.name.toString()}.`,
+        `Account usage (purchase) Request Approved by "${approvedBy.name.toString()}".`,
         `Your account usage request has been approved by ${approvedBy.name.toString()} Please make an action from the ASCL Portal.`,
-        `<p>Your account usage request has been approved by ${approvedBy.name.toString()} <br /> 
+        `<p>Your account usage request has been Approved by "${approvedBy.name.toString()}" <br /> 
         Please proceed your purchasing action from the
         <a href="http://ascl.kaist.ac.kr/portal" target="_blank" rel="noopener noreferrer">ASCL Portal</a>.<br />
         </p>

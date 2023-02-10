@@ -68,11 +68,11 @@ async function handler(
   if (notify)
     postMail(
       `${requestedUser.email}`,
-      `${currentUser.name.toString()} accepted your [${getRequestString(currentRequest.kind)}] request.`,
+      `"${currentUser.name.toString()}" Accepted your ${getRequestString(currentRequest.kind)} Request.`,
       "Request accepted. Please check the details from the ASCL Portal.",
-      `<p>Your <b>${getRequestString(currentRequest.kind)}</b> request to <b>${currentUser.name.toString()}</b> (${currentUser.email.toString()}) has been accepted. <br /> 
-    Please check the details from the ASCL Portal.</p>
-    <p><b>Message:</b> ${message?.toString()}</p>`,
+      `<p>Your ${getRequestString(currentRequest.kind)} Request to "${currentUser.name.toString()}" (${currentUser.email.toString()}) has been Accepted. <br /> 
+      Please check the details from the ASCL Portal.</p>
+      <p><b>Message:</b> ${message?.toString()}</p>`,
       false);
 
   res.json({

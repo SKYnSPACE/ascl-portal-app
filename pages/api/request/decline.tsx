@@ -6,11 +6,19 @@ import { withApiSession } from "../../../libs/backend/withSession";
 import { postMail } from "../../../libs/backend/postMail";
 
 const Requests = {
+  purchase: 30,
+  businessTrip: 35,
   seminar: 90,
 }
 
 const getRequestString = (kind: number) => {
   switch (kind) {
+    case Requests.purchase:
+      return "Purchase";
+
+    case Requests.businessTrip:
+      return "Business Trip";
+
     case Requests.seminar:
       return "Seminar Review";
     default: return "";
@@ -60,9 +68,9 @@ async function handler(
   if (notify)
     postMail(
       `${requestedUser.email}`,
-      `${currentUser.name.toString()} declined your [${getRequestString(currentRequest.kind)}] request.`,
+      `"${currentUser.name.toString()}" Declined your ${getRequestString(currentRequest.kind)} Request.`,
       "Request declined. Please check the details from the ASCL Portal.",
-      `<p>Your <b>${getRequestString(currentRequest.kind)}</b> request to <b>${currentUser.name.toString()}</b> (${currentUser.email.toString()}) has been declined. <br /> 
+      `<p>Your ${getRequestString(currentRequest.kind)} Request to "${currentUser.name.toString()}" (${currentUser.email.toString()}) has been declined. <br /> 
     Please check the details from the ASCL Portal.</p>
     <p><b>Message:</b> ${message?.toString()}</p>`,
       false);

@@ -23,6 +23,7 @@ import {
 
 import { NumericFormat } from 'react-number-format';
 import useMutation from "../../../libs/frontend/useMutation";
+import { inRange } from "lodash";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -53,6 +54,19 @@ export default function PurchaseActionProceedModal({ props }) {
     defaultValue: {
     }
   });
+
+  const totalPrice = watch('totalPrice');
+
+  const [caution, setCaution] = useState(null);
+
+  useEffect(()=>{
+    if (!selectedAction) return;
+    if (+totalPrice == +selectedAction?.amount?.replaceAll(",",""))
+    setCaution(null);
+    else{
+    setCaution("Caution: Total Price doesn't match with your original request. Please check again.");
+  }
+  },[totalPrice])
 
   useEffect(() => {
     if (isModalOpen)
@@ -225,6 +239,7 @@ export default function PurchaseActionProceedModal({ props }) {
                     type="text"
                     name="purchasedFrom"
                     id="purchasedFrom"
+                    placeholder="Purchased From"
                     className="w-full inset-y-0 flex items-center rounded-md border-gray-300 focus:border-sky-500 focus:ring-sky-500 text-sm"
                     required
                   />
@@ -259,6 +274,10 @@ export default function PurchaseActionProceedModal({ props }) {
                 />
               </div>
             </div>
+
+            {caution ? <div className="w-full mt-2">
+              <p className="text-xs text-yellow-600">{caution}</p>
+            </div> : <></>}
 
             {isNotify ? <div className="w-full mt-2">
               <p className="text-xs text-red-600">{message.details}</p>
