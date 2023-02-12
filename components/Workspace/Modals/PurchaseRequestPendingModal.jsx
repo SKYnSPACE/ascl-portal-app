@@ -42,7 +42,7 @@ const Categories = {
   NS: "지정요망",
 }
 
-export default function PurchaseRequestModal({ props }) {
+export default function PurchaseRequestPendingModal({ props }) {
   const { modal, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage, selectedRequest } = { ...props };
 
   const [createPurchaseAction, { loading: createPurchaseActionLoading, data: createPurchaseActionData, error: createPurchaseActionError }] = useMutation("/api/workspace/purchasing");
@@ -209,7 +209,7 @@ export default function PurchaseRequestModal({ props }) {
     <Dialog
       as="div"
       className="fixed z-10 inset-0 overflow-y-auto"
-      open={modal.id == isModalOpen}
+      open={(modal.kind == isModalOpen.kind && modal.status == isModalOpen.status)}
       onClose={() => setIsModalOpen(false)}
     >
       <div className="flex items-end justify-center min-h-screen pt-20 px-4 pb-20 text-center sm:block">
@@ -229,7 +229,7 @@ export default function PurchaseRequestModal({ props }) {
               as="h3"
               className="text-lg font-medium text-gray-900"
             >
-              {modal.name} ({selectedRequest.status})
+              {modal.name}
             </Dialog.Title>
           </div>
           <Dialog.Description className="mt-4">

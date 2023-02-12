@@ -13,7 +13,6 @@ import {
   PaperAirplaneIcon,
   PencilSquareIcon,
   QuestionMarkCircleIcon,
-  UsersIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline'
 
@@ -21,6 +20,7 @@ import { format, parseISO } from "date-fns";
 
 import PurchaseRequestPendingModal from './Modals/PurchaseRequestPendingModal';
 import PurchaseRequestProcessingModal from './Modals/PurchaseRequestProcessingModal';
+
 import Notification from '../Notification';
 // import TripRequestModal from './Modals/TripRequestModal';
 // import ReviewCompletedModal from './Modals/ReviewCompletedModal';
@@ -96,46 +96,6 @@ const modals_by_category = [
   },
 ]
 
-
-const requests = [
-  {
-    id: 1,
-    name: 'Seongheon Lee',
-    title: '미래 전장 응용을 위한 고신뢰성의 다목적 호버바이크 개발(2019년도)',
-    href: '#',
-    amount: '20,000',
-    currency: 'KRW',
-    status: 'pending',
-    date: 'July 11, 2020',
-    datetime: '2020-07-11',
-  },
-  {
-    id: 2,
-    name: 'Seongheon Lee',
-    title: '미래 전장 응용을 위한 고신뢰성의 다목적 호버바이크 개발(2019년도)',
-    href: '#',
-    amount: '20,000',
-    currency: 'KRW',
-    status: 'processing',
-    date: 'July 11, 2020',
-    datetime: '2020-07-11',
-  },
-  {
-    id: 3,
-    name: 'Seongheon Lee',
-    title: '미래 전장 응용을 위한 고신뢰성의 다목적 호버바이크 개발(2019년도)',
-    href: '#',
-    amount: '20,000',
-    currency: 'KRW',
-    status: 'declined',
-    date: 'July 11, 2020',
-    datetime: '2020-07-11',
-  },
-  // More requests...
-]
-
-
-
 const statusStyles = {
   pending: 'bg-sky-100 text-sky-800',
   processing: 'bg-yellow-100 text-yellow-800', //accepted, yet incomplete
@@ -154,39 +114,6 @@ const Status = {
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
-
-// function DateTimeDisplay({ category, requestInfo }) {
-//   switch (category) {
-//     case 'requests':
-//       return (
-//         <p>
-//           requests on <time dateTime={requestInfo.requestedAt}>{requestInfo.requestedAt}</time>
-//         </p>
-//       );
-
-//     case 'completed':
-//       return (
-//         <p>
-//           completed on <time dateTime={requestInfo.acceptedDate}>{requestInfo.acceptedDate}</time>
-//         </p>
-//       );
-
-//     case 'finished':
-//       return (
-//         <p>
-//           Finished on <time dateTime={requestInfo.finishedDate}>{requestInfo.finishedDate}</time>
-//         </p>
-//       );
-
-//     case 'declined':
-//       return (
-//         <p>
-//           Declined on <time dateTime={requestInfo.declinedDate}>{requestInfo.declinedDate}</time>
-//         </p>
-//       );
-//     default: return (<p>---</p>);
-//   }
-// }
 
 function parseRequests(requests) {
   const parsedList = requests?.map((request) => {
@@ -210,7 +137,6 @@ function parseRequests(requests) {
           status: Status[`${request.status}`],
           date: `${format(parseISO(request.due), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
           datetime: `${format(parseISO(request.due), "yyyy-MM-dd")}`,//datetime: '2020-07-11',
-          relatedAction: +request.relatedAction?.id,
         };
       case 35:
         return {
@@ -234,14 +160,14 @@ function parseRequests(requests) {
   return parsedList;
 }
 
-export default function Requests() {
-  const [isModalOpen, setIsModalOpen] = useState({});
+export default function Manage() {
+  const [isModalOpen, setIsModalOpen] = useState(0);
   const [isNotify, setIsNotify] = useState(false);
   const [message, setMessage] = useState({ type: 'success', title: 'Confirmed!', details: 'Test message initiated.', });
 
   const [reviewItems, setReviewItems] = useState([]);
 
-  const { data, error, isLoading } = useSWR(`/api/workspace/requests`);
+  const { data, error, isLoading } = useSWR(`/api/workspace/manage`);
 
   const [requests, setRequests] = useState(null);
   const [selectedRequest, setSelectedRequest] = useState({});
@@ -278,10 +204,10 @@ export default function Requests() {
     <div className="px-4">
 
       <h2 className="text-xl font-medium leading-6 text-gray-900">
-        Received Requests
+        Manage Requests
       </h2>
       <p className="mt-2 text-sm text-gray-700">
-        All requests received within two months. (Pagination is not supported yet.)
+        All processing/delayed requests within two months. (Pagination is not supported yet.)
       </p>
 
       {/* Activity list (smallest breakpoint only) */}
@@ -394,7 +320,7 @@ export default function Requests() {
                         onClick={(e) => {
                           e.preventDefault();
                           setSelectedRequest(request);
-                          // console.log({kind: +request.kind, status: request.status});
+                          console.log({kind: +request.kind, status: request.status});
                           setIsModalOpen({kind: +request.kind, status: request.status});
                         }}>
 
@@ -470,7 +396,7 @@ export default function Requests() {
         </div>
       </div>
 
-      <PurchaseRequestPendingModal props={{
+            <PurchaseRequestPendingModal props={{
         modal: modals[0].items[2], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
       }} />

@@ -15,29 +15,32 @@ import {
   CreditCardIcon,
   IdentificationIcon,
   PresentationChartLineIcon,
+  StarIcon,
   UsersIcon,
 } from '@heroicons/react/24/outline'
 import Purchasing from '../../../components/Workspace/Purchasing';
 import Requests from '../../../components/Workspace/Requests';
+import Manage from '../../../components/Workspace/Manage';
 
 
 
 const subNavigation = [
-  { id: 0, name: 'Requests', href: '/workspace/requests', icon: BellAlertIcon, onDev: false },
+  { id: 0, name: 'Received Requests', href: '/workspace/requests', icon: BellAlertIcon, onDev: false },
+  { id: 1, name: 'Manage Requests', href: '/workspace/manage', icon: StarIcon, onDev: false },
   { id: 30, name: 'Purchasing', href: '/workspace/purchasing', icon: CreditCardIcon, onDev: false },
   { id: 31, name: 'Business Trip', href: '/workspace/trip', icon: BriefcaseIcon, onDev: true },
-  { id: 100, name:''},
+  { id: 100, name: '' },
 
   { id: 4, name: 'Lab. Calendar', href: '/workspace/calendar', icon: CalendarDaysIcon, onDev: true },
   { id: 5, name: 'Contacts', href: '/workspace/contacts', icon: IdentificationIcon, onDev: false },
   { id: 8, name: 'Attendance', href: '/workspace/attendance', icon: UsersIcon, onDev: true },
-  
-  { id: 101, name:''},
-  
+
+  { id: 101, name: '' },
+
   { id: 6, name: 'Ledger', href: '/workspace/ledger', icon: ClipboardDocumentListIcon, onDev: true },
   { id: 7, name: 'Conferences', href: '/workspace/conferences', icon: PresentationChartLineIcon, onDev: true },
 
-  
+
 ]
 
 function classNames(...classes) {
@@ -57,13 +60,17 @@ function Utility() {
       // return <Page404 />;
       return <Requests />;
 
+    case 'manage':
+      // return <Page404 />;
+      return <Manage />;
+
     case 'attendance':
       return <Page404 />;
     // return <Attendance />;
 
     case 'purchasing':
       // return <Page404 />;
-    return <Purchasing />;
+      return <Purchasing />;
 
     case 'trip':
       return <Page404 />;
@@ -97,29 +104,29 @@ export default function Workspace() {
                 {subNavigation.map((item) => (
                   <div key={item.id}>
                     {item.name ?
-                    <a
-                      href={item.href}
-                      className={classNames(
-                        item.href === router.asPath
-                          ? 'bg-sky-50 border-sky-500 text-sky-700 hover:bg-sky-50 hover:text-sky-700'
-                          : 'border-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-900',
-                        item.onDev ? 'line-through decoration-double' : '',
-                        'group border-l-4 px-3 py-2 flex items-center text-sm font-medium'
-                      )}
-                      aria-current={item.href === router.asPath ? 'page' : undefined}
-                    >
-                      <item.icon
+                      <a
+                        href={item.href}
                         className={classNames(
                           item.href === router.asPath
-                            ? 'text-sky-500 group-hover:text-sky-500'
-                            : 'text-gray-400 group-hover:text-gray-500',
-                          'flex-shrink-0 -ml-1 mr-3 h-6 w-6'
+                            ? 'bg-sky-50 border-sky-500 text-sky-700 hover:bg-sky-50 hover:text-sky-700'
+                            : 'border-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-900',
+                          item.onDev ? 'line-through decoration-double' : '',
+                          'group border-l-4 px-3 py-2 flex items-center text-sm font-medium'
                         )}
-                        aria-hidden="true"
-                      />
-                      <span className="truncate">{item.name}</span>
-                    </a>
-                     :<hr className="bg-gray-200" />}
+                        aria-current={item.href === router.asPath ? 'page' : undefined}
+                      >
+                        <item.icon
+                          className={classNames(
+                            item.href === router.asPath
+                              ? 'text-sky-500 group-hover:text-sky-500'
+                              : 'text-gray-400 group-hover:text-gray-500',
+                            'flex-shrink-0 -ml-1 mr-3 h-6 w-6'
+                          )}
+                          aria-hidden="true"
+                        />
+                        <span className="truncate">{item.name}</span>
+                      </a>
+                      : <hr className="bg-gray-200" />}
                   </div>
                 ))}
               </nav>

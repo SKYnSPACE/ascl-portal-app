@@ -1,9 +1,5 @@
 //GET: 구매관련 요청 리스트 반환 (최근 2달)
 //POST: 구매관련 요청 생성
-
-//TODO: POST = update request from (Processing -> Completed)
-//Authority [those who received the request, 6,7]
-
 import { NextApiRequest, NextApiResponse } from "next";
 import withHandler, { ResponseType } from "../../../libs/backend/withHandler";
 import client from "../../../libs/backend/client";
@@ -39,22 +35,16 @@ async function handler(
       where: { id: user.id },
     });
 
+    if (currentUser.position < 3)
+      return res.status(403).json({ ok: false, error: { code: "403", message: "Not allowed to access the data." } })
+
+
     const requests = await client.request.findMany({
       where: {
         OR: [
           { kind: 30 },
           { kind: 35 }
         ],
-        requestedFor: {
-          id: +currentUser.id,
-        },
-      },
-      include: {
-        relatedAction: {
-          select: { 
-            id: true
-          },
-        },
       },
       orderBy: [{ createdAt: 'desc' }]
     });

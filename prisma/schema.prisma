@@ -187,6 +187,8 @@ model Request{
   payload11   String? //reserved.
 
   due         DateTime
+  decidedAt   DateTime?
+  completedAt DateTime?
   status      Int //(Enum. Pending, Accepted(Processing), Delayed, Rejected)
   // 세미나 관련 request 및 status는 모두 유지
   // 나머지의 경우 처리 완료되면 레코드 삭제.
@@ -319,6 +321,7 @@ model Action{
   payload11   String? //reserved.
 
   due         DateTime
+  completedAt DateTime?
   status      Int //(Enum. Pending, Accepted(Processing), Delayed, Rejected)
 }
 
