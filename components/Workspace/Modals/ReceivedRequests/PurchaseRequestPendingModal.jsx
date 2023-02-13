@@ -21,7 +21,7 @@ import {
   XCircleIcon,
 } from '@heroicons/react/24/outline';
 
-import useMutation from "../../../libs/frontend/useMutation";
+import useMutation from "../../../../libs/frontend/useMutation";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')

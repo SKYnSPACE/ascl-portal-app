@@ -19,11 +19,13 @@ import {
 
 import { format, differenceInSeconds, parseISO } from "date-fns";
 
-import PurchaseRequestPendingModal from './Modals/PurchaseRequestPendingModal';
-import PurchaseRequestProcessingModal from './Modals/PurchaseRequestProcessingModal';
 import Notification from '../Notification';
-import PurchaseRequestCompletedModal from './Modals/PurchaseRequestCompletedModal';
-import PurchaseRequestDeclinedModal from './Modals/PurchaseRequestDeclinedModal';
+
+import PurchaseRequestPendingModal from './Modals/ReceivedRequests/PurchaseRequestPendingModal';
+import PurchaseRequestProcessingModal from './Modals/ReceivedRequests/PurchaseRequestProcessingModal';
+import PurchaseRequestCompletedModal from './Modals/ReceivedRequests/PurchaseRequestCompletedModal';
+import PurchaseRequestDeclinedModal from './Modals/ReceivedRequests/PurchaseRequestDeclinedModal';
+import TripRequestPendingModal from './Modals/ReceivedRequests/TriqRequestPendingModal';
 // import TripRequestModal from './Modals/TripRequestModal';
 // import ReviewCompletedModal from './Modals/ReviewCompletedModal';
 // import ReviewDeclinedModal from './Modals/ReviewDeclinedModal';
@@ -35,18 +37,18 @@ const modals = [
     items: [
       { id: 28, kind: 30, status: 'delayed', name: 'Delayed Purchasing Request', href: '#', },
       { id: 29, kind: 30, status: 'declined', name: 'Declined Purchasing Request', href: '#', },
-      { id: 30, kind: 30, status: 'pending', name: 'Pending Purchasing Request', href: '#', detail: '신규 유저를 생성합니다. 필수 항목들만 입력하며, 나머지 항목(권한, 팀설정, ...)들은 편집화면을 통해 설정합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
-      { id: 31, kind: 30, status: 'processing', name: 'Processing Purchasing Request', href: '#', detail: '기존 유저를 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600' },
-      { id: 32, kind: 30, status: 'completed', name: 'Completed Purchasing Request', href: '#', detail: '유저들의 직위(권한), 담당업무를 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600' },]
+      { id: 30, kind: 30, status: 'pending', name: 'Pending Purchasing Request', href: '#', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
+      { id: 31, kind: 30, status: 'processing', name: 'Processing Purchasing Request', href: '#', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600' },
+      { id: 32, kind: 30, status: 'completed', name: 'Completed Purchasing Request', href: '#', iconBackground: 'bg-green-100', iconForeground: 'text-green-600' },]
   },
   {
-    category: 'Business Trip Request', kind: 35,
+    category: 'Business Trip Request',
     items: [
-      { id: 33, name: 'Delayed Business Trip Request', href: '#', },
-      { id: 34, name: 'Declined Business Trip Request', href: '#', detail: '신규 학기를 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
-      { id: 35, name: 'Pending Business Trip Request', href: '#', detail: '신규 학기를 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
-      { id: 36, name: 'Processing Business Trip Request', href: '#', detail: '학기 정보를 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600' },
-      { id: 37, name: 'Completed Business Trip Request', href: '#', detail: '시스템 기준학기(현재학기)를 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600' },]
+      { id: 33, kind: 35, status: 'delayed', name: 'Delayed Business Trip Request', href: '#', },
+      { id: 34, kind: 35, status: 'declined', name: 'Declined Business Trip Request', href: '#', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
+      { id: 35, kind: 35, status: 'pending', name: 'Pending Business Trip Request', href: '#', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
+      { id: 36, kind: 35, status: 'processing', name: 'Processing Business Trip Request', href: '#', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600' },
+      { id: 37, kind: 35, status: 'completed', name: 'Completed Business Trip Request', href: '#', iconBackground: 'bg-green-100', iconForeground: 'text-green-600' },]
   },
 ]
 
@@ -228,15 +230,21 @@ function parseRequests(requests) {
           kind: 35,
           icon: BriefcaseIcon,
           name: `${request.payload2}`,
+          requestFor: `${request.requestedFor.name}`,
           projectAlias: `${request.payload3}`,
           title: `${request.payload4}`,
           category: `${request.payload5}`,
-          href: '#',
+          destination: `${request.payload6}`,
           amount: `${(+request.payload7).toLocaleString()}`,
+          startDate: `${request.payload8}`,
+          endDate: `${request.payload9}`,
+          href: '#',
+          details: `${request.payload10}`,
+          message: `${request.payload11}`,
           currency: ' ￦',
           status: Status[`${request.status}`],
           date: `${format(parseISO(request.due), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
-          datetime: `${format(parseISO(request.due), "yyyy-MM-dd")}`,//datetime: '2020-07-11',
+          datetime: request.due, //datetime: '2020-07-11',
         };
     }
   })
@@ -260,14 +268,14 @@ export default function Requests() {
     if (isLoading) return;
 
     if (data && data.ok) {
-      let requests = [];
+      // let requests = [];
 
-      const purchaseRequests = parseRequests(data.requests);
-      requests.push(purchaseRequests)
+      const requests = parseRequests(data.requests);
+      // requests.push(purchaseRequests)
 
       // console.log(requests)
 
-      setRequests(...requests);
+      setRequests([...requests]);
     }
   }, [data])
 
@@ -446,24 +454,24 @@ export default function Requests() {
                       {request.currency}
                     </td>
                     <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
-                    {((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0) ?
-                          <span
-                            className={classNames(
-                              statusStyles['delayed'],
-                              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
-                            )}
-                          >
-                            delayed
-                          </span>
-                          :
-                          <span
-                            className={classNames(
-                              statusStyles[request.status],
-                              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
-                            )}
-                          >
-                            {request.status}
-                          </span>}
+                      {((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0) ?
+                        <span
+                          className={classNames(
+                            statusStyles['delayed'],
+                            'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                          )}
+                        >
+                          delayed
+                        </span>
+                        :
+                        <span
+                          className={classNames(
+                            statusStyles[request.status],
+                            'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                          )}
+                        >
+                          {request.status}
+                        </span>}
                     </td>
                     <td className="hidden md:block whitespace-nowrap px-4 py-4 text-right text-sm text-gray-500">
                       <time dateTime={request.datetime}>{request.date}</time>
@@ -517,6 +525,11 @@ export default function Requests() {
       }} />
       <PurchaseRequestCompletedModal props={{
         modal: modals[0].items[4], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+        selectedRequest,
+      }} />
+
+      <TripRequestPendingModal props={{
+        modal: modals[1].items[2], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
       }} />
 

@@ -102,7 +102,7 @@ async function handler(
         payload2: requestedUser.name.toString(),
         payload3: requestedProject.alias.toString(),
         payload4: requestedProject.title.toString(),
-        payload5: Categories[category].toString(),
+        payload5: category.toString(),
         payload6: destination.toString(),
         payload7: expense?.toString(),
         payload8: startDate.toString(),

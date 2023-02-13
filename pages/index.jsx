@@ -69,7 +69,7 @@ const actions = [
     href: '#',
     iconForeground: 'text-rose-700',
     iconBackground: 'bg-rose-50',
-    onDev: true,
+    onDev: false,
   },
   {
     id: 6,
@@ -176,9 +176,9 @@ export default function Home() {
   const [message, setMessage] = useState({ type: 'success', title: 'Confirmed!', details: 'Test message initiated.', });
 
   const [stats, setStats] = useState([
-    { label: 'Requests waiting', value: 0 },
-    { label: 'Actions required', value: 0 },
-    { label: 'Vacation days left', value: 0 },]);
+    { label: 'Requests waiting', value: 0, href: '/workspace/requests' },
+    { label: 'Actions required', value: 0, href: '#' },
+    { label: 'Vacation days left', value: 0, href: '#' },]);
 
   
   // const closeAnnouncementModal = () => { setIsAnnouncementModalOpen(false) }
@@ -188,12 +188,12 @@ export default function Home() {
 
     if(user?.requests)
     {
-      stats.push({ label: 'Requests waiting', value:user.requests.length })
+      stats.push({ label: 'Requests waiting', value:user.requests.length, href: '/workspace/requests' })
     }
 
     stats.push(
-      { label: 'Actions required', value: 0 },
-      { label: 'Vacation days left', value: 0 },
+      { label: 'Actions required', value: 0, href: '#' },
+      { label: 'Vacation days left', value: 0, href: '#' },
     )
     setStats(stats)
   },[user]);
@@ -246,8 +246,11 @@ export default function Home() {
                     <div className="grid grid-cols-1 divide-y divide-gray-200 border-t border-gray-200 bg-gray-50 sm:grid-cols-3 sm:divide-y-0 sm:divide-x">
                       {stats.map((stat) => (
                         <div key={stat.label} className="px-6 py-5 text-center text-sm font-medium">
-                          <span className="text-gray-900">{stat.value}</span>{' '}
+                          <a href={stat.href} className="">
+                            <span className="text-gray-900">{stat.value}</span>
+                          {' '}
                           <span className="text-gray-600">{stat.label}</span>
+                          </a>
                         </div>
                       ))}
                     </div>

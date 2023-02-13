@@ -22,6 +22,8 @@ import { format, differenceInSeconds, parseISO } from "date-fns";
 import PurchaseRequestProcessingModal from './Modals/ManageRequests/PurchaseRequestProcessingModal';
 
 import Notification from '../Notification';
+import PurchaseRequestCompletedModal from './Modals/ManageRequests/PurchaseRequestCompletedModal';
+import PurchaseRequestDeclinedModal from './Modals/ManageRequests/PurchaseRequestDeclinedModal';
 // import TripRequestModal from './Modals/TripRequestModal';
 // import ReviewCompletedModal from './Modals/ReviewCompletedModal';
 // import ReviewDeclinedModal from './Modals/ReviewDeclinedModal';
@@ -30,21 +32,21 @@ import Notification from '../Notification';
 const modals = [
   {
     category: 'Purchasing Request',
-    items:[
-      { id: 28, kind:30, status: 'delayed', name: 'Delayed Purchasing Request', href: '#',},
-      { id: 29, kind:30, status: 'declined', name: 'Declined Purchasing Request', href: '#',},
-      { id: 30, kind:30, status: 'pending', name: 'Pending Purchasing Request', href: '#', detail: '신규 유저를 생성합니다. 필수 항목들만 입력하며, 나머지 항목(권한, 팀설정, ...)들은 편집화면을 통해 설정합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
-      { id: 31, kind:30, status: 'processing', name: 'Processing Purchasing Request', href: '#', detail: '기존 유저를 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600' },
-      { id: 32, kind:30, status: 'completed', name: 'Completed Purchasing Request', href: '#', detail: '유저들의 직위(권한), 담당업무를 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600' },]
+    items: [
+      { id: 28, kind: 30, status: 'delayed', name: 'Delayed Purchasing Request', href: '#', },
+      { id: 29, kind: 30, status: 'declined', name: 'Declined Purchasing Request', href: '#', },
+      { id: 30, kind: 30, status: 'pending', name: 'Pending Purchasing Request', href: '#', detail: '신규 유저를 생성합니다. 필수 항목들만 입력하며, 나머지 항목(권한, 팀설정, ...)들은 편집화면을 통해 설정합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
+      { id: 31, kind: 30, status: 'processing', name: 'Processing Purchasing Request', href: '#', detail: '기존 유저를 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600' },
+      { id: 32, kind: 30, status: 'completed', name: 'Completed Purchasing Request', href: '#', detail: '유저들의 직위(권한), 담당업무를 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600' },]
   },
   {
-    category: 'Business Trip Request', kind:35,
-    items:[
-      { id: 33, name: 'Delayed Business Trip Request', href: '#', },
-      { id: 34, name: 'Declined Business Trip Request', href: '#', detail: '신규 학기를 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
-      { id: 35, name: 'Pending Business Trip Request', href: '#', detail: '신규 학기를 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
-      { id: 36, name: 'Processing Business Trip Request', href: '#', detail: '학기 정보를 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600' },
-      { id: 37, name: 'Completed Business Trip Request', href: '#', detail: '시스템 기준학기(현재학기)를 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600' },]
+    category: 'Business Trip Request',
+    items: [
+      { id: 33, kind: 35, status: 'delayed', name: 'Delayed Business Trip Request', href: '#', },
+      { id: 34, kind: 35, status: 'declined', name: 'Declined Business Trip Request', href: '#', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
+      { id: 35, kind: 35, status: 'pending', name: 'Pending Business Trip Request', href: '#', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
+      { id: 36, kind: 35, status: 'processing', name: 'Processing Business Trip Request', href: '#', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600' },
+      { id: 37, kind: 35, status: 'completed', name: 'Completed Business Trip Request', href: '#', iconBackground: 'bg-green-100', iconForeground: 'text-green-600' },]
   },
 ]
 
@@ -226,7 +228,7 @@ export default function Manage() {
                 onClick={(e) => {
                   e.preventDefault();
                   setSelectedRequest(request);
-                  setIsModalOpen({kind: +request.kind, status: request.status});
+                  setIsModalOpen({ kind: +request.kind, status: request.status });
                 }}>
                 <span className="flex items-center space-x-4">
                   <span className="flex flex-1 grow space-x-2 truncate">
@@ -239,7 +241,7 @@ export default function Manage() {
                       </span>
                       <span className="truncate">{request.name}</span>
                       <time dateTime={request.datetime} className="flex justify-between">{request.date}
-                      {((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0) ?
+                        {((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0) ?
                           <span
                             className={classNames(
                               statusStyles['delayed'],
@@ -337,8 +339,8 @@ export default function Manage() {
                         onClick={(e) => {
                           e.preventDefault();
                           setSelectedRequest(request);
-                          console.log({kind: +request.kind, status: request.status});
-                          setIsModalOpen({kind: +request.kind, status: request.status});
+                          console.log({ kind: +request.kind, status: request.status });
+                          setIsModalOpen({ kind: +request.kind, status: request.status });
                         }}>
 
                         <request.icon
@@ -367,24 +369,24 @@ export default function Manage() {
                       {request.currency}
                     </td>
                     <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
-                    {((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0) ?
-                          <span
-                            className={classNames(
-                              statusStyles['delayed'],
-                              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
-                            )}
-                          >
-                            delayed
-                          </span>
-                          :
-                          <span
-                            className={classNames(
-                              statusStyles[request.status],
-                              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
-                            )}
-                          >
-                            {request.status}
-                          </span>}
+                      {((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0) ?
+                        <span
+                          className={classNames(
+                            statusStyles['delayed'],
+                            'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                          )}
+                        >
+                          delayed
+                        </span>
+                        :
+                        <span
+                          className={classNames(
+                            statusStyles[request.status],
+                            'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                          )}
+                        >
+                          {request.status}
+                        </span>}
                     </td>
                     <td className="hidden md:block whitespace-nowrap px-4 py-4 text-right text-sm text-gray-500">
                       <time dateTime={request.datetime}>{request.date}</time>
@@ -423,12 +425,20 @@ export default function Manage() {
         </div>
       </div>
 
-            {/* <PurchaseRequestPendingModal props={{
+      <PurchaseRequestDeclinedModal props={{
+        modal: modals[0].items[1], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+        selectedRequest,
+      }} />
+      {/* <PurchaseRequestPendingModal props={{
         modal: modals[0].items[2], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
       }} /> */}
-            <PurchaseRequestProcessingModal props={{
+      <PurchaseRequestProcessingModal props={{
         modal: modals[0].items[3], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+        selectedRequest,
+      }} />
+      <PurchaseRequestCompletedModal props={{
+        modal: modals[0].items[4], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
       }} />
 
