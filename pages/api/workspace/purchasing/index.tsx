@@ -43,12 +43,12 @@ async function handler(
       where: { id: user.id },
     });
 
-    const createdPurchaseActions = await client.action.findMany({
-      where:{
-        kind: 30,
-        payload1: currentUser.id.toString(),
-      }
-    })
+    // const createdPurchaseActions = await client.action.findMany({
+    //   where:{
+    //     kind: 30,
+    //     payload1: currentUser.id.toString(),
+    //   }
+    // })
 
     const myPurchaseActions = await client.action.findMany({
       where:{
@@ -56,13 +56,31 @@ async function handler(
         relatedRequest:{
           payload1: currentUser.id.toString(),
         }
-      }
+      },
+      orderBy: [{ createdAt: 'desc' }]
+    })
+
+    const myPurchaseRequests = await client.request.findMany({
+      where:{
+        kind: 30,
+        payload1: currentUser.id.toString(),
+        status: 0,
+      },
+      include:{
+        requestedFor:{
+          select:{
+            name: true,
+          }
+        }
+      },
+      orderBy: [{ createdAt: 'desc' }]
     })
 
     res.json({
       ok: true,
-      createdPurchaseActions,
+      // createdPurchaseActions,
       myPurchaseActions,
+      myPurchaseRequests,
     });
   }
 

@@ -22,18 +22,28 @@ import { format, parseISO } from "date-fns";
 import Notification from '../Notification';
 
 import { classNames } from '../../libs/frontend/utils'
-import PurchaseActionProceedModal from './Modals/PurchaseActionProceedModal';
+import PurchaseRequestPendingModal from './Modals/Purchasing/PurchaseRequestPendingModal';
 
 const modals = [
   {
-    id: 30,
-    name: 'Purchasing Action',
+    category: 'Purchasing Request',
+    items: [
+      { id: 28, kind: 30, status: 'delayed', name: 'Delayed Purchasing Request', href: '#', },
+      { id: 29, kind: 30, status: 'declined', name: 'Declined Purchasing Request', href: '#', },
+      { id: 30, kind: 30, status: 'pending', name: 'Pending Purchasing Request', href: '#', detail: '신규 유저를 생성합니다. 필수 항목들만 입력하며, 나머지 항목(권한, 팀설정, ...)들은 편집화면을 통해 설정합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
+      { id: 31, kind: 30, status: 'processing', name: 'Processing Purchasing Request', href: '#', detail: '기존 유저를 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600' },
+      { id: 32, kind: 30, status: 'completed', name: 'Completed Purchasing Request', href: '#', detail: '유저들의 직위(권한), 담당업무를 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600' },]
   },
   {
-    id: 35,
-    name: 'Business Trip Request'
-  }
-];
+    category: 'Business Trip Request', kind: 35,
+    items: [
+      { id: 33, name: 'Delayed Business Trip Request', href: '#', },
+      { id: 34, name: 'Declined Business Trip Request', href: '#', detail: '신규 학기를 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
+      { id: 35, name: 'Pending Business Trip Request', href: '#', detail: '신규 학기를 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
+      { id: 36, name: 'Processing Business Trip Request', href: '#', detail: '학기 정보를 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600' },
+      { id: 37, name: 'Completed Business Trip Request', href: '#', detail: '시스템 기준학기(현재학기)를 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600' },]
+  },
+]
 
 const purchases = [
   {
@@ -122,25 +132,67 @@ function parseActions(requests) {
   return parsedList;
 }
 
+
+function parseRequests(requests) {
+  const parsedList = requests?.map((request) => {
+    return {
+      id: +`${request.id}`,
+      kind: 30,
+      icon: BanknotesIcon,
+      name: `${request.payload2}`,
+      requestFor: `${request.requestedFor.name}`,
+      projectAlias: `${request.payload3}`,
+      title: `${request.payload4}`,
+      category: `${request.payload5}`,
+      item: `${request.payload6}`,
+      quantity: `${request.payload7}`,
+      payMethod: `${request.payload8}`,
+      href: '#',
+      amount: `${(+request.payload9).toLocaleString()}`,
+      details: `${request.payload10}`,
+      message: `${request.payload11}`,
+      currency: ' ￦',
+      status: Status[`${request.status}`],
+      date: `${format(parseISO(request.due), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
+      datetime: `${format(parseISO(request.due), "yyyy-MM-dd")}`,//datetime: '2020-07-11',
+    };
+  })
+
+  return parsedList;
+}
+
 export default function Purchasing() {
   const [isModalOpen, setIsModalOpen] = useState(0);
   const [isNotify, setIsNotify] = useState(false);
   const [message, setMessage] = useState({ type: 'success', title: 'Confirmed!', details: 'Test message initiated.', });
 
-  const [actions, setActions] = useState([]);
-  const [purchases, setPurchases] = useState([]);
+
   const { data, error, isLoading } = useSWR(`/api/workspace/purchasing`);
 
+  const [actions, setActions] = useState([]);
+  const [purchases, setPurchases] = useState([]);
+  const [requests, setRequests] = useState([]);
+
   const [selectedAction, setSelectedAction] = useState({});
+  const [selectedRequest, setSelectedRequest] = useState({});
+
+
 
   useEffect(() => {
     if (isLoading) return;
 
     if (data && data.ok) {
       let purchases = [];
-
       const purchaseActions = parseActions(data.myPurchaseActions);
 
+
+      purchases.push(
+        {
+          category: 'Delayed (Overdue actions will be withdrawn automatically)', //기한지남(증빙안됨): TODO(E-MAIL), 완료 권한은 김은영선생님께?
+          status: 'delayed',
+          lists: purchaseActions.filter(action => action.status == 'pending' || action.status == 'processing')
+        },
+      )
       purchases.push(
         {
           category: 'Pending (Make a purchase action)', //결제 대기중
@@ -148,7 +200,6 @@ export default function Purchasing() {
           lists: purchaseActions.filter(action => action.status == 'pending')
         },
       )
-
       purchases.push(
         {
           category: 'Processing (Please submit the reference documents)', //결제완료. 서류처리중
@@ -156,7 +207,13 @@ export default function Purchasing() {
           lists: purchaseActions.filter(action => action.status == 'processing')
         },
       )
-
+      purchases.push(
+        {
+          category: 'Completed',
+          status: 'completed',
+          lists: purchaseActions.filter(action => action.status == 'completed')
+        },
+      )
       purchases.push(
         {
           category: 'Withdrawn',
@@ -167,10 +224,19 @@ export default function Purchasing() {
 
       setActions(purchaseActions);
       setPurchases(purchases);
+
+      let requests = [];
+
+      const purchaseRequests = parseRequests(data.myPurchaseRequests);
+      requests.push(purchaseRequests)
+
+      // console.log(requests)
+
+      setRequests(...requests);
     }
   }, [data])
 
-  return (
+  return (<>
     <div className="px-4">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
@@ -294,56 +360,63 @@ export default function Purchasing() {
               {purchases.length != 0 ?
                 <tbody className="bg-white">
                   {purchases?.map((actions) => (
-                           
-  
+
+
                     <Fragment key={actions.category}>
+                      {
+                        actions.lists.length != 0 ?
+                          <tr className="border-t border-gray-200">
+                            <th
+                              colSpan={7}
+                              scope="colgroup"
+                              className={classNames(
+                                statusStyles[actions.status],
+                                "bg-gray-50 px-4 py-2 text-left text-sm font-semibold text-gray-900")}
+                            >
+                              {actions.category}
+                            </th>
+                          </tr> : <tr></tr>}
 
-                      <tr className="border-t border-gray-200">
-                        <th
-                          colSpan={7}
-                          scope="colgroup"
-                          className={classNames(
-                            statusStyles[actions.status],
-                            "bg-gray-50 px-4 py-2 text-left text-sm font-semibold text-gray-900")}
-                        >
-                          {actions.category}
-                        </th>
-                      </tr>
+                      {
+                        actions.lists.length != 0 ?
+                          actions.lists.map((action, itemIdx) => (
+                            <tr
+                              key={action.id}
+                              className={classNames(itemIdx === 0 ? 'border-gray-300' : 'border-gray-200', 'border-t')}
+                            >
+                              <td className="w-full max-w-0 truncate whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                {action.item}
+                              </td>
+                              <td className="hidden xl:block whitespace-nowrap px-3 py-4 text-sm text-gray-500">{Categories[action.category]}</td>
+                              <td className="w-full max-w-[200px] truncate whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                {action.title}
+                              </td>
 
-                      {actions.lists.map((action, itemIdx) => (
-                        <tr
-                          key={action.id}
-                          className={classNames(itemIdx === 0 ? 'border-gray-300' : 'border-gray-200', 'border-t')}
-                        >
-                          <td className="w-full max-w-0 truncate whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                            {action.item}
-                          </td>
-                          <td className="hidden xl:block whitespace-nowrap px-3 py-4 text-sm text-gray-500">{Categories[action.category]}</td>
-                          <td className="w-full max-w-[200px] truncate whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {action.title}
-                          </td>
+                              <td className="hidden xl:block whitespace-nowrap px-3 py-4 text-sm text-gray-500">{PayMethods[action.payMethod]}</td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                <span className="font-medium text-gray-900">{action.amount}</span>
+                                {action.currency}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center">{action.date}</td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm font-semibold text-center text-sky-500 hover:text-sky-700">
+                                {action.status == 'pending' ?
+                                  <a href={action.href} className=""
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      setSelectedAction(action);
+                                      setIsModalOpen(+action.kind);
+                                    }}>
+                                    Proceed
+                                  </a> : <></>}
+                              </td>
+                            </tr>
+                          ))
+                          :
+                          <tr>
+                          </tr>
+                      }
 
-                          <td className="hidden xl:block whitespace-nowrap px-3 py-4 text-sm text-gray-500">{PayMethods[action.payMethod]}</td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            <span className="font-medium text-gray-900">{action.amount}</span>
-                            {action.currency}
-                          </td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center">{action.date}</td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm font-semibold text-center text-sky-500 hover:text-sky-700">
-                            {action.status == 'pending' ? 
-                            <a href={action.href} className=""
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setSelectedAction(action);
-                              setIsModalOpen(+action.kind);
-                            }}>
-                              Proceed
-                            </a> :<></>}
-                          </td>
-                        </tr>
-                      ))}
-                                           
-                    </Fragment> 
+                    </Fragment>
 
                   ))}
                 </tbody> : <></>}
@@ -352,13 +425,176 @@ export default function Purchasing() {
         </div>
 
       </div>
-
-      <PurchaseActionProceedModal props={{
-        modal: modals[0], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
-        selectedAction,
-      }} />
-
-      <Notification props={{ message, isNotify, setIsNotify }} />
     </div>
+
+
+
+
+
+
+
+
+
+    <div className="px-4 mt-4">
+      <div className="sm:flex sm:items-center">
+        <div className="sm:flex-auto">
+          <h1 className="text-xl font-semibold text-gray-900">Pending Requests</h1>
+          <p className="mt-2 text-sm text-gray-700">
+            Purchasing requests still pending.
+          </p>
+        </div>
+        {/* <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+          <button
+            type="button"
+            className="inline-flex items-center justify-center rounded-md border border-transparent bg-[#2980b9] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-[#2980b9] focus:ring-offset-2 sm:w-auto"
+          >
+            Add Item
+          </button>
+        </div> */}
+      </div>
+
+
+      {/* Activity list (smallest breakpoint only) */}
+      <div className="mt-4 shadow md:hidden">
+        <ul role="list" className="mt-2 divide-y divide-gray-200 overflow-hidden shadow md:hidden">
+          {requests?.map((request) => (
+            <li key={request.id}>
+              <a href={request.href} className="block bg-white px-4 py-4 hover:bg-gray-50"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelectedRequest(request);
+                  setIsModalOpen({ kind: +request.kind, status: request.status });
+                }}>
+                <span className="flex items-center space-x-4">
+                  <span className="flex flex-1 grow space-x-2 truncate">
+                    <request.icon className="h-5 w-5 flex-shrink-0 text-gray-900" aria-hidden="true" />
+                    <span className="flex flex-col grow truncate text-sm text-gray-500">
+                      <span className="truncate text-gray-900">{request.item}</span>
+                      <span className="truncate">{request.title} / {Categories[request.category]}</span>
+                      <span>
+                        <span className="font-medium text-gray-900">{request.amount}</span>{' '}
+                        {request.currency} ({PayMethods[request.payMethod]})
+                      </span>
+                      <span className="truncate">Request To: {request.requestFor}</span>
+                      <time dateTime={request.datetime} className="flex justify-between">{request.date}
+                        <span
+                          className={classNames(
+                            statusStyles[request.status],
+                            'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                          )}
+                        >
+                          {request.status}
+                        </span>
+                      </time>
+                    </span>
+                  </span>
+                  <ChevronRightIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+
+
+
+      <div className="mt-4 hidden md:block">
+        <div className="mt-2 flex flex-col">
+          <div className="min-w-full overflow-hidden overflow-x-auto align-middle shadow border rounded-lg ">
+            <table className="min-w-full">
+              <thead>
+                <tr>
+                  <th
+                    className="bg-gray-50 px-4 py-3 text-center text-sm font-semibold text-gray-900"
+                    scope="col"
+                  >
+                    Request
+                  </th>
+                  <th
+                    className="bg-gray-50 py-3 text-center text-sm font-semibold text-gray-900"
+                    scope="col"
+                  >
+                    To
+                  </th>
+                  <th
+                    className=" bg-gray-50 px-4 py-3 text-center text-sm font-semibold text-gray-900"
+                    scope="col"
+                  >
+                    Item
+                  </th>
+                  <th
+                    className="bg-gray-50 px-4 py-3 text-right text-sm font-semibold text-gray-900"
+                    scope="col"
+                  >
+                    Amount
+                  </th>
+                  <th
+                    className=" bg-gray-50 px-4 py-3 text-right text-sm font-semibold text-gray-900"
+                    scope="col"
+                  >
+                    Due Date
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {requests?.map((request) => (
+
+                  <tr key={request.id} className="bg-white hover:bg-gray-100">
+                    <td className="w-full max-w-0 truncate px-4 py-4 text-sm text-gray-500">
+                      <a href={request.href} className="group space-x-2 truncate text-sm"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelectedRequest(request);
+                          setIsModalOpen({ kind: +request.kind, status: request.status });
+                        }}>
+
+                        <request.icon
+                          className="inline h-5 w-5 text-gray-700 group-hover:text-sky-600"
+                          aria-hidden="true"
+                        />
+                        <span className="whitespace-nowrap py-4 text-right text-sm text-gray-900 group-hover:text-sky-600">
+
+                          {request.title}
+                        </span>
+                      </a>
+                    </td>
+                    <td className="max-w-xs whitespace-nowrap py-4 text-sm text-gray-900">
+                      <div className="flex">
+                        <div className="group inline-flex space-x-2 truncate text-sm">
+
+                          <p className="truncate text-gray-500">
+                            {request.requestFor}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-4 text-right text-sm text-gray-500">
+                      <span className="font-medium text-gray-900">{request.item}</span>
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-4 text-right text-sm text-gray-500">
+                      <span className="font-medium text-gray-900">{request.amount}</span>
+                      {request.currency}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-4 text-right text-sm text-gray-500">
+                      <time dateTime={request.datetime}>{request.date}</time>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <PurchaseRequestPendingModal props={{
+      modal: modals[0].items[2], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+      selectedRequest,
+    }} />
+
+    <Notification props={{ message, isNotify, setIsNotify }} />
+  </>
   )
 }
