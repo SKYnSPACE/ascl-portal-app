@@ -16,13 +16,18 @@ import {
   XCircleIcon,
 } from '@heroicons/react/24/outline'
 
-import { format, parseISO } from "date-fns";
+import { format, differenceInSeconds, parseISO } from "date-fns";
 
 // import PurchaseRequestModal from './Modals/PurchaseRequestModal';
 import Notification from '../Notification';
 
 import { classNames } from '../../libs/frontend/utils'
+import PurchaseActionProceedModal from './Modals/Purchasing/PurchaseActionProceedModal';
 import PurchaseRequestPendingModal from './Modals/Purchasing/PurchaseRequestPendingModal';
+
+const actionModals = [
+
+]
 
 const modals = [
   {
@@ -42,6 +47,15 @@ const modals = [
       { id: 35, name: 'Pending Business Trip Request', href: '#', detail: '신규 학기를 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
       { id: 36, name: 'Processing Business Trip Request', href: '#', detail: '학기 정보를 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600' },
       { id: 37, name: 'Completed Business Trip Request', href: '#', detail: '시스템 기준학기(현재학기)를 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600' },]
+  },
+  {
+    category: 'Purchasing Action',
+    items: [
+      { id: 298, kind: 300, status: 'delayed', name: 'Delayed Purchasing Action', href: '#', },
+      { id: 299, kind: 300, status: 'declined', name: 'Declined Purchasing Action', href: '#', },
+      { id: 300, kind: 300, status: 'pending', name: 'Pending Purchasing Action', href: '#', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
+      { id: 301, kind: 300, status: 'processing', name: 'Processing Purchasing Action', href: '#', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600' },
+      { id: 302, kind: 300, status: 'completed', name: 'Completed Purchasing Action', href: '#', iconBackground: 'bg-green-100', iconForeground: 'text-green-600' },]
   },
 ]
 
@@ -110,7 +124,7 @@ function parseActions(requests) {
   const parsedList = requests?.map((action) => {
     return {
       id: +action.id,
-      kind: 30,
+      kind: 300,
       icon: BanknotesIcon,
       name: `${action.payload2}`,
       projectAlias: `${action.payload3}`,
@@ -125,7 +139,7 @@ function parseActions(requests) {
       currency: ' ￦',
       status: Status[`${action.status}`],
       date: `${format(parseISO(action.due), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
-      datetime: `${format(parseISO(action.due), "yyyy-MM-dd")}`,//datetime: '2020-07-11',
+      datetime: action.due, //datetime: '2020-07-11',
     };
   })
 
@@ -154,7 +168,7 @@ function parseRequests(requests) {
       currency: ' ￦',
       status: Status[`${request.status}`],
       date: `${format(parseISO(request.due), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
-      datetime: `${format(parseISO(request.due), "yyyy-MM-dd")}`,//datetime: '2020-07-11',
+      datetime: request.due, //datetime: '2020-07-11',
     };
   })
 
@@ -190,7 +204,7 @@ export default function Purchasing() {
         {
           category: 'Delayed (Overdue actions will be withdrawn automatically)', //기한지남(증빙안됨): TODO(E-MAIL), 완료 권한은 김은영선생님께?
           status: 'delayed',
-          lists: purchaseActions.filter(action => action.status == 'pending' || action.status == 'processing')
+          lists: purchaseActions.filter(action => (action.status == 'pending' || action.status == 'processing') && differenceInSeconds(parseISO(action.datetime), new Date()) < 0)
         },
       )
       purchases.push(
@@ -265,7 +279,7 @@ export default function Purchasing() {
                 onClick={(e) => {
                   e.preventDefault();
                   setSelectedAction(action);
-                  setIsModalOpen(+action.kind);
+                  setIsModalOpen({ kind: +action.kind, status: action.status });
                 }}>
                 <span className="flex items-center space-x-4">
                   <span className="flex flex-1 grow space-x-2 truncate">
@@ -404,7 +418,7 @@ export default function Purchasing() {
                                     onClick={(e) => {
                                       e.preventDefault();
                                       setSelectedAction(action);
-                                      setIsModalOpen(+action.kind);
+                                      setIsModalOpen({ kind: +action.kind, status: action.status });
                                     }}>
                                     Proceed
                                   </a> : <></>}
@@ -463,6 +477,9 @@ export default function Purchasing() {
                 onClick={(e) => {
                   e.preventDefault();
                   setSelectedRequest(request);
+                  // if ((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0 )
+                  // setIsModalOpen({ kind: +request.kind, status: 'delayed' });
+                  // else
                   setIsModalOpen({ kind: +request.kind, status: request.status });
                 }}>
                 <span className="flex items-center space-x-4">
@@ -477,14 +494,25 @@ export default function Purchasing() {
                       </span>
                       <span className="truncate">Request To: {request.requestFor}</span>
                       <time dateTime={request.datetime} className="flex justify-between">{request.date}
-                        <span
-                          className={classNames(
-                            statusStyles[request.status],
-                            'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
-                          )}
-                        >
-                          {request.status}
-                        </span>
+
+                        {((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0) ?
+                          <span
+                            className={classNames(
+                              statusStyles['delayed'],
+                              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                            )}
+                          >
+                            delayed
+                          </span>
+                          :
+                          <span
+                            className={classNames(
+                              statusStyles[request.status],
+                              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                            )}
+                          >
+                            {request.status}
+                          </span>}
                       </time>
                     </span>
                   </span>
@@ -495,9 +523,6 @@ export default function Purchasing() {
           ))}
         </ul>
       </div>
-
-
-
 
       <div className="mt-4 hidden md:block">
         <div className="mt-2 flex flex-col">
@@ -589,6 +614,10 @@ export default function Purchasing() {
       </div>
     </div>
 
+    <PurchaseActionProceedModal props={{
+      modal: modals[2].items[2], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+      selectedAction,
+    }} />
     <PurchaseRequestPendingModal props={{
       modal: modals[0].items[2], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
       selectedRequest,

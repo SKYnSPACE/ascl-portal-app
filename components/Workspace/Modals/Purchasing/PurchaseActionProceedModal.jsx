@@ -22,7 +22,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { NumericFormat } from 'react-number-format';
-import useMutation from "../../../libs/frontend/useMutation";
+import useMutation from "../../../../libs/frontend/useMutation";
 import { inRange } from "lodash";
 
 function classNames(...classes) {
@@ -116,12 +116,13 @@ export default function PurchaseActionProceedModal({ props }) {
     if (!selectedAction) return;
     if (purchaseActionLoading) return;
     withdrawAction({ actionId: +id, response:"WITHDRAW" })
+
   }
 
   useEffect(() => {
     if (purchaseActionData?.ok) {
       setMessage(
-        { type: 'success', title: 'Accepted!', details: 'Thank you for your decision. Wait for the page reload.', }
+        { type: 'success', title: 'Purchased!', details: 'Successfully reported. Wait for the page reload.', }
       )
       setIsNotify(true);
       setIsModalOpen(false);
@@ -149,11 +150,45 @@ export default function PurchaseActionProceedModal({ props }) {
 
   }, [purchaseActionData])
 
+  useEffect(() => {
+    if (withdrawActionData?.ok) {
+      setMessage(
+        { type: 'success', title: 'Withdrawn!', details: 'Successfully withdrawn. Wait for the page reload.', }
+      )
+      setIsNotify(true);
+      setIsModalOpen(false);
+    }
+
+    if (withdrawActionData?.error) {
+      switch (withdrawActionData.error?.code) {
+        case 'P1017':
+          console.log("Connection Lost.")
+          setMessage(
+            { type: 'fail', title: 'Connection Lost.', details: "Database Server does not respond.", }
+          )
+          setIsNotify(true);
+          return;
+        case 'P2002':
+          console.log("Existing User.");
+          setMessage(
+            { type: 'fail', title: 'Creating user failed!', details: "User already exists. Or you may typed someone else's Email and phone number.", }
+          )
+          setIsNotify(true);
+          return;
+        default:
+      }
+    }
+
+  }, [withdrawActionData])
+
+
+
+
   return (
     <Dialog
       as="div"
       className="fixed z-10 inset-0 overflow-y-auto"
-      open={modal.id == isModalOpen}
+      open={(modal.kind == isModalOpen.kind && modal.status == isModalOpen.status)}
       onClose={() => setIsModalOpen(false)}
     >
       <div className="flex items-end justify-center min-h-screen pt-32 px-4 pb-20 text-center sm:block">

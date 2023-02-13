@@ -123,7 +123,7 @@ export default function PurchaseRequestPendingModal({ props }) {
     if(isFormValid){
       createPurchaseAction({selectedRequest,
         response:"ACCEPT", ...getValues()});
-      acceptRequest({ requestId: id, notify: false, ...getValues() })
+      acceptRequest({ requestId: id, notify: true, ...getValues() })
     }
     else{
       setMessage(
@@ -137,8 +137,7 @@ export default function PurchaseRequestPendingModal({ props }) {
     if (!id) return;
     if (isLoading || createPurchaseActionLoading) return;
 
-    console.log({selectedRequest,
-      response:"DECLINE", ...getValues()})
+    // console.log({selectedRequest,response:"DECLINE", ...getValues()})
 
     declineRequest({ requestId: id, notify: true, ...getValues() })
   }

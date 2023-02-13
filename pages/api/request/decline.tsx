@@ -62,10 +62,11 @@ async function handler(
       status: -1,
       payload11: message?.toString(),
       due: dueDate,
+      decidedAt: new Date(),
     },
   });
 
-  if (notify)
+  if (notify) {
     postMail(
       `${requestedUser.email}`,
       `"${currentUser.name.toString()}" Declined your ${getRequestString(currentRequest.kind)} Request.`,
@@ -74,6 +75,7 @@ async function handler(
     Please check the details from the ASCL Portal.</p>
     <p><b>Message:</b> ${message?.toString()}</p>`,
       false);
+  }
 
   res.json({
     ok: true,

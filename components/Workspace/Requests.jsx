@@ -32,16 +32,16 @@ import PurchaseRequestDeclinedModal from './Modals/PurchaseRequestDeclinedModal'
 const modals = [
   {
     category: 'Purchasing Request',
-    items:[
-      { id: 28, kind:30, status: 'delayed', name: 'Delayed Purchasing Request', href: '#',},
-      { id: 29, kind:30, status: 'declined', name: 'Declined Purchasing Request', href: '#',},
-      { id: 30, kind:30, status: 'pending', name: 'Pending Purchasing Request', href: '#', detail: '신규 유저를 생성합니다. 필수 항목들만 입력하며, 나머지 항목(권한, 팀설정, ...)들은 편집화면을 통해 설정합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
-      { id: 31, kind:30, status: 'processing', name: 'Processing Purchasing Request', href: '#', detail: '기존 유저를 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600' },
-      { id: 32, kind:30, status: 'completed', name: 'Completed Purchasing Request', href: '#', detail: '유저들의 직위(권한), 담당업무를 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600' },]
+    items: [
+      { id: 28, kind: 30, status: 'delayed', name: 'Delayed Purchasing Request', href: '#', },
+      { id: 29, kind: 30, status: 'declined', name: 'Declined Purchasing Request', href: '#', },
+      { id: 30, kind: 30, status: 'pending', name: 'Pending Purchasing Request', href: '#', detail: '신규 유저를 생성합니다. 필수 항목들만 입력하며, 나머지 항목(권한, 팀설정, ...)들은 편집화면을 통해 설정합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
+      { id: 31, kind: 30, status: 'processing', name: 'Processing Purchasing Request', href: '#', detail: '기존 유저를 편집/삭제 합니다.', iconBackground: 'bg-yellow-100', iconForeground: 'text-yellow-600' },
+      { id: 32, kind: 30, status: 'completed', name: 'Completed Purchasing Request', href: '#', detail: '유저들의 직위(권한), 담당업무를 설정합니다.', iconBackground: 'bg-green-100', iconForeground: 'text-green-600' },]
   },
   {
-    category: 'Business Trip Request', kind:35,
-    items:[
+    category: 'Business Trip Request', kind: 35,
+    items: [
       { id: 33, name: 'Delayed Business Trip Request', href: '#', },
       { id: 34, name: 'Declined Business Trip Request', href: '#', detail: '신규 학기를 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
       { id: 35, name: 'Pending Business Trip Request', href: '#', detail: '신규 학기를 생성합니다.', iconBackground: 'bg-pink-100', iconForeground: 'text-pink-600' },
@@ -215,10 +215,10 @@ function parseRequests(requests) {
           status: Status[`${request.status}`],
           date: `${format(parseISO(request.due), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
           datetime: `${format(parseISO(request.due), "yyyy-MM-dd")}`,//datetime: '2020-07-11',
-          decidedDate:`${format(parseISO(request.decidedAt? request.decidedAt : '1990-02-26'), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
-          decidedDatetime:`${format(parseISO(request.decidedAt? request.decidedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
-          completedDate:`${format(parseISO(request.completedAt? request.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
-          completedDatetime:`${format(parseISO(request.completedAt? request.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
+          decidedDate: `${format(parseISO(request.decidedAt ? request.decidedAt : '1990-02-26'), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
+          decidedDatetime: `${format(parseISO(request.decidedAt ? request.decidedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
+          completedDate: `${format(parseISO(request.completedAt ? request.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
+          completedDatetime: `${format(parseISO(request.completedAt ? request.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
           relatedAction: +request.relatedAction?.id,
         };
       case 35:
@@ -302,13 +302,13 @@ export default function Requests() {
                 onClick={(e) => {
                   e.preventDefault();
                   setSelectedRequest(request);
-                  setIsModalOpen({kind: +request.kind, status: request.status});
+                  setIsModalOpen({ kind: +request.kind, status: request.status });
                 }}>
                 <span className="flex items-center space-x-4">
                   <span className="flex flex-1 grow space-x-2 truncate">
                     <request.icon className="h-5 w-5 flex-shrink-0 text-gray-900" aria-hidden="true" />
                     <span className="flex flex-col grow truncate text-sm text-gray-500">
-                      
+
                       <span className="truncate text-gray-900">{request.title}</span>
                       <span>
                         <span className="font-medium text-gray-900">{request.amount}</span>{' '}
@@ -316,14 +316,25 @@ export default function Requests() {
                       </span>
                       <span className="truncate">{request.name}</span>
                       <time dateTime={request.datetime} className="flex justify-between">{request.date}
-                        <span
-                          className={classNames(
-                            statusStyles[request.status],
-                            'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
-                          )}
-                        >
-                          {request.status}
-                        </span>
+
+                        {((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0) ?
+                          <span
+                            className={classNames(
+                              statusStyles['delayed'],
+                              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                            )}
+                          >
+                            delayed
+                          </span>
+                          :
+                          <span
+                            className={classNames(
+                              statusStyles[request.status],
+                              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                            )}
+                          >
+                            {request.status}
+                          </span>}
                       </time>
                     </span>
                   </span>
@@ -405,7 +416,7 @@ export default function Requests() {
                           e.preventDefault();
                           setSelectedRequest(request);
                           // console.log({kind: +request.kind, status: request.status});
-                          setIsModalOpen({kind: +request.kind, status: request.status});
+                          setIsModalOpen({ kind: +request.kind, status: request.status });
                         }}>
 
                         <request.icon
@@ -434,14 +445,24 @@ export default function Requests() {
                       {request.currency}
                     </td>
                     <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
-                      <span
-                        className={classNames(
-                          statusStyles[request.status],
-                          'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
-                        )}
-                      >
-                        {request.status}
-                      </span>
+                    {((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0) ?
+                          <span
+                            className={classNames(
+                              statusStyles['delayed'],
+                              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                            )}
+                          >
+                            delayed
+                          </span>
+                          :
+                          <span
+                            className={classNames(
+                              statusStyles[request.status],
+                              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                            )}
+                          >
+                            {request.status}
+                          </span>}
                     </td>
                     <td className="hidden md:block whitespace-nowrap px-4 py-4 text-right text-sm text-gray-500">
                       <time dateTime={request.datetime}>{request.date}</time>
@@ -489,11 +510,11 @@ export default function Requests() {
         modal: modals[0].items[2], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
       }} />
-            <PurchaseRequestProcessingModal props={{
+      <PurchaseRequestProcessingModal props={{
         modal: modals[0].items[3], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
       }} />
-                  <PurchaseRequestCompletedModal props={{
+      <PurchaseRequestCompletedModal props={{
         modal: modals[0].items[4], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
       }} />

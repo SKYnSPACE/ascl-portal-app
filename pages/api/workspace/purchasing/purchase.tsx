@@ -108,6 +108,7 @@ async function handler(
           status: 1,
           payload9: totalPrice.toString(),
           payload11: purchasedFrom?.toString(),
+          completedAt: new Date(),
           due: dueDate,
         },
       })
