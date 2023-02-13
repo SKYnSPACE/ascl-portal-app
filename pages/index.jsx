@@ -69,7 +69,7 @@ const actions = [
     href: '#',
     iconForeground: 'text-rose-700',
     iconBackground: 'bg-rose-50',
-    onDev: false,
+    onDev: true,
   },
   {
     id: 6,
