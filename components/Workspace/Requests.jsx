@@ -22,6 +22,8 @@ import { format, parseISO } from "date-fns";
 import PurchaseRequestPendingModal from './Modals/PurchaseRequestPendingModal';
 import PurchaseRequestProcessingModal from './Modals/PurchaseRequestProcessingModal';
 import Notification from '../Notification';
+import PurchaseRequestCompletedModal from './Modals/PurchaseRequestCompletedModal';
+import PurchaseRequestDeclinedModal from './Modals/PurchaseRequestDeclinedModal';
 // import TripRequestModal from './Modals/TripRequestModal';
 // import ReviewCompletedModal from './Modals/ReviewCompletedModal';
 // import ReviewDeclinedModal from './Modals/ReviewDeclinedModal';
@@ -192,11 +194,13 @@ function parseRequests(requests) {
   const parsedList = requests?.map((request) => {
     switch (request.kind) {
       case 30:
+        // console.log(request);
         return {
           id: +`${request.id}`,
           kind: 30,
           icon: BanknotesIcon,
           name: `${request.payload2}`,
+          requestFor: `${request.requestedFor.name}`,
           projectAlias: `${request.payload3}`,
           title: `${request.payload4}`,
           category: `${request.payload5}`,
@@ -206,10 +210,15 @@ function parseRequests(requests) {
           href: '#',
           amount: `${(+request.payload9).toLocaleString()}`,
           details: `${request.payload10}`,
+          message: `${request.payload11}`,
           currency: ' ￦',
           status: Status[`${request.status}`],
           date: `${format(parseISO(request.due), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
           datetime: `${format(parseISO(request.due), "yyyy-MM-dd")}`,//datetime: '2020-07-11',
+          decidedDate:`${format(parseISO(request.decidedAt? request.decidedAt : '1990-02-26'), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
+          decidedDatetime:`${format(parseISO(request.decidedAt? request.decidedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
+          completedDate:`${format(parseISO(request.completedAt? request.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
+          completedDatetime:`${format(parseISO(request.completedAt? request.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
           relatedAction: +request.relatedAction?.id,
         };
       case 35:
@@ -297,14 +306,15 @@ export default function Requests() {
                 }}>
                 <span className="flex items-center space-x-4">
                   <span className="flex flex-1 grow space-x-2 truncate">
-                    <request.icon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                    <request.icon className="h-5 w-5 flex-shrink-0 text-gray-900" aria-hidden="true" />
                     <span className="flex flex-col grow truncate text-sm text-gray-500">
-                      <span className="truncate">{request.name}</span>
-                      <span className="truncate">{request.title}</span>
+                      
+                      <span className="truncate text-gray-900">{request.title}</span>
                       <span>
                         <span className="font-medium text-gray-900">{request.amount}</span>{' '}
                         {request.currency}
                       </span>
+                      <span className="truncate">{request.name}</span>
                       <time dateTime={request.datetime} className="flex justify-between">{request.date}
                         <span
                           className={classNames(
@@ -470,12 +480,21 @@ export default function Requests() {
         </div>
       </div>
 
+
+      <PurchaseRequestDeclinedModal props={{
+        modal: modals[0].items[1], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+        selectedRequest,
+      }} />
       <PurchaseRequestPendingModal props={{
         modal: modals[0].items[2], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
       }} />
             <PurchaseRequestProcessingModal props={{
         modal: modals[0].items[3], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+        selectedRequest,
+      }} />
+                  <PurchaseRequestCompletedModal props={{
+        modal: modals[0].items[4], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
       }} />
 

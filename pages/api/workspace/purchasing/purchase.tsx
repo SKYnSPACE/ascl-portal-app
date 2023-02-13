@@ -112,29 +112,28 @@ async function handler(
         },
       })
 
-      res.json({
+      return res.json({
         ok: true,
         updatedProject,
         updatedAction,
       });
     }
     // Request Declined -> set action status 1 (due: +3)
-    if (response == "WITHDRAW") {
-      dueDate.setDate(dueDate.getDate() + 3);
+    // if (response == "WITHDRAW") {
+    //   dueDate.setDate(dueDate.getDate() + 3);
 
-      const updatedAction = await client.action.update({
-        where: { id: +selectedAction.id },
-        data: {
-          status: -1,
-          due: dueDate,
-        },
-      })
+    //   const updatedAction = await client.action.update({
+    //     where: { id: +selectedAction.id },
+    //     data: {
+    //       status: -1,
+    //       due: dueDate,
+    //     },
+    //   })
 
       res.json({
         ok: false,
-        updatedAction,
       });
-    }
+    // }
   }
 }
 

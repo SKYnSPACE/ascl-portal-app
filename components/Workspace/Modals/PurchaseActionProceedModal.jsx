@@ -112,10 +112,10 @@ export default function PurchaseActionProceedModal({ props }) {
     }
   }
 
-  const onClickWithdraw = () => {
+  const onClickWithdraw = (id) => {
     if (!selectedAction) return;
     if (purchaseActionLoading) return;
-    withdrawAction({ requestId: id })
+    withdrawAction({ actionId: +id, response:"WITHDRAW" })
   }
 
   useEffect(() => {
@@ -307,7 +307,7 @@ export default function PurchaseActionProceedModal({ props }) {
                 className="mx-1 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-rose-600 text-base font-medium text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500   sm:text-sm"
                 disabled={withdrawActionLoading}
                 onClick={(e) => {
-                  onClickWithdraw();
+                  onClickWithdraw(selectedAction.id);
                   // setIsModalOpen(false);
                 }}
               >

@@ -50,6 +50,11 @@ async function handler(
         },
       },
       include: {
+        requestedFor: {
+          select:{
+            name: true,
+          }
+        },
         relatedAction: {
           select: { 
             id: true

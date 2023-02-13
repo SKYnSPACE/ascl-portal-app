@@ -99,7 +99,7 @@ const Categories = {
 function parseActions(requests) {
   const parsedList = requests?.map((action) => {
     return {
-      id: +`${action.id}`,
+      id: +action.id,
       kind: 30,
       icon: BanknotesIcon,
       name: `${action.payload2}`,
@@ -157,6 +157,14 @@ export default function Purchasing() {
         },
       )
 
+      purchases.push(
+        {
+          category: 'Withdrawn',
+          status: 'withdrawn',
+          lists: purchaseActions.filter(action => action.status == 'withdrawn')
+        },
+      )
+
       setActions(purchaseActions);
       setPurchases(purchases);
     }
@@ -195,15 +203,15 @@ export default function Purchasing() {
                 }}>
                 <span className="flex items-center space-x-4">
                   <span className="flex flex-1 grow space-x-2 truncate">
-                    <action.icon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                    <action.icon className="h-5 w-5 flex-shrink-0 text-gray-900" aria-hidden="true" />
                     <span className="flex flex-col grow truncate text-sm text-gray-500">
-                      <span className="truncate">{action.name}</span>
                       <span className="truncate text-gray-900">{action.item}</span>
                       <span className="truncate">{action.title} / {Categories[action.category]}</span>
                       <span>
                         <span className="font-medium text-gray-900">{action.amount}</span>{' '}
                         {action.currency} ({PayMethods[action.payMethod]})
                       </span>
+                      <span className="truncate">{action.name}</span>
                       <time dateTime={action.datetime} className="flex justify-between">{action.date}
                         <span
                           className={classNames(
@@ -286,7 +294,10 @@ export default function Purchasing() {
               {purchases.length != 0 ?
                 <tbody className="bg-white">
                   {purchases?.map((actions) => (
+                           
+  
                     <Fragment key={actions.category}>
+
                       <tr className="border-t border-gray-200">
                         <th
                           colSpan={7}
@@ -298,6 +309,7 @@ export default function Purchasing() {
                           {actions.category}
                         </th>
                       </tr>
+
                       {actions.lists.map((action, itemIdx) => (
                         <tr
                           key={action.id}
@@ -330,7 +342,9 @@ export default function Purchasing() {
                           </td>
                         </tr>
                       ))}
-                    </Fragment>
+                                           
+                    </Fragment> 
+
                   ))}
                 </tbody> : <></>}
             </table>

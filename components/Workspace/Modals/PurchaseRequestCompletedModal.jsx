@@ -86,7 +86,7 @@ const feed = [
   },
 ]
 
-export default function PurchaseRequestProcessingModal({ props }) {
+export default function PurchaseRequestCompletedModal({ props }) {
   const { modal, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage, selectedRequest } = { ...props };
   const { data, mutate, error, isLoading } = useSWR(selectedRequest?.relatedAction ? `/api/action/${selectedRequest.relatedAction}`:null);
 
@@ -117,7 +117,19 @@ export default function PurchaseRequestProcessingModal({ props }) {
         icon: PencilSquareIcon,
         iconBackground: 'bg-blue-500',
       }];
-      if (data.relatedAction.status == 1) {
+      if (data.relatedAction.status == -1) {
+        feed.push({
+          id: 2,
+          content: 'Withdrew purchasing process.',
+          user: `${selectedRequest.name}`,
+          href: '#',
+          date: `${format(parseISO(data.relatedAction.completedAt? data.relatedAction.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,
+          datetime: `${format(parseISO(data.relatedAction.completedAt? data.relatedAction.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,
+          icon: XMarkIcon,
+          iconBackground: 'bg-red-500',
+        });
+      }
+      if (data.relatedAction.status == 2) {
         feed.push({
           id: 2,
           content: `Completed purchasing process: ${data.relatedAction.payload11} / ${(+data.relatedAction.payload9).toLocaleString()} KRW`,
@@ -125,6 +137,16 @@ export default function PurchaseRequestProcessingModal({ props }) {
           href: '#',
           date: `${format(parseISO(data.relatedAction.completedAt? data.relatedAction.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,
           datetime: `${format(parseISO(data.relatedAction.completedAt? data.relatedAction.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,
+          icon: CreditCardIcon,
+          iconBackground: 'bg-blue-500',
+        });
+        feed.push({
+          id: 3,
+          content: 'Received referential documents.',
+          user: `${selectedRequest.name}`,
+          href: '#',
+          date: selectedRequest.completedDate,
+          datetime: selectedRequest.completedDatetime,
           icon: CreditCardIcon,
           iconBackground: 'bg-blue-500',
         });

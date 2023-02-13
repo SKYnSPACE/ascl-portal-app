@@ -86,9 +86,8 @@ const feed = [
   },
 ]
 
-export default function PurchaseRequestProcessingModal({ props }) {
+export default function PurchaseRequestDeclinedModal({ props }) {
   const { modal, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage, selectedRequest } = { ...props };
-  const { data, mutate, error, isLoading } = useSWR(selectedRequest?.relatedAction ? `/api/action/${selectedRequest.relatedAction}`:null);
 
   const [feed, setFeed] = useState([
     {
@@ -104,42 +103,20 @@ export default function PurchaseRequestProcessingModal({ props }) {
   ]);
 
   useEffect(() => {
-    if (isLoading) return;
-
-    if (data?.ok && data?.relatedAction) {
-      let feed = [{
+    if (selectedRequest) {
+      const feed = [{
         id: 1,
-        content: `Purchase granted: ${data.relatedAction.payload4} / ${Categories[data.relatedAction.payload5]}`,
-        user: `${data.relatedAction.payload2}`,
+        content: `Purchase rejected: ${selectedRequest.message}`,
+        user: `${selectedRequest.requestFor}`,
         href: '#',
         date: selectedRequest.decidedDate,
         datetime: selectedRequest.decidedDatetime,
-        icon: PencilSquareIcon,
-        iconBackground: 'bg-blue-500',
+        icon: XMarkIcon,
+        iconBackground: 'bg-red-500',
       }];
-      if (data.relatedAction.status == 1) {
-        feed.push({
-          id: 2,
-          content: `Completed purchasing process: ${data.relatedAction.payload11} / ${(+data.relatedAction.payload9).toLocaleString()} KRW`,
-          user: `${selectedRequest.name}`,
-          href: '#',
-          date: `${format(parseISO(data.relatedAction.completedAt? data.relatedAction.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,
-          datetime: `${format(parseISO(data.relatedAction.completedAt? data.relatedAction.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,
-          icon: CreditCardIcon,
-          iconBackground: 'bg-blue-500',
-        });
-      }
       setFeed(feed)
     }
-
-    if (data?.error) {
-      setMessage(
-        { type: 'fail', title: `${data.error?.code}`, details: `${data.error?.message}`, }
-      )
-      setIsNotify(true);
-      reset();
-    }
-  }, [data]);
+  }, [selectedRequest]);
 
 
   const statusStyles = {

@@ -29,30 +29,55 @@ async function handler(
 ) {
   if (req.method === "POST") {
     const {
-      body: { selectedAction,
-        response, purchasedFrom, totalPrice,
+      body: { actionId,
+        response,
       },
       session: { user }
     } = req;
 
-    let dueDate = new Date();
-    // Request Declined -> set action status 1 (due: +3)
     if (response == "WITHDRAW") {
-      dueDate.setDate(dueDate.getDate() + 3);
-
       const updatedAction = await client.action.update({
-        where: { id: +selectedAction.id },
+        where: { id: +actionId },
         data: {
           status: -1,
-          due: dueDate,
+          completedAt: new Date(),
         },
+        // include: {
+        //   relatedRequest: {
+        //     select: {
+        //       id: true
+        //     },
+        //   }
+        // }
       })
 
-      res.json({
-        ok: false,
+      // const relatedRequest = await client.request.findUnique({
+      //   where: {
+      //     id: +updatedAction.requestId,
+      //   }
+      // })
+
+      const updatedRequest = await client.request.update({
+        where: {
+          id: +updatedAction.requestId,
+        },
+        data: {
+          status: 2,
+          completedAt: new Date(),
+        }
+      })
+
+      return res.json({
+        ok: true,
         updatedAction,
+        updatedRequest,
       });
     }
+
+
+    res.json({
+      ok: false,
+    });
   }
 }
 

@@ -223,14 +223,14 @@ export default function Manage() {
                 }}>
                 <span className="flex items-center space-x-4">
                   <span className="flex flex-1 grow space-x-2 truncate">
-                    <request.icon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                    <request.icon className="h-5 w-5 flex-shrink-0 text-gray-900" aria-hidden="true" />
                     <span className="flex flex-col grow truncate text-sm text-gray-500">
-                      <span className="truncate">{request.name}</span>
-                      <span className="truncate">{request.title}</span>
+                      <span className="truncate text-gray-900">{request.title}</span>
                       <span>
                         <span className="font-medium text-gray-900">{request.amount}</span>{' '}
                         {request.currency}
                       </span>
+                      <span className="truncate">{request.name}</span>
                       <time dateTime={request.datetime} className="flex justify-between">{request.date}
                         <span
                           className={classNames(
