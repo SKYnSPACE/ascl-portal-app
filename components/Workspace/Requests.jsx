@@ -17,7 +17,7 @@ import {
   XCircleIcon,
 } from '@heroicons/react/24/outline'
 
-import { format, parseISO } from "date-fns";
+import { format, differenceInSeconds, parseISO } from "date-fns";
 
 import PurchaseRequestPendingModal from './Modals/PurchaseRequestPendingModal';
 import PurchaseRequestProcessingModal from './Modals/PurchaseRequestProcessingModal';
@@ -219,6 +219,7 @@ function parseRequests(requests) {
           decidedDatetime: `${format(parseISO(request.decidedAt ? request.decidedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
           completedDate: `${format(parseISO(request.completedAt ? request.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
           completedDatetime: `${format(parseISO(request.completedAt ? request.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
+          completedBy: `${request.completedBy}`,
           relatedAction: +request.relatedAction?.id,
         };
       case 35:

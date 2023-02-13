@@ -8,11 +8,13 @@ import { format, parseISO } from "date-fns";
 import { useForm, Controller } from "react-hook-form";
 
 
-import { CheckIcon, XMarkIcon, PencilSquareIcon,
-  CreditCardIcon, HandThumbUpIcon, UserIcon } from '@heroicons/react/20/solid'
+import {
+  CheckIcon, XMarkIcon, PencilSquareIcon,
+  CreditCardIcon, HandThumbUpIcon, UserIcon
+} from '@heroicons/react/20/solid'
 
 
-import useMutation from "../../../libs/frontend/useMutation";
+import useMutation from "../../../../libs/frontend/useMutation";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -33,62 +35,13 @@ const Categories = {
   NS: "지정요망",
 }
 
-const feed = [
-  {
-    id: 1,
-    content: 'Purchase granted: 가나다라마바사 아자차카타파하 아야어여오요우유 으이 / 전산처리비.',
-    user: 'Hyochoong Bang',
-    href: '#',
-    date: 'Sep 20',
-    datetime: '2020-09-20',
-    icon: PencilSquareIcon,
-    iconBackground: 'bg-blue-500',
-  },
-  {
-    id: 2,
-    content: 'Purchase rejected: 이런저런 사유가 있어서 구매를 반려하겠습니다.',
-    user: 'Hyochoong Bang',
-    href: '#',
-    date: 'Sep 20',
-    datetime: '2020-09-20',
-    icon: XMarkIcon,
-    iconBackground: 'bg-red-500',
-  },
-  {
-    id: 3,
-    content: 'Completed purchasing process: 컴방아 / 1,000,000 KRW',
-    user: 'Seongheon Lee',
-    href: '#',
-    date: 'Sep 22',
-    datetime: '2020-09-22',
-    icon: CreditCardIcon,
-    iconBackground: 'bg-blue-500',
-  },
-  {
-    id: 4,
-    content: 'Withdrew purchasing process.',
-    user: 'Seongheon Lee',
-    href: '#',
-    date: 'Sep 28',
-    datetime: '2020-09-28',
-    icon: XMarkIcon,
-    iconBackground: 'bg-red-500',
-  },
-  {
-    id: 5,
-    content: 'Received referential documents.',
-    user: 'EK',
-    href: '#',
-    date: 'Sep 28',
-    datetime: '2020-09-28',
-    icon: CheckIcon,
-    iconBackground: 'bg-green-500',
-  },
-]
-
-export default function PurchaseRequestCompletedModal({ props }) {
+export default function PurchaseRequestProcessingModal({ props }) {
   const { modal, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage, selectedRequest } = { ...props };
-  const { data, mutate, error, isLoading } = useSWR(selectedRequest?.relatedAction ? `/api/action/${selectedRequest.relatedAction}`:null);
+  const { data, mutate, error, isLoading } = useSWR(selectedRequest?.relatedAction ? `/api/action/${selectedRequest.relatedAction}` : null);
+
+  const [completeRequest, { loading: completeRequestLoading, data: completeRequestData, error: completeRequestError }] = useMutation("/api/workspace/purchasing/complete");
+
+  useMutation();
 
   const [feed, setFeed] = useState([
     {
@@ -102,6 +55,13 @@ export default function PurchaseRequestCompletedModal({ props }) {
       iconBackground: 'bg-gray-400',
     },
   ]);
+
+  const onClickCompleted = (id) => {
+    if (!id) return;
+    if (isLoading || completeRequestLoading) return;
+
+    completeRequest({ requestId: id, notify: false })
+  }
 
   useEffect(() => {
     if (isLoading) return;
@@ -117,38 +77,16 @@ export default function PurchaseRequestCompletedModal({ props }) {
         icon: PencilSquareIcon,
         iconBackground: 'bg-blue-500',
       }];
-      if (data.relatedAction.status == -1) {
-        feed.push({
-          id: 2,
-          content: 'Withdrew purchasing process.',
-          user: `${selectedRequest.name}`,
-          href: '#',
-          date: `${format(parseISO(data.relatedAction.completedAt? data.relatedAction.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,
-          datetime: `${format(parseISO(data.relatedAction.completedAt? data.relatedAction.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,
-          icon: XMarkIcon,
-          iconBackground: 'bg-red-500',
-        });
-      }
-      if (data.relatedAction.status == 2) {
+      if (data.relatedAction.status == 1) {
         feed.push({
           id: 2,
           content: `Completed purchasing process: ${data.relatedAction.payload11} / ${(+data.relatedAction.payload9).toLocaleString()} KRW`,
           user: `${selectedRequest.name}`,
           href: '#',
-          date: `${format(parseISO(data.relatedAction.completedAt? data.relatedAction.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,
-          datetime: `${format(parseISO(data.relatedAction.completedAt? data.relatedAction.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,
+          date: `${format(parseISO(data.relatedAction.completedAt ? data.relatedAction.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,
+          datetime: `${format(parseISO(data.relatedAction.completedAt ? data.relatedAction.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,
           icon: CreditCardIcon,
           iconBackground: 'bg-blue-500',
-        });
-        feed.push({
-          id: 3,
-          content: 'Received referential documents.',
-          user: `${selectedRequest.completedBy}`,
-          href: '#',
-          date: selectedRequest.completedDate,
-          datetime: selectedRequest.completedDatetime,
-          icon: CheckIcon,
-          iconBackground: 'bg-green-500',
         });
       }
       setFeed(feed)
@@ -162,6 +100,11 @@ export default function PurchaseRequestCompletedModal({ props }) {
       reset();
     }
   }, [data]);
+
+  useEffect(() => {
+    if (completeRequestData?.ok)
+      setIsModalOpen(false);
+  }, [completeRequestData]);
 
 
   const statusStyles = {
@@ -263,9 +206,9 @@ export default function PurchaseRequestCompletedModal({ props }) {
                         </div>
                         <div className="flex min-w-0 flex-1 justify-between space-x-4">
                           <div>
-                          <a href={event.href} className="text-sm font-medium text-gray-900">
-                                {event.user}
-                              </a>  
+                            <a href={event.href} className="text-sm font-medium text-gray-900">
+                              {event.user}
+                            </a>
                             <p className="text-sm text-gray-500">
                               {event.content}{' '}
                               {/* <a href={event.href} className="font-medium text-gray-900">
@@ -290,25 +233,30 @@ export default function PurchaseRequestCompletedModal({ props }) {
             {isNotify ? <div className="w-full mt-2">
               <p className="text-xs text-red-600">{message.details}</p>
             </div> : <></>}
-            <div className="mt-5 sm:mt-6">
-              {/* <button
-                className="mx-1 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-sky-600 text-base font-medium text-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:text-sm"
-                disabled={createPurchaseActionLoading}
-                onClick={(e) => {
-                  onClickAccept(selectedRequest.id);
-                  // setIsModalOpen(false);
-                }}
+            <div className="mt-8">
 
-              >
-                {createPurchaseActionLoading ?
-                  <span className="flex items-center text-center">
-                    <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-sky-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>processing...</span>
-                  : <span>Accept</span>}
+              {data?.relatedAction?.status == 1 ?
+                <button
+                  className="mx-1 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-sky-500 text-base font-medium text-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:text-sm"
+                  disabled={completeRequestLoading}
+                  onClick={(e) => {
+                    onClickCompleted(selectedRequest?.id);
 
-              </button> */}
+                  }}
+
+                >
+                  {completeRequestLoading ?
+                    <span className="flex items-center text-center">
+                      <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-sky-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>processing...</span>
+                    : <span>Complete</span>}
+
+                </button>
+                : <></>}
+
+
 
 
               <button

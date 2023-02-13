@@ -16,10 +16,10 @@ import {
   XCircleIcon,
 } from '@heroicons/react/24/outline'
 
-import { format, parseISO } from "date-fns";
+import { format, differenceInSeconds, parseISO } from "date-fns";
 
-import PurchaseRequestPendingModal from './Modals/PurchaseRequestPendingModal';
-import PurchaseRequestProcessingModal from './Modals/PurchaseRequestProcessingModal';
+// import PurchaseRequestPendingModal from './Modals/PurchaseRequestPendingModal';
+import PurchaseRequestProcessingModal from './Modals/ManageRequests/PurchaseRequestProcessingModal';
 
 import Notification from '../Notification';
 // import TripRequestModal from './Modals/TripRequestModal';
@@ -124,6 +124,7 @@ function parseRequests(requests) {
           kind: 30,
           icon: BanknotesIcon,
           name: `${request.payload2}`,
+          requestFor: `${request.requestedFor.name}`,
           projectAlias: `${request.payload3}`,
           title: `${request.payload4}`,
           category: `${request.payload5}`,
@@ -133,10 +134,16 @@ function parseRequests(requests) {
           href: '#',
           amount: `${(+request.payload9).toLocaleString()}`,
           details: `${request.payload10}`,
+          message: `${request.payload11}`,
           currency: ' ￦',
           status: Status[`${request.status}`],
           date: `${format(parseISO(request.due), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
-          datetime: `${format(parseISO(request.due), "yyyy-MM-dd")}`,//datetime: '2020-07-11',
+          datetime: request.due, //datetime: '2020-07-11',
+          decidedDate: `${format(parseISO(request.decidedAt ? request.decidedAt : '1990-02-26'), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
+          decidedDatetime: `${format(parseISO(request.decidedAt ? request.decidedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
+          completedDate: `${format(parseISO(request.completedAt ? request.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
+          completedDatetime: `${format(parseISO(request.completedAt ? request.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
+          relatedAction: +request.relatedAction?.id,
         };
       case 35:
         return {
@@ -232,14 +239,24 @@ export default function Manage() {
                       </span>
                       <span className="truncate">{request.name}</span>
                       <time dateTime={request.datetime} className="flex justify-between">{request.date}
-                        <span
-                          className={classNames(
-                            statusStyles[request.status],
-                            'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
-                          )}
-                        >
-                          {request.status}
-                        </span>
+                      {((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0) ?
+                          <span
+                            className={classNames(
+                              statusStyles['delayed'],
+                              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                            )}
+                          >
+                            delayed
+                          </span>
+                          :
+                          <span
+                            className={classNames(
+                              statusStyles[request.status],
+                              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                            )}
+                          >
+                            {request.status}
+                          </span>}
                       </time>
                     </span>
                   </span>
@@ -350,14 +367,24 @@ export default function Manage() {
                       {request.currency}
                     </td>
                     <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
-                      <span
-                        className={classNames(
-                          statusStyles[request.status],
-                          'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
-                        )}
-                      >
-                        {request.status}
-                      </span>
+                    {((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0) ?
+                          <span
+                            className={classNames(
+                              statusStyles['delayed'],
+                              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                            )}
+                          >
+                            delayed
+                          </span>
+                          :
+                          <span
+                            className={classNames(
+                              statusStyles[request.status],
+                              'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize'
+                            )}
+                          >
+                            {request.status}
+                          </span>}
                     </td>
                     <td className="hidden md:block whitespace-nowrap px-4 py-4 text-right text-sm text-gray-500">
                       <time dateTime={request.datetime}>{request.date}</time>
@@ -396,10 +423,10 @@ export default function Manage() {
         </div>
       </div>
 
-            <PurchaseRequestPendingModal props={{
+            {/* <PurchaseRequestPendingModal props={{
         modal: modals[0].items[2], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
-      }} />
+      }} /> */}
             <PurchaseRequestProcessingModal props={{
         modal: modals[0].items[3], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,

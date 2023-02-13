@@ -25,7 +25,7 @@ export default function Notification({ props }) {
       setTimeout(() => {
         setIsNotify(false);
         Router.reload();
-      }, 5000);
+      }, 3000);
     }
 
   }, [isNotify])

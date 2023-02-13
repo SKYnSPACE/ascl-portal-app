@@ -46,6 +46,18 @@ async function handler(
           { kind: 35 }
         ],
       },
+      include: {
+        requestedFor: {
+          select:{
+            name: true,
+          }
+        },
+        relatedAction: {
+          select: { 
+            id: true
+          },
+        },
+      },
       orderBy: [{ createdAt: 'desc' }]
     });
 
