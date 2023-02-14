@@ -110,11 +110,12 @@ async function handler(
       const relatedRequest = await client.request.findUnique({
         where: { id: +selectedRequest.id },
         select: {
-          userId: true
+          userId: true, //requestFor userID
+          payload1: true, //requested user ID
         }
       })
       const requestedUser = await client.user.findUnique({
-        where: { id: +relatedRequest.userId }
+        where: { id: +relatedRequest.payload1 }
       })
 
       const newAction = await client.action.create({

@@ -90,11 +90,12 @@ async function handler(
       const relatedRequest = await client.request.findUnique({
         where: { id: +selectedRequest.id },
         select: {
-          userId: true
+          userId: true, //requestFor userID
+          payload1: true, //requested user ID
         }
       })
       const requestedUser = await client.user.findUnique({
-        where: { id: +relatedRequest.userId }
+        where: { id: +relatedRequest.payload1 }
       })
 
       const newAction = await client.action.create({
@@ -133,7 +134,7 @@ async function handler(
         <b>계정(Account): </b> ${projectToUse.title.toString()} <br />
         <b>세목(Category): </b> ${Categories[category].toString()} <br />
         <b>목적지(Destination): </b> ${selectedRequest.destination.toString()}<br />
-        <b>출장기간(Period): </b> ${selectedRequest.startDate.toString()} ~ {selectedRequest.endDate.toString()}<br />
+        <b>출장기간(Period): </b> ${selectedRequest.startDate.toString()} ~ ${selectedRequest.endDate.toString()}<br />
         <b>예상비용(Est. Expenses):</b> ${selectedRequest.amount.toString()}${selectedRequest.currency.toString()}</p>
         <b>안내사항(Message):</b> ${message.toString()}</p>
         `,

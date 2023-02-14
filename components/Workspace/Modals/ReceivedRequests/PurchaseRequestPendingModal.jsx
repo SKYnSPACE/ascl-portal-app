@@ -123,7 +123,7 @@ export default function PurchaseRequestPendingModal({ props }) {
     if(isFormValid){
       createPurchaseAction({selectedRequest,
         response:"ACCEPT", ...getValues()});
-      acceptRequest({ requestId: id, notify: true, ...getValues() })
+      acceptRequest({ requestId: id, notify: false, ...getValues() }) // notify: Create action에서 발송하므로 생략.
     }
     else{
       setMessage(
