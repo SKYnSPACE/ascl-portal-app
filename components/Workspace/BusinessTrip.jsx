@@ -22,6 +22,7 @@ import { format, differenceInSeconds, parseISO } from "date-fns";
 import Notification from '../Notification';
 
 import { classNames } from '../../libs/frontend/utils'
+import TripActionProceedModal from './Modals/BusinessTrip/TripActionProceedModal';
 // import TripActionProceedModal from './Modals/BusinessTrip/TripActionProceedModal';
 // import TripRequestPendingModal from './Modals/BusinessTrip/TripRequestPendingModal';
 
@@ -294,7 +295,7 @@ export default function BusinessTrip() {
                       <span className="truncate">{action.title} / {Categories[action.category]}</span>
                       <span>
                         <span className="font-medium text-gray-900">{action.expense}</span>{' '}
-                        {action.currency} 
+                        {action.currency}
                       </span>
                       <time dateTime={action.datetime} className="flex justify-between">{action.date}
 
@@ -418,16 +419,16 @@ export default function BusinessTrip() {
                               </td>
                               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
                                 {action.destination}
-                                </td>
+                              </td>
                               <td className="hidden xl:block whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                 {Categories[action.category]}
                               </td>
                               <td className="w-full max-w-[200px] truncate whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {action.title}
-                                </td>
+                                {action.title}
+                              </td>
                               <td className="hidden xl:block  whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                <span className="font-medium text-gray-900">{action.amount}</span>
-                                {action.expense}
+                                <span className="font-medium text-gray-900">{action.expense}</span>
+                                {action.currency}
                               </td>
                               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center">{action.date}</td>
                               <td className="whitespace-nowrap px-3 py-4 text-sm font-semibold text-center text-sky-500 hover:text-sky-700">
@@ -501,7 +502,7 @@ export default function BusinessTrip() {
                       <span className="truncate">{request.title} / {Categories[request.category]}</span>
                       <span>
                         <span className="font-medium text-gray-900">{request.expense}</span>{' '}
-                        {request.currency} 
+                        {request.currency}
                       </span>
                       <span className="truncate">Request To: {request.requestFor}</span>
                       <time dateTime={request.datetime} className="flex justify-between">{request.date}
@@ -633,11 +634,12 @@ export default function BusinessTrip() {
       </div>
     </div>
 
-    {/* <TripActionProceedModal props={{
-      modal: modals[2].items[2], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+
+    <TripActionProceedModal props={{
+      modal: modals[3].items[2], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
       selectedAction,
     }} />
-    <TripRequestPendingModal props={{
+    {/* <TripRequestPendingModal props={{
       modal: modals[0].items[2], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
       selectedRequest,
     }} /> */}

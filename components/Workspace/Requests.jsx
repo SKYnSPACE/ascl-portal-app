@@ -26,6 +26,9 @@ import PurchaseRequestProcessingModal from './Modals/ReceivedRequests/PurchaseRe
 import PurchaseRequestCompletedModal from './Modals/ReceivedRequests/PurchaseRequestCompletedModal';
 import PurchaseRequestDeclinedModal from './Modals/ReceivedRequests/PurchaseRequestDeclinedModal';
 import TripRequestPendingModal from './Modals/ReceivedRequests/TriqRequestPendingModal';
+import TripRequestProcessingModal from './Modals/ReceivedRequests/TripRequestProcessingModal';
+import TripRequestDeclinedModal from './Modals/ReceivedRequests/TripRequestDeclinedModal';
+import TripRequestCompletedModal from './Modals/ReceivedRequests/TripRequestCompletedModal';
 // import TripRequestModal from './Modals/TripRequestModal';
 // import ReviewCompletedModal from './Modals/ReviewCompletedModal';
 // import ReviewDeclinedModal from './Modals/ReviewDeclinedModal';
@@ -245,6 +248,12 @@ function parseRequests(requests) {
           status: Status[`${request.status}`],
           date: `${format(parseISO(request.due), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
           datetime: request.due, //datetime: '2020-07-11',
+          decidedDate: `${format(parseISO(request.decidedAt ? request.decidedAt : '1990-02-26'), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
+          decidedDatetime: `${format(parseISO(request.decidedAt ? request.decidedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
+          completedDate: `${format(parseISO(request.completedAt ? request.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
+          completedDatetime: `${format(parseISO(request.completedAt ? request.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
+          completedBy: `${request.completedBy}`,
+          relatedAction: +request.relatedAction?.id,
         };
     }
   })
@@ -528,8 +537,20 @@ export default function Requests() {
         selectedRequest,
       }} />
 
+      <TripRequestDeclinedModal props={{
+        modal: modals[1].items[1], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+        selectedRequest,
+      }} />
       <TripRequestPendingModal props={{
         modal: modals[1].items[2], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+        selectedRequest,
+      }} />
+      <TripRequestProcessingModal props={{
+        modal: modals[1].items[3], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+        selectedRequest,
+      }} />
+      <TripRequestCompletedModal props={{
+        modal: modals[1].items[4], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
       }} />
 

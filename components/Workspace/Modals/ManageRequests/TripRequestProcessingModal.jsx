@@ -10,7 +10,7 @@ import { useForm, Controller } from "react-hook-form";
 
 import {
   CheckIcon, XMarkIcon, PencilSquareIcon,
-  CreditCardIcon, HandThumbUpIcon, UserIcon
+  TruckIcon, HandThumbUpIcon, UserIcon
 } from '@heroicons/react/20/solid'
 
 
@@ -35,11 +35,11 @@ const Categories = {
   NS: "지정요망",
 }
 
-export default function PurchaseRequestProcessingModal({ props }) {
+export default function TripRequestProcessingModal({ props }) {
   const { modal, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage, selectedRequest } = { ...props };
   const { data, mutate, error, isLoading } = useSWR(selectedRequest?.relatedAction ? `/api/action/${selectedRequest.relatedAction}` : null);
 
-  const [completeRequest, { loading: completeRequestLoading, data: completeRequestData, error: completeRequestError }] = useMutation("/api/workspace/purchasing/complete");
+  const [completeRequest, { loading: completeRequestLoading, data: completeRequestData, error: completeRequestError }] = useMutation("/api/workspace/businessTrip/complete");
 
   const [feed, setFeed] = useState([
     {
@@ -67,7 +67,7 @@ export default function PurchaseRequestProcessingModal({ props }) {
     if (data?.ok && data?.relatedAction) {
       let feed = [{
         id: 1,
-        content: `Purchase granted: ${data.relatedAction.payload4} / ${Categories[data.relatedAction.payload5]}`,
+        content: `Business trip granted: ${data.relatedAction.payload4} / ${Categories[data.relatedAction.payload5]}`,
         user: `${data.relatedAction.payload2}`,
         href: '#',
         date: selectedRequest.decidedDate,
@@ -78,12 +78,12 @@ export default function PurchaseRequestProcessingModal({ props }) {
       if (data.relatedAction.status == 1) {
         feed.push({
           id: 2,
-          content: `Completed purchasing process: ${data.relatedAction.payload11} / ${(+data.relatedAction.payload9).toLocaleString()} KRW`,
+          content: `Completed business trip: ${(+data.relatedAction.payload7).toLocaleString()} KRW`,
           user: `${selectedRequest.name}`,
           href: '#',
           date: `${format(parseISO(data.relatedAction.completedAt ? data.relatedAction.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,
           datetime: `${format(parseISO(data.relatedAction.completedAt ? data.relatedAction.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,
-          icon: CreditCardIcon,
+          icon: TruckIcon,
           iconBackground: 'bg-blue-500',
         });
       }
@@ -183,25 +183,21 @@ export default function PurchaseRequestProcessingModal({ props }) {
               <div className="border-t border-gray-200 px-4 py-2 sm:p-0">
                 <dl className="sm:divide-y sm:divide-gray-200">
 
-                  {/* <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4 sm:py-3">
-                    <dt className="text-sm font-medium text-gray-500">Requested by(신청인)</dt>
-                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.name}</dd>
-                  </div> */}
-                  <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
+                <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
+                    <dt className="text-sm font-medium text-gray-500">Account(사용계정)</dt>
+                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.title}</dd>
+                  </div>
+                <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
                     <dt className="text-sm font-medium text-gray-500">Category(세목)</dt>
                     <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{Categories[selectedRequest?.category]}</dd>
                   </div>
                   <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
-                    <dt className="text-sm font-medium text-gray-500">Item/Qty.(품목/수량)</dt>
-                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.item} / x{selectedRequest?.quantity}</dd>
-                  </div>
-                  <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
-                    <dt className="text-sm font-medium text-gray-500">Details(상세)</dt>
+                    <dt className="text-sm font-medium text-gray-500">Message(안내)</dt>
                     <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.details}</dd>
                   </div>
                   <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
-                    <dt className="text-sm font-medium text-gray-500">Total Price(총액)</dt>
-                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.amount}{selectedRequest?.currency} ({PayMethods[selectedRequest?.payMethod]})</dd>
+                    <dt className="text-sm font-medium text-gray-500">Expenses(예상비용)</dt>
+                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.amount}{selectedRequest?.currency}</dd>
                   </div>
                   <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
                     <dt className="text-sm font-medium text-gray-500">Due(처리기한)</dt>

@@ -18,12 +18,16 @@ import {
 
 import { format, differenceInSeconds, parseISO } from "date-fns";
 
-// import PurchaseRequestPendingModal from './Modals/PurchaseRequestPendingModal';
-import PurchaseRequestProcessingModal from './Modals/ManageRequests/PurchaseRequestProcessingModal';
-
 import Notification from '../Notification';
+
+import PurchaseRequestPendingModal from './Modals/ManageRequests/PurchaseRequestPendingModal';
+import PurchaseRequestProcessingModal from './Modals/ManageRequests/PurchaseRequestProcessingModal';
 import PurchaseRequestCompletedModal from './Modals/ManageRequests/PurchaseRequestCompletedModal';
 import PurchaseRequestDeclinedModal from './Modals/ManageRequests/PurchaseRequestDeclinedModal';
+import TripRequestProcessingModal from './Modals/ManageRequests/TripRequestProcessingModal';
+import TripRequestCompletedModal from './Modals/ManageRequests/TripRequestCompletedModal';
+import TripRequestDeclinedModal from './Modals/ManageRequests/TripRequestDeclinedModal';
+import TripRequestPendingModal from './Modals/ManageRequests/TripRequestPendingModal';
 // import TripRequestModal from './Modals/TripRequestModal';
 // import ReviewCompletedModal from './Modals/ReviewCompletedModal';
 // import ReviewDeclinedModal from './Modals/ReviewDeclinedModal';
@@ -153,15 +157,27 @@ function parseRequests(requests) {
           kind: 35,
           icon: BriefcaseIcon,
           name: `${request.payload2}`,
+          requestFor: `${request.requestedFor.name}`,
           projectAlias: `${request.payload3}`,
           title: `${request.payload4}`,
           category: `${request.payload5}`,
-          href: '#',
+          destination: `${request.payload6}`,
           amount: `${(+request.payload7).toLocaleString()}`,
+          startDate: `${request.payload8}`,
+          endDate: `${request.payload9}`,
+          href: '#',
+          details: `${request.payload10}`,
+          message: `${request.payload11}`,
           currency: ' ￦',
           status: Status[`${request.status}`],
           date: `${format(parseISO(request.due), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
-          datetime: `${format(parseISO(request.due), "yyyy-MM-dd")}`,//datetime: '2020-07-11',
+          datetime: request.due, //datetime: '2020-07-11',
+          decidedDate: `${format(parseISO(request.decidedAt ? request.decidedAt : '1990-02-26'), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
+          decidedDatetime: `${format(parseISO(request.decidedAt ? request.decidedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
+          completedDate: `${format(parseISO(request.completedAt ? request.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
+          completedDatetime: `${format(parseISO(request.completedAt ? request.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
+          completedBy: `${request.completedBy}`,
+          relatedAction: +request.relatedAction?.id,
         };
     }
   })
@@ -239,7 +255,7 @@ export default function Manage() {
                         <span className="font-medium text-gray-900">{request.amount}</span>{' '}
                         {request.currency}
                       </span>
-                      <span className="truncate">{request.name}</span>
+                      <span className="truncate">{request.name} &gt; {request.requestFor}</span>
                       <time dateTime={request.datetime} className="flex justify-between">{request.date}
                         {((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0) ?
                           <span
@@ -311,7 +327,13 @@ export default function Manage() {
                   </th>
 
                   <th
-                    className="hidden md:block bg-gray-50 px-4 py-3 text-right text-sm font-semibold text-gray-900"
+                    className=" bg-gray-50 py-3 text-center text-sm font-semibold text-gray-900"
+                    scope="col"
+                  >
+                    To
+                  </th>
+                  <th
+                    className=" bg-gray-50 px-4 py-3 text-right text-sm font-semibold text-gray-900"
                     scope="col"
                   >
                     Amount
@@ -353,7 +375,7 @@ export default function Manage() {
                         </span>
                       </a>
                     </td>
-                    <td className="max-w-xs whitespace-nowrap py-4 text-sm text-gray-900">
+                    <td className="max-w-xs whitespace-nowrap px-1 py-4 text-sm text-gray-900">
                       <div className="flex">
                         <div className="group inline-flex space-x-2 truncate text-sm">
 
@@ -364,11 +386,22 @@ export default function Manage() {
                       </div>
                     </td>
 
-                    <td className="hidden md:block whitespace-nowrap px-4 py-4 text-right text-sm text-gray-500">
+                    <td className="max-w-xs whitespace-nowrap px-1 py-4 text-sm text-gray-900">
+                      <div className="flex">
+                        <div className="group inline-flex space-x-2 truncate text-sm">
+
+                          <p className="truncate text-gray-500">
+                            {request.requestFor}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td className="hidden md:block whitespace-nowrap px-2 py-4 text-right text-sm text-gray-500">
                       <span className="font-medium text-gray-900">{request.amount}</span>
                       {request.currency}
                     </td>
-                    <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
+                    <td className="whitespace-nowrap py-4 text-sm text-gray-500">
                       {((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0) ?
                         <span
                           className={classNames(
@@ -388,7 +421,7 @@ export default function Manage() {
                           {request.status}
                         </span>}
                     </td>
-                    <td className="hidden md:block whitespace-nowrap px-4 py-4 text-right text-sm text-gray-500">
+                    <td className="hidden md:block whitespace-nowrap pl-2 pr-4 py-4 text-right text-sm text-gray-500">
                       <time dateTime={request.datetime}>{request.date}</time>
                     </td>
                   </tr>
@@ -429,16 +462,34 @@ export default function Manage() {
         modal: modals[0].items[1], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
       }} />
-      {/* <PurchaseRequestPendingModal props={{
+      <PurchaseRequestPendingModal props={{
         modal: modals[0].items[2], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
-      }} /> */}
+      }} />
       <PurchaseRequestProcessingModal props={{
         modal: modals[0].items[3], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
       }} />
       <PurchaseRequestCompletedModal props={{
         modal: modals[0].items[4], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+        selectedRequest,
+      }} />
+
+
+      <TripRequestDeclinedModal props={{
+        modal: modals[1].items[1], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+        selectedRequest,
+      }} />
+      <TripRequestPendingModal props={{
+        modal: modals[1].items[2], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+        selectedRequest,
+      }} />
+      <TripRequestProcessingModal props={{
+        modal: modals[1].items[3], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
+        selectedRequest,
+      }} />
+      <TripRequestCompletedModal props={{
+        modal: modals[1].items[4], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage,
         selectedRequest,
       }} />
 

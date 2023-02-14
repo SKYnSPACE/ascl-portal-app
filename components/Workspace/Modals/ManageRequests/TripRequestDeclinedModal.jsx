@@ -8,10 +8,8 @@ import { format, parseISO } from "date-fns";
 import { useForm, Controller } from "react-hook-form";
 
 
-import {
-  CheckIcon, XMarkIcon, PencilSquareIcon,
-  CreditCardIcon, HandThumbUpIcon, UserIcon
-} from '@heroicons/react/20/solid'
+import { CheckIcon, XMarkIcon, PencilSquareIcon,
+  CreditCardIcon, HandThumbUpIcon, UserIcon } from '@heroicons/react/20/solid'
 
 
 import useMutation from "../../../../libs/frontend/useMutation";
@@ -35,11 +33,8 @@ const Categories = {
   NS: "지정요망",
 }
 
-export default function PurchaseRequestProcessingModal({ props }) {
+export default function TripRequestDeclinedModal({ props }) {
   const { modal, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage, selectedRequest } = { ...props };
-  const { data, mutate, error, isLoading } = useSWR(selectedRequest?.relatedAction ? `/api/action/${selectedRequest.relatedAction}` : null);
-
-  const [completeRequest, { loading: completeRequestLoading, data: completeRequestData, error: completeRequestError }] = useMutation("/api/workspace/purchasing/complete");
 
   const [feed, setFeed] = useState([
     {
@@ -54,84 +49,21 @@ export default function PurchaseRequestProcessingModal({ props }) {
     },
   ]);
 
-  const onClickCompleted = (id) => {
-    if (!id) return;
-    if (isLoading || completeRequestLoading) return;
-
-    completeRequest({ requestId: id, notify: false })
-  }
-
   useEffect(() => {
-    if (isLoading) return;
-
-    if (data?.ok && data?.relatedAction) {
-      let feed = [{
+    if (selectedRequest) {
+      const feed = [{
         id: 1,
-        content: `Purchase granted: ${data.relatedAction.payload4} / ${Categories[data.relatedAction.payload5]}`,
-        user: `${data.relatedAction.payload2}`,
+        content: `Business Trip rejected: ${selectedRequest.message}`,
+        user: `${selectedRequest.requestFor}`,
         href: '#',
         date: selectedRequest.decidedDate,
         datetime: selectedRequest.decidedDatetime,
-        icon: PencilSquareIcon,
-        iconBackground: 'bg-blue-500',
+        icon: XMarkIcon,
+        iconBackground: 'bg-red-500',
       }];
-      if (data.relatedAction.status == 1) {
-        feed.push({
-          id: 2,
-          content: `Completed purchasing process: ${data.relatedAction.payload11} / ${(+data.relatedAction.payload9).toLocaleString()} KRW`,
-          user: `${selectedRequest.name}`,
-          href: '#',
-          date: `${format(parseISO(data.relatedAction.completedAt ? data.relatedAction.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,
-          datetime: `${format(parseISO(data.relatedAction.completedAt ? data.relatedAction.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,
-          icon: CreditCardIcon,
-          iconBackground: 'bg-blue-500',
-        });
-      }
       setFeed(feed)
     }
-
-    if (data?.error) {
-      setMessage(
-        { type: 'fail', title: `${data.error?.code}`, details: `${data.error?.message}`, }
-      )
-      setIsNotify(true);
-      reset();
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (completeRequestData?.ok){
-      setMessage(
-        { type: 'success', title: 'Successfully Completed!', details: 'Wait for the page reload.', }
-      )
-      setIsNotify(true);
-      setIsModalOpen(false);
-    }
-    if (completeRequestData?.error){
-      switch (completeRequestData.error?.code) {
-        case 'P1017':
-          console.log("Connection Lost.")
-          setMessage(
-            { type: 'fail', title: 'Connection Lost.', details: "Database Server does not respond.", }
-          )
-          setIsNotify(true);
-          return;
-        case 'P2002':
-          console.log("Existing Data.");
-          setMessage(
-            { type: 'fail', title: 'Creating data failed!', details: "Data conflict.", }
-          )
-          setIsNotify(true);
-          return;
-        default:
-          setMessage(
-            { type: 'fail',  title: `${completeRequestData.error.code}`, details: `${completeRequestData.error.message}`, }
-          )
-          setIsNotify(true);
-          return;
-      }
-    }
-  }, [completeRequestData]);
+  }, [selectedRequest]);
 
 
   const statusStyles = {
@@ -183,25 +115,25 @@ export default function PurchaseRequestProcessingModal({ props }) {
               <div className="border-t border-gray-200 px-4 py-2 sm:p-0">
                 <dl className="sm:divide-y sm:divide-gray-200">
 
-                  {/* <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4 sm:py-3">
-                    <dt className="text-sm font-medium text-gray-500">Requested by(신청인)</dt>
-                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.name}</dd>
-                  </div> */}
-                  <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
+                <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
                     <dt className="text-sm font-medium text-gray-500">Category(세목)</dt>
                     <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{Categories[selectedRequest?.category]}</dd>
                   </div>
                   <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
-                    <dt className="text-sm font-medium text-gray-500">Item/Qty.(품목/수량)</dt>
-                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.item} / x{selectedRequest?.quantity}</dd>
+                    <dt className="text-sm font-medium text-gray-500">Destination(목적지)</dt>
+                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.destination}</dd>
+                  </div>
+                  <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
+                    <dt className="text-sm font-medium text-gray-500">Period(기간)</dt>
+                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.startDate} ~ {selectedRequest?.endDate}</dd>
                   </div>
                   <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
                     <dt className="text-sm font-medium text-gray-500">Details(상세)</dt>
                     <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.details}</dd>
                   </div>
                   <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
-                    <dt className="text-sm font-medium text-gray-500">Total Price(총액)</dt>
-                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.amount}{selectedRequest?.currency} ({PayMethods[selectedRequest?.payMethod]})</dd>
+                    <dt className="text-sm font-medium text-gray-500">Expenses(예상비용)</dt>
+                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.amount}{selectedRequest?.currency}</dd>
                   </div>
                   <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
                     <dt className="text-sm font-medium text-gray-500">Due(처리기한)</dt>
@@ -233,9 +165,9 @@ export default function PurchaseRequestProcessingModal({ props }) {
                         </div>
                         <div className="flex min-w-0 flex-1 justify-between space-x-4">
                           <div>
-                            <a href={event.href} className="text-sm font-medium text-gray-900">
-                              {event.user}
-                            </a>
+                          <a href={event.href} className="text-sm font-medium text-gray-900">
+                                {event.user}
+                              </a>  
                             <p className="text-sm text-gray-500">
                               {event.content}{' '}
                               {/* <a href={event.href} className="font-medium text-gray-900">
@@ -260,32 +192,7 @@ export default function PurchaseRequestProcessingModal({ props }) {
             {isNotify ? <div className="w-full mt-2">
               <p className="text-xs text-red-600">{message.details}</p>
             </div> : <></>}
-            <div className="mt-8">
-
-              {data?.relatedAction?.status == 1 ?
-                <button
-                  className="mx-1 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-sky-500 text-base font-medium text-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:text-sm"
-                  disabled={completeRequestLoading}
-                  onClick={(e) => {
-                    onClickCompleted(selectedRequest?.id);
-
-                  }}
-
-                >
-                  {completeRequestLoading ?
-                    <span className="flex items-center text-center">
-                      <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-sky-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>processing...</span>
-                    : <span>Complete</span>}
-
-                </button>
-                : <></>}
-
-
-
-
+            <div className="mt-5 sm:mt-6">
               <button
                 className="mx-1 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2980b9] text-sm"
                 onClick={(e) => {
