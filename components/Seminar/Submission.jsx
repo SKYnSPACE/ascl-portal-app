@@ -108,6 +108,8 @@ export default function Submission() {
 
   const { register, setValue, watch, handleSubmit } = useForm();
   const [saveSubmission, { loading: submissionLoading, data: submissionData, error: submissionError }] = useMutation("/api/seminar/save");
+  const [saveDraft, { loading: saveDraftLoading, data: saveDraftData, error: saveDraftError }] = useMutation("/api/seminar/saveDraft");
+  const [saveFinal, { loading: saveFinalLoading, data: saveFinalData, error: saveFinalError }] = useMutation("/api/seminar/saveFinal");
   // const [download, { loading:downloadLoading, data: downloadData, error: downloadError }] = useMutation("/api/seminar/download");
 
   const [progress, setProgress] = useState(0);
@@ -154,7 +156,14 @@ export default function Submission() {
   }
 
 
-  const handleUploadFile = async (e) => { };
+  const handleDeleteDraftFile = async (e) => {
+    if (uploadedDraftFile) {
+      const deleteResponse = await fetch(`/api/seminar/delete?token=${uploadedDraftFile.name}&ext=${uploadedDraftFile.ext}`, {
+        method: 'DELETE'
+      })
+      // console.log(deleteResponse)
+    }
+  };
 
   const onSelectedDraftFile = async (e) => {
     const fileInput = e.target;
@@ -212,6 +221,8 @@ export default function Submission() {
 
       // console.log("File was uploaded successfylly:", data);
       setUploadedDraftFile({ name: data?.fileName, ext: data?.extension });
+      saveDraft({alias: seminarData?.mySeminarSubmission?.alias, draftFile:{ name: data?.fileName, ext: data?.extension }});
+
     } catch (e) {
       console.error(e);
       const error =
@@ -278,6 +289,8 @@ export default function Submission() {
 
       // console.log("File was uploaded successfylly:", data);
       setUploadedFinalFile({ name: data?.fileName, ext: data?.extension });
+      saveFinal({alias: seminarData?.mySeminarSubmission?.alias, finalFile:{ name: data?.fileName, ext: data?.extension }});
+
     } catch (e) {
       console.error(e);
       const error =
@@ -1183,12 +1196,12 @@ export default function Submission() {
                                   </p>
                                 </div>
                                 : <div className="text-sm text-center text-gray-600">
-                                  {uploadedDraftFile ?
+                                  {uploadedFinalFile ?
                                     <p>
                                       <span>Your token: </span>
                                       <a className="relative cursor-pointer rounded-md bg-white font-medium text-sky-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-sky-500 focus-within:ring-offset-2 hover:text-sky-500"
-                                        href={`/uploads/seminar/${uploadedDraftFile.name}.${uploadedDraftFile.ext}`}
-                                        download={`${seminarData?.mySeminarSubmission?.alias}-final.${uploadedDraftFile.ext}`}>{uploadedDraftFile.name}</a> </p>
+                                        href={`/uploads/seminar/${uploadedFinalFile.name}.${uploadedFinalFile.ext}`}
+                                        download={`${seminarData?.mySeminarSubmission?.alias}-final.${uploadedFinalFile.ext}`}>{uploadedFinalFile.name}</a> </p>
                                     : <></>}
                                   <span>Press save to complete <br />the final submission.</span>
                                 </div>
@@ -1375,6 +1388,7 @@ export default function Submission() {
                 type="button"
                 className="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
                 onClick={(e) => {
+                  
                   scrollToTop();
                 }}
               >
