@@ -464,7 +464,7 @@ export default function Submission() {
                           </span>
                           <input
                             {...register("title", {
-                              // required: "Title is required.",
+                              required: "Title is required.",
                               maxLength: {
                                 message: "Maximum length of the title is 100.",
                                 value: 100
@@ -474,8 +474,8 @@ export default function Submission() {
                             id="title"
                             name="title"
                             type="text"
+                            required
                             disabled={seminarData?.mySeminarSubmission?.currentStage >= 3}
-                            // required
                             className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm disabled:bg-gray-100"
                           />
                         </div>
@@ -490,7 +490,7 @@ export default function Submission() {
                       <div className="mt-1 sm:col-span-2 sm:mt-0">
                         <textarea
                           {...register("abstract", {
-                            // required: "Abstract is required.",
+                            required: "Abstract is required.",
                             maxLength: {
                               message: "Maximum length of the abstract is 500.",
                               value: 500
@@ -500,6 +500,7 @@ export default function Submission() {
                           id="abstract"
                           name="abstract"
                           rows={7}
+                          required
                           disabled={seminarData?.mySeminarSubmission?.currentStage >= 3}
                           className="block w-full max-w-xl rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm disabled:bg-gray-100"
                           defaultValue={''}
