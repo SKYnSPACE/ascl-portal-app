@@ -157,7 +157,7 @@ async function handler(
         <b>금액(Price):</b> ${selectedRequest.amount.toString()}${selectedRequest.currency.toString()}</p>
         <b>안내사항(Message):</b> ${message.toString()}</p>
         `,
-        true);
+        false);
 
 
       res.json({

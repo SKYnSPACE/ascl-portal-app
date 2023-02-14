@@ -131,7 +131,7 @@ async function handler(
       <b>출장기간:</b> ${startDate.toString()} ~ ${startDate.toString()}<br />
       <b>상세(Details):</b> ${details.toString()}</p>
       `,
-      true);
+      false);
 
 
     // console.log(newRequest)

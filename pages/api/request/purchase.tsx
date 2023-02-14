@@ -133,7 +133,7 @@ async function handler(
       <b>금액(Price):</b> ${totalPrice.toString()}</p>
       <b>상세(Details):</b> ${details.toString()}</p>
       `,
-      true);
+      false);
 
 
     // console.log(newRequest)

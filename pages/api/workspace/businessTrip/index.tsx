@@ -137,7 +137,7 @@ async function handler(
         <b>예상비용(Est. Expenses):</b> ${selectedRequest.amount.toString()}${selectedRequest.currency.toString()}</p>
         <b>안내사항(Message):</b> ${message.toString()}</p>
         `,
-        true);
+        false);
 
 
       res.json({
