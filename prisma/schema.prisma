@@ -149,7 +149,7 @@ model Review{
   @@index([seminarId])
  
   title      String
-  comments   String
+  comments   String @db.VarChar(512)
 
   rating1    Int?
   rating2    Int?
@@ -183,8 +183,8 @@ model Request{
   payload7    String? //reserved.
   payload8    String? //reserved.
   payload9    String? //reserved.
-  payload10   String? //reserved.
-  payload11   String? //reserved.
+  payload10   String? @db.VarChar(512)//reserved.
+  payload11   String? @db.VarChar(512)//reserved.
 
   due         DateTime
   decidedAt   DateTime?
@@ -241,7 +241,7 @@ model Project{
   // accomodation cost(수용비)
 
 
-  note            String
+  note            String @db.VarChar(512)
 
 // [SET]
   isFinished      Boolean     @default(false) //완료된 과제를 리스트에서 제거할수 있도록.
@@ -319,8 +319,8 @@ model Action{
   payload7    String? //Qty.
   payload8    String? //Payment method.
   payload9    String? //Total Price to pay.
-  payload10   String? //Message.
-  payload11   String? //reserved.
+  payload10   String? @db.VarChar(512) //Message.
+  payload11   String? @db.VarChar(512) //reserved.
 
   due         DateTime
   completedAt DateTime?
