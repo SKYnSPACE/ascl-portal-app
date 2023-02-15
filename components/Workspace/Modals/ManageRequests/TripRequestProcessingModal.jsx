@@ -149,7 +149,7 @@ export default function TripRequestProcessingModal({ props }) {
       open={(modal.kind == isModalOpen.kind && modal.status == isModalOpen.status)}
       onClose={() => setIsModalOpen({})}
     >
-      <div className="flex items-end justify-center min-h-screen pt-20 px-4 pb-20 text-center sm:block">
+      <div className="flex items-end justify-center min-h-screen pt-12 px-4 pb-20 text-center sm:block">
         <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         <div className="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle max-w-lg sm:w-full sm:p-6">
           <div className={classNames("mx-auto flex items-center justify-center h-12 w-12 rounded-full", statusStyles[selectedRequest.status])}>
@@ -192,7 +192,15 @@ export default function TripRequestProcessingModal({ props }) {
                     <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{Categories[selectedRequest?.category]}</dd>
                   </div>
                   <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
-                    <dt className="text-sm font-medium text-gray-500">Message(안내)</dt>
+                    <dt className="text-sm font-medium text-gray-500">Destination(목적지)</dt>
+                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.destination}</dd>
+                  </div>
+                  <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
+                    <dt className="text-sm font-medium text-gray-500">Period(기간)</dt>
+                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.startDate} ~ {selectedRequest?.endDate}</dd>
+                  </div>
+                  <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
+                    <dt className="text-sm font-medium text-gray-500">Details(상세)</dt>
                     <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.details}</dd>
                   </div>
                   <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
