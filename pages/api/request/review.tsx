@@ -91,6 +91,7 @@ async function handler(
           id: +requestFor,
         },
         kind: 90,
+        payload1: currentUser.id.toString(),
       },
     })
 
