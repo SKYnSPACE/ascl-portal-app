@@ -654,7 +654,7 @@ export default function Submission() {
               <ExclamationTriangleIcon className="w-6 h-6"/> WAIVER
               </Switch.Label> */}
                             <Switch.Description as="span" className="text-sm text-gray-500">
-                              I want to request a waiver for this seminar. A notification Email will be sent to the professor and Lab manager. (<u>This action cannot be undone. Please be certain and press save to confirm your decision.</u>)      </Switch.Description>
+                              I want to request a waiver for this seminar. Your seminar presentation will be withdrawn, and all information you written will be lost. A notification Email will be sent to the professor and Lab manager. (<u>This action cannot be undone. Please be certain and press save to confirm your decision.</u>)      </Switch.Description>
                           </span>
                           <Switch
                             checked={waiver}

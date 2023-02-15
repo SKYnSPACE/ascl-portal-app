@@ -37,8 +37,7 @@ const Categories = {
 
 export default function TripRequestCompletedModal({ props }) {
   const { modal, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage, selectedRequest } = { ...props };
-  const { data, mutate, error, isLoading } = useSWR(selectedRequest?.relatedAction ? `/api/action/${selectedRequest.relatedAction}` : null);
-
+  const { data, mutate, error, isLoading } = useSWR(selectedRequest?.relatedAction?.id ? `/api/action/${selectedRequest.relatedAction.id}`:null);
   const [feed, setFeed] = useState([
     {
       id: 0,

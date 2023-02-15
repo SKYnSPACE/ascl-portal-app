@@ -149,7 +149,7 @@ function parseRequests(requests) {
           decidedDatetime: `${format(parseISO(request.decidedAt ? request.decidedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
           completedDate: `${format(parseISO(request.completedAt ? request.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
           completedDatetime: `${format(parseISO(request.completedAt ? request.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
-          relatedAction: +request.relatedAction?.id,
+          relatedAction: request.relatedAction,
         };
       case 35:
         return {
@@ -177,7 +177,7 @@ function parseRequests(requests) {
           completedDate: `${format(parseISO(request.completedAt ? request.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,//date: 'July 11, 2020',
           completedDatetime: `${format(parseISO(request.completedAt ? request.completedAt : '1990-02-26'), "yyyy-MM-dd")}`,//date: 'July 11, 2020',
           completedBy: `${request.completedBy}`,
-          relatedAction: +request.relatedAction?.id,
+          relatedAction: request.relatedAction,
         };
     }
   })
@@ -252,9 +252,11 @@ export default function Manage() {
                     <span className="flex flex-col grow truncate text-sm text-gray-500">
                       <span className="truncate text-gray-900">{request.title}</span>
                       <span>
-                        <span className="font-medium text-gray-900">{request.amount}</span>{' '}
-                        {request.currency}
-                      </span>
+                        {request.relatedAction?.payload7 ?
+                          <span className="font-medium text-gray-900">{(+request.relatedAction.payload7).toLocaleString()}</span> :
+                          <span className="font-medium text-gray-900">{request.amount}</span>
+                        }{' '}
+                        {request.currency}</span>
                       <span className="truncate">{request.name} &gt; {request.requestFor}</span>
                       <time dateTime={request.datetime} className="flex justify-between">{request.date}
                         {((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0) ?
@@ -398,8 +400,16 @@ export default function Manage() {
                     </td>
 
                     <td className="hidden md:block whitespace-nowrap px-2 py-4 text-right text-sm text-gray-500">
+
+                      <span>
+                        {request.relatedAction?.payload7 ?
+                          <span className="font-medium text-gray-900">{(+request.relatedAction.payload7).toLocaleString()}</span> :
+                          <span className="font-medium text-gray-900">{request.amount}</span>
+                        }{' '}
+                        {request.currency}</span>
+                      {/*                         
                       <span className="font-medium text-gray-900">{request.amount}</span>
-                      {request.currency}
+                      {request.currency} */}
                     </td>
                     <td className="whitespace-nowrap py-4 text-sm text-gray-500">
                       {((request.status == 'pending' || request.status == 'processing') && differenceInSeconds(parseISO(request.datetime), new Date()) < 0) ?
