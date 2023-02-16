@@ -9,7 +9,7 @@ import {
   BanknotesIcon,
   CreditCardIcon,
   ChevronRightIcon,
-  MagnifyingGlassIcon,
+  GlobeAltIcon,
   TruckIcon,
 } from '@heroicons/react/20/solid'
 
@@ -31,7 +31,7 @@ export default function OteBalance(props) {
           {
             id: transaction.id,
             item: transaction.payload6,
-            icon: TruckIcon,
+            icon: GlobeAltIcon,
             href: '#',
             amount: `${(+transaction.payload7).toLocaleString()}`,
             currency: 'KRW',

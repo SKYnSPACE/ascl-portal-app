@@ -9,7 +9,7 @@ import {
   BanknotesIcon,
   CreditCardIcon,
   ChevronRightIcon,
-  MagnifyingGlassIcon,
+  Square3Stack3DIcon,
   TruckIcon,
 } from '@heroicons/react/20/solid'
 

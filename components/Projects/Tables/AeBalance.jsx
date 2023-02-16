@@ -31,7 +31,7 @@ export default function AeBalance(props) {
           {
             id: transaction.id,
             item: transaction.payload6,
-            icon: Square3Stack3DIcon,
+            icon: BanknotesIcon,
             href: '#',
             amount: `${(+transaction.payload9).toLocaleString()}`,
             currency: 'KRW',

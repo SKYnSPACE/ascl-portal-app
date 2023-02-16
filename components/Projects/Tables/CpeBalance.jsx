@@ -7,7 +7,7 @@ import {
   ArrowPathRoundedSquareIcon,
   BuildingLibraryIcon,
   BanknotesIcon,
-  CreditCardIcon,
+  CpuChipIcon,
   ChevronRightIcon,
   MagnifyingGlassIcon,
   TruckIcon,
@@ -31,7 +31,7 @@ export default function CpeBalance(props) {
           {
             id: transaction.id,
             item: transaction.payload6,
-            icon: Square3Stack3DIcon,
+            icon: CpuChipIcon,
             href: '#',
             amount: `${(+transaction.payload9).toLocaleString()}`,
             currency: 'KRW',

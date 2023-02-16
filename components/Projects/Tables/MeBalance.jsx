@@ -10,7 +10,7 @@ import {
   CreditCardIcon,
   ChevronRightIcon,
   MagnifyingGlassIcon,
-  TruckIcon,
+  UserGroupIcon,
 } from '@heroicons/react/20/solid'
 
 import { classNames } from "../../../libs/frontend/utils";
@@ -31,7 +31,7 @@ export default function MeBalance(props) {
           {
             id: transaction.id,
             item: transaction.payload6,
-            icon: Square3Stack3DIcon,
+            icon: UserGroupIcon,
             href: '#',
             amount: `${(+transaction.payload9).toLocaleString()}`,
             currency: 'KRW',
