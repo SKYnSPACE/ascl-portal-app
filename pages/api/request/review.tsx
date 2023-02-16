@@ -113,7 +113,7 @@ async function handler(
           payload3: currentSemester.alias.toString(),
           payload4: currentSeminar.alias.toString(),
           payload5: currentSeminar.title.toString(),
-          payload6: currentSeminar.tags.toString(),
+          payload6: currentSeminar.tags?.toString(),
           due: dueDate,
           status: 0,
         },
@@ -134,8 +134,8 @@ async function handler(
       <p>
       <b>Title: </b> ${currentSeminar.title.toString()} <br />
       <b>Presented by:</b> ${currentUser.name.toString()} (${currentUser.email.toString()})<br />
-      <b>Tags:</b> ${currentSeminar.tags.toString()}<br />
-      <b>Abstract:</b> ${currentSeminar.abstract.toString()}</p>
+      <b>Tags:</b> ${currentSeminar.tags?.toString()}<br />
+      <b>Abstract:</b> ${currentSeminar.abstract?.toString()}</p>
       `,
       false);
     }
