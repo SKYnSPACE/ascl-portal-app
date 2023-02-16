@@ -144,6 +144,7 @@ async function handler(
             kind: +CategoryCode[category],
             payload1: currentUser.id?.toString(),
             payload2: currentUser.name?.toString(),
+            payload3: alias?.toString(),
             payload5: category?.toString(),
             payload6: note?.toString(),
             payload9: variance?.toString(), ////////////////
@@ -160,6 +161,7 @@ async function handler(
             kind: +CategoryCode[category],
             payload1: currentUser.id?.toString(),
             payload2: currentUser.name?.toString(),
+            payload3: alias?.toString(),
             payload5: category?.toString(),
             payload6: note?.toString(),
             payload7: variance?.toString(), ////////////////
