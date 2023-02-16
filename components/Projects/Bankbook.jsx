@@ -6,10 +6,48 @@ import { format, differenceInDays, parseISO } from "date-fns";
 import { BanknotesIcon, CpuChipIcon, GlobeAltIcon, PaperClipIcon, Square3Stack3DIcon, TruckIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import Page403 from "../Page403";
 import LoadingSpinner from "../LoadingSpinner";
+import Page404 from "../Page404";
+import MpeBalance from "./Tables/MpeBalance";
+import DteBalance from "./Tables/DteBalance";
+import CorrectBalanceModal from "./Modals/CorrectBalanceModal";
+import Notification from "../Notification";
 
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
+}
+
+function Details(props) {
+
+  switch (props.category) {
+    case 'MPE':
+      // return <Page404 />;
+      return <MpeBalance alias={props.alias}/>;
+
+    case 'CPE':
+      return <Page404 />;
+    // return <Requests />;
+
+    case 'DTE':
+      // return <Page404 />;
+      return <DteBalance alias={props.alias}/>;
+    // return <Manage />;
+
+    case 'OTE':
+      return <Page404 />;
+    // return <BusinessTrip />;
+
+    case 'ME':
+      return <Page404 />;
+    // return <Attendance />;
+
+    case 'AE':
+      return <Page404 />;
+    // return <Purchasing />;
+
+    default:
+      return <Page404 />;
+  }
 }
 
 export default function Bankbook({ props }) {
@@ -24,14 +62,21 @@ export default function Bankbook({ props }) {
   const elapsedRate = 1 - remainingRate;
 
   const cards = [
-    { name: '재료비 잔액', href: '#', icon: Square3Stack3DIcon, amount: data?.selectedProject?.mpeBalance?.toLocaleString() },
-    { name: '전산처리비 잔액', href: '#', icon: CpuChipIcon, amount: data?.selectedProject?.cpeBalance?.toLocaleString() },
-    { name: '국내출장비 잔액', href: '#', icon: TruckIcon, amount: data?.selectedProject?.dteBalance?.toLocaleString() },
-    { name: '해외출장비 잔액', href: '#', icon: GlobeAltIcon, amount: data?.selectedProject?.oteBalance?.toLocaleString() },
-    { name: '회의비 잔액', href: '#', icon: UserGroupIcon, amount: data?.selectedProject?.meBalance?.toLocaleString() },
-    { name: '수용비 잔액', href: '#', icon: BanknotesIcon, amount: data?.selectedProject?.aeBalance?.toLocaleString() },
+    { name: '재료비 잔액', category: 'MPE', href: '#details', icon: Square3Stack3DIcon, amount: data?.selectedProject?.mpeBalance?.toLocaleString() },
+    { name: '전산처리비 잔액', category: 'CPE', href: '#details', icon: CpuChipIcon, amount: data?.selectedProject?.cpeBalance?.toLocaleString() },
+    { name: '국내출장비 잔액', category: 'DTE', href: '#details', icon: TruckIcon, amount: data?.selectedProject?.dteBalance?.toLocaleString() },
+    { name: '해외출장비 잔액', category: 'OTE', href: '#details', icon: GlobeAltIcon, amount: data?.selectedProject?.oteBalance?.toLocaleString() },
+    { name: '회의비 잔액', category: 'ME', href: '#details', icon: UserGroupIcon, amount: data?.selectedProject?.meBalance?.toLocaleString() },
+    { name: '수용비 잔액', category: 'AE', href: '#details', icon: BanknotesIcon, amount: data?.selectedProject?.aeBalance?.toLocaleString() },
     // More items...
-  ]
+  ];
+
+  const [selectedCategory, setSelectedCategory] = useState("MPE");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [isNotify, setIsNotify] = useState(false);
+  const [message, setMessage] = useState({ type: 'success', title: 'Confirmed!', details: 'Test message initiated.', });
 
   return (
 
@@ -126,7 +171,8 @@ export default function Bankbook({ props }) {
               <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {/* Card */}
                 {cards.map((card) => (
-                  <div key={card.name} className="overflow-hidden rounded-lg bg-white shadow">
+                  <div key={card.name} className={classNames("overflow-hidden rounded-lg shadow",
+                    card.category == selectedCategory ? "bg-yellow-50" : "bg-white")}>
                     <div className="p-5">
                       <div className="flex items-center">
                         <div className="flex-shrink-0">
@@ -142,16 +188,36 @@ export default function Bankbook({ props }) {
                         </div>
                       </div>
                     </div>
-                    <div className="bg-gray-50 px-5 py-3">
-                      <div className="text-sm text-center">
-                        <a href={card.href} className="font-medium text-cyan-700 hover:text-cyan-900">
-                          View all
+                    <div className={classNames("py-3",
+                      card.category == selectedCategory ? "bg-yellow-100" : "bg-gray-50")}>
+                      <div className="flex text-sm text-center divide-x">
+                        <a href={card.href} className="flex-auto font-medium text-sky-700 hover:text-sky-900"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setSelectedCategory(card.category);
+                            setIsModalOpen(true);
+                          }}>
+                          Correction
+                        </a>
+
+                        <a href={card.href} className="flex-auto font-medium text-sky-700 hover:text-sky-900"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setSelectedCategory(card.category);
+
+                            const element = document.getElementById("details");
+                            if (element) element.scrollIntoView({ behavior: 'smooth' });
+                          }}>
+                          Transactions
                         </a>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
+
+              <div id="details" />
+              <Details category={selectedCategory} alias={alias} />
 
 
             </div> :
@@ -160,6 +226,10 @@ export default function Bankbook({ props }) {
             </>
           }
         </>}
+
+        <CorrectBalanceModal props={{alias, selectedCategory, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage, }} /> 
+
+        <Notification props={{ message, isNotify, setIsNotify }} />
     </div>
 
   )

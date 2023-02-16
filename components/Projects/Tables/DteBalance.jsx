@@ -1,71 +1,50 @@
 import { Fragment, useState, useEffect } from "react";
-import { Dialog, Menu, Transition } from '@headlessui/react'
-import {
-  Bars3CenterLeftIcon,
-  BellIcon,
-  ClockIcon,
-  CogIcon,
-  DocumentChartBarIcon,
-  HomeIcon,
-  QuestionMarkCircleIcon,
-  ScaleIcon,
-  ShieldCheckIcon,
-  UserGroupIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline'
+import useSWR from "swr";
+
+import { format, parseISO } from "date-fns";
+
 import {
   BuildingLibraryIcon,
   BanknotesIcon,
   CreditCardIcon,
   ChevronRightIcon,
   MagnifyingGlassIcon,
+  TruckIcon,
 } from '@heroicons/react/20/solid'
 
 import { classNames } from "../../../libs/frontend/utils";
 
-const transactions = [
-  {
-    id: 1,
-    item: 'Payment to Molly Sanders',
-    icon: BanknotesIcon,
-    href: '#',
-    amount: '20,000',
-    currency: 'KRW',
-    user: 'Molly Sanders',
-    date: 'July 11, 2020',
-    datetime: '2020-07-11',
-  },
-  {
-    id: 2,
-    item: 'Payment to Molly Sanders',
-    icon: CreditCardIcon,
-    href: '#',
-    amount: '20,000',
-    currency: 'KRW',
-    user: 'Molly Sanders',
-    date: 'July 11, 2020',
-    datetime: '2020-07-11',
-  },
-  {
-    id: 3,
-    item: 'Payment to Molly Sanders',
-    icon: BuildingLibraryIcon,
-    href: '#',
-    amount: '20,000',
-    currency: 'KRW',
-    user: 'Molly Sanders',
-    date: 'July 11, 2020',
-    datetime: '2020-07-11',
-  },
-  // More transactions...
-]
-const statusStyles = {
-  success: 'bg-green-100 text-green-800',
-  processing: 'bg-yellow-100 text-yellow-800',
-  failed: 'bg-gray-100 text-gray-800',
-}
+export default function DteBalance(props) {
+  const { data, mutate, error, isLoading } = useSWR(props?.alias ? `/api/project/${props.alias}/dte` : null);
 
-export default function MpeBalance() {
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (data?.ok) {
+      let transactions = [];
+      // console.log(data.transactions)
+      data.transactions?.map((transaction) => {
+        transactions.push(
+          {
+            id: transaction.id,
+            item: transaction.payload6,
+            icon: TruckIcon,
+            href: '#',
+            amount: `${(+transaction.payload7).toLocaleString()}`,
+            currency: 'KRW',
+            user: transaction.relatedRequest.payload2,
+            startDate: `${transaction.payload8}`,
+            endDate: `${transaction.payload9}`,
+            date: `${format(parseISO(transaction.completedAt ? transaction.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,
+            datetime: transaction.relatedRequest.completedAt,
+          }
+        )
+      })
+      setTransactions(transactions);
+    }
+  }, [data])
+
   return (
 
     <div className="w-full">
@@ -83,7 +62,7 @@ export default function MpeBalance() {
                   <span className="flex flex-1 space-x-2 truncate">
                     <transaction.icon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                     <span className="flex flex-col truncate text-sm text-gray-500">
-                      <span className="truncate">{transaction.item}</span>
+                      <span className="truncate">{transaction.item} ({transaction.startDate} ~ {transaction.endDate})</span>
                       <span>
                         <span className="font-medium text-gray-900">{transaction.amount}</span>{' '}
                         {transaction.currency}
@@ -166,7 +145,7 @@ export default function MpeBalance() {
                               aria-hidden="true"
                             />
                             <p className="truncate text-gray-500 group-hover:text-gray-900">
-                              {transaction.item}
+                              {transaction.item} ({transaction.startDate} ~ {transaction.endDate})
                             </p>
                           </a>
                         </div>
@@ -176,7 +155,7 @@ export default function MpeBalance() {
                         {transaction.currency}
                       </td>
                       <td className="hidden whitespace-nowrap px-6 py-4 text-sm text-center text-gray-900 md:block">
-                        <span>{transaction.user}
+                        <span>{transaction.user} 
                         </span>
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
@@ -197,6 +176,7 @@ export default function MpeBalance() {
                     <span className="font-medium">20</span> results
                   </p>
                 </div>
+
                 <div className="flex flex-1 justify-between sm:justify-end">
                   <a
                     href="#"

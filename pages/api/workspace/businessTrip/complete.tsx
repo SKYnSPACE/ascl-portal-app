@@ -68,7 +68,6 @@ async function handler(
         },
         data:{
           status: 2,
-          completedAt: new Date(),
         }
       })
 
