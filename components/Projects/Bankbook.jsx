@@ -8,10 +8,13 @@ import Page403 from "../Page403";
 import LoadingSpinner from "../LoadingSpinner";
 import Page404 from "../Page404";
 import MpeBalance from "./Tables/MpeBalance";
+import CpeBalance from "./Tables/CpeBalance";
 import DteBalance from "./Tables/DteBalance";
+import OteBalance from "./Tables/OteBalance";
+import MeBalance from "./Tables/MeBalance";
+import AeBalance from "./Tables/AeBalance";
 import CorrectBalanceModal from "./Modals/CorrectBalanceModal";
 import Notification from "../Notification";
-
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -22,28 +25,29 @@ function Details(props) {
   switch (props.category) {
     case 'MPE':
       // return <Page404 />;
-      return <MpeBalance alias={props.alias}/>;
+      return <MpeBalance alias={props.alias} />;
 
     case 'CPE':
-      return <Page404 />;
+      // return <Page404 />;
+      return <CpeBalance alias={props.alias} />;
     // return <Requests />;
 
     case 'DTE':
       // return <Page404 />;
-      return <DteBalance alias={props.alias}/>;
+      return <DteBalance alias={props.alias} />;
     // return <Manage />;
 
     case 'OTE':
-      return <Page404 />;
-    // return <BusinessTrip />;
+      // return <Page404 />;
+      return <OteBalance alias={props.alias} />;
 
     case 'ME':
-      return <Page404 />;
-    // return <Attendance />;
+      // return <Page404 />;
+      return <MeBalance alias={props.alias} />;
 
     case 'AE':
-      return <Page404 />;
-    // return <Purchasing />;
+      // return <Page404 />;
+      return <AeBalance alias={props.alias} />;
 
     default:
       return <Page404 />;
@@ -62,12 +66,12 @@ export default function Bankbook({ props }) {
   const elapsedRate = 1 - remainingRate;
 
   const cards = [
-    { name: '재료비 잔액', category: 'MPE', href: '#details', icon: Square3Stack3DIcon, amount: data?.selectedProject?.mpeBalance?.toLocaleString() },
-    { name: '전산처리비 잔액', category: 'CPE', href: '#details', icon: CpuChipIcon, amount: data?.selectedProject?.cpeBalance?.toLocaleString() },
-    { name: '국내출장비 잔액', category: 'DTE', href: '#details', icon: TruckIcon, amount: data?.selectedProject?.dteBalance?.toLocaleString() },
-    { name: '해외출장비 잔액', category: 'OTE', href: '#details', icon: GlobeAltIcon, amount: data?.selectedProject?.oteBalance?.toLocaleString() },
-    { name: '회의비 잔액', category: 'ME', href: '#details', icon: UserGroupIcon, amount: data?.selectedProject?.meBalance?.toLocaleString() },
-    { name: '수용비 잔액', category: 'AE', href: '#details', icon: BanknotesIcon, amount: data?.selectedProject?.aeBalance?.toLocaleString() },
+    { name: '재료비 잔액', category: 'MPE', href: '#details', icon: Square3Stack3DIcon, amount: data?.selectedProject?.mpeBalance?.toLocaleString(), planned: data?.selectedProject?.mpePlanned?.toLocaleString() },
+    { name: '전산처리비 잔액', category: 'CPE', href: '#details', icon: CpuChipIcon, amount: data?.selectedProject?.cpeBalance?.toLocaleString(), planned: data?.selectedProject?.cpePlanned?.toLocaleString() },
+    { name: '국내출장비 잔액', category: 'DTE', href: '#details', icon: TruckIcon, amount: data?.selectedProject?.dteBalance?.toLocaleString(), planned: data?.selectedProject?.dtePlanned?.toLocaleString() },
+    { name: '해외출장비 잔액', category: 'OTE', href: '#details', icon: GlobeAltIcon, amount: data?.selectedProject?.oteBalance?.toLocaleString(), planned: data?.selectedProject?.otePlanned?.toLocaleString() },
+    { name: '회의비 잔액', category: 'ME', href: '#details', icon: UserGroupIcon, amount: data?.selectedProject?.meBalance?.toLocaleString(), planned: data?.selectedProject?.mePlanned?.toLocaleString() },
+    { name: '수용비 잔액', category: 'AE', href: '#details', icon: BanknotesIcon, amount: data?.selectedProject?.aeBalance?.toLocaleString(), planned: data?.selectedProject?.aePlanned?.toLocaleString() },
     // More items...
   ];
 
@@ -171,8 +175,15 @@ export default function Bankbook({ props }) {
               <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {/* Card */}
                 {cards.map((card) => (
-                  <div key={card.name} className={classNames("overflow-hidden rounded-lg shadow",
-                    card.category == selectedCategory ? "bg-yellow-50" : "bg-white")}>
+                  <div key={card.name} className={classNames("overflow-hidden rounded-lg shadow hover:cursor-pointer",
+                    card.category == selectedCategory ? "bg-yellow-50" : "bg-white")}
+                    onClick={(e)=>{
+                      e.preventDefault();
+                      setSelectedCategory(card.category);
+
+                      const element = document.getElementById("details");
+                      if (element) element.scrollIntoView({ behavior: 'smooth' });
+                    }}>
                     <div className="p-5">
                       <div className="flex items-center">
                         <div className="flex-shrink-0">
@@ -182,7 +193,8 @@ export default function Bankbook({ props }) {
                           <dl>
                             <dt className="truncate text-sm font-medium text-gray-500">{card.name}</dt>
                             <dd>
-                              <div className="text-lg font-medium text-gray-900">&#8361;{card.amount}</div>
+                              <div className="text-lg font-medium text-gray-900"><p>&#8361;{card.amount}</p>
+                                <p className="text-sm text-right font-normal text-gray-500">/ {card.planned}</p></div>
                             </dd>
                           </dl>
                         </div>
@@ -191,7 +203,7 @@ export default function Bankbook({ props }) {
                     <div className={classNames("py-3",
                       card.category == selectedCategory ? "bg-yellow-100" : "bg-gray-50")}>
                       <div className="flex text-sm text-center divide-x">
-                        <a href={card.href} className="flex-auto font-medium text-sky-700 hover:text-sky-900"
+                        <a href={card.href} className="flex-auto font-medium text-rose-700 hover:text-rose-900"
                           onClick={(e) => {
                             e.preventDefault();
                             setSelectedCategory(card.category);
@@ -227,9 +239,9 @@ export default function Bankbook({ props }) {
           }
         </>}
 
-        <CorrectBalanceModal props={{alias, selectedCategory, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage, }} /> 
+      <CorrectBalanceModal props={{ alias, selectedCategory, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage, }} />
 
-        <Notification props={{ message, isNotify, setIsNotify }} />
+      <Notification props={{ message, isNotify, setIsNotify }} />
     </div>
 
   )

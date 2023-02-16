@@ -15,8 +15,8 @@ import {
 
 import { classNames } from "../../../libs/frontend/utils";
 
-export default function MpeBalance(props) {
-  const { data, mutate, error, isLoading } = useSWR(props?.alias ? `/api/project/${props.alias}/mpe` : null);
+export default function CpeBalance(props) {
+  const { data, mutate, error, isLoading } = useSWR(props?.alias ? `/api/project/${props.alias}/cpe` : null);
 
   const [transactions, setTransactions] = useState([]);
 

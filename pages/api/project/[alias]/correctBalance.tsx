@@ -24,7 +24,7 @@ async function handler(
   if (req.method === "POST") {
 
     const { query: { alias },
-      body:{note, variance, category},
+      body: { note, variance, category },
       session: { user } } = req;
 
     if (!alias) {
@@ -69,38 +69,128 @@ async function handler(
       })
 
 
+    let updatedProject = null;
+    switch (category) {
+      case "MPE":
+        updatedProject = await client.project.update({
+          where: { id: selectedProject.id },
+          data: {
+            mpeBalance: selectedProject.mpeBalance - (+variance),
+            mpeExeRate: +(100 * (1 - (selectedProject.mpeBalance - (+variance)) / selectedProject.mpePlanned) || 0).toFixed(0),
+          },
+        })
+        break;
+      case "CPE":
+        updatedProject = await client.project.update({
+          where: { id: selectedProject.id },
+          data: {
+            cpeBalance: selectedProject.cpeBalance - (+variance),
+            cpeExeRate: +(100 * (1 - (selectedProject.cpeBalance - (+variance)) / selectedProject.cpePlanned) || 0).toFixed(0),
+          },
+        })
+        break;
+      case "DTE":
+        updatedProject = await client.project.update({
+          where: { id: selectedProject.id },
+          data: {
+            dteBalance: selectedProject.dteBalance - (+variance),
+            dteExeRate: +(100 * (1 - (selectedProject.dteBalance - (+variance)) / selectedProject.dtePlanned) || 0).toFixed(0),
+          },
+        })
+        break;
+      case "OTE":
+        updatedProject = await client.project.update({
+          where: { id: selectedProject.id },
+          data: {
+            oteBalance: selectedProject.oteBalance - (+variance),
+            oteExeRate: +(100 * (1 - (selectedProject.oteBalance - (+variance)) / selectedProject.otePlanned) || 0).toFixed(0),
+          },
+        })
+        break;
+      case "ME":
+        updatedProject = await client.project.update({
+          where: { id: selectedProject.id },
+          data: {
+            meBalance: selectedProject.meBalance - (+variance),
+            meExeRate: +(100 * (1 - (selectedProject.meBalance - (+variance)) / selectedProject.mePlanned) || 0).toFixed(0),
+          },
+        })
+        break;
+      case "AE":
+        updatedProject = await client.project.update({
+          where: { id: selectedProject.id },
+          data: {
+            aeBalance: selectedProject.aeBalance - (+variance),
+            aeExeRate: +(100 * (1 - (selectedProject.aeBalance - (+variance)) / selectedProject.aePlanned) || 0).toFixed(0),
+          },
+        })
+        break;
 
-//TODO: 카테고리별로 프로젝트 balance 업데이트!!!!!!!!!!!!!!!!!!!!!!!!!!
+      default:
+        return res.status(400).json({
+          ok: false,
+          error: { code: 400, message: "Bad Category." }
+        })
+    }
+
+    let correction = null;
+    switch (category) {
+      case "MPE":
+      case "CPE":
+      case "ME":
+      case "AE":
+        correction = await client.action.create({
+          data: {
+            kind: +CategoryCode[category],
+            payload1: currentUser.id?.toString(),
+            payload2: currentUser.name?.toString(),
+            payload5: category?.toString(),
+            payload6: note?.toString(),
+            payload9: variance?.toString(), ////////////////
+            status: 1,
+            due: new Date(),
+            completedAt: new Date(),
+          },
+        })
+        break;
+      case "DTE":
+      case "OTE":
+        correction = await client.action.create({
+          data: {
+            kind: +CategoryCode[category],
+            payload1: currentUser.id?.toString(),
+            payload2: currentUser.name?.toString(),
+            payload5: category?.toString(),
+            payload6: note?.toString(),
+            payload7: variance?.toString(), ////////////////
+            status: 1,
+            due: new Date(),
+            completedAt: new Date(),
+          },
+        })
+        break;
+
+      default:
+        return res.status(400).json({
+          ok: false,
+          error: { code: 400, message: "Bad Category." }
+        })
+    }
+        //TODO: Return ledger
+        res.json({
+          ok: true,
+          updatedProject,
+          correction,
+        });
+    }
 
 
-    const correction = await client.action.create({
-      data:{
-        kind: +CategoryCode[category],
-        payload1: currentUser.id?.toString(),
-        payload2: currentUser.name?.toString(),
-        payload5: category?.toString(),
-        payload6: note?.toString(),
-        payload7: variance?.toString(),
-        status: 1,
-        due: new Date(),
-        completedAt: new Date(),
-      },
-    })
 
-    //TODO: Return ledger
-    res.json({
-      ok: true,
-      correction
-    });
   }
 
-
-
-}
-
-export default withApiSession(
-  withHandler({
-    methods: ["POST"],
-    handler,
-  })
-);
+  export default withApiSession(
+    withHandler({
+      methods: ["POST"],
+      handler,
+    })
+  );

@@ -52,8 +52,8 @@ export default function DteBalance(props) {
             amount: `${(+transaction.payload7).toLocaleString()}`,
             currency: 'KRW',
             user: `${transaction.payload2}`,
-            startDate: `${transaction.payload8}`,
-            endDate: `${transaction.payload9}`,
+            startDate: "",
+            endDate: "",
             date: `${format(parseISO(transaction.completedAt ? transaction.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,
             datetime: transaction.completedAt,
           }

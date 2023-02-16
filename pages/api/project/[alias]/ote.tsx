@@ -78,9 +78,9 @@ async function handler(
 
     const transactions = await client.action.findMany({
       where:{
-        kind: 30,
+        kind: 35,
         payload3: alias.toString(),
-        payload5: "MPE",
+        payload5: "OTE",
         status:{
           gte: 1,
         }

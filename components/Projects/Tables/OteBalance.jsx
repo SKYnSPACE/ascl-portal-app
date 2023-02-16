@@ -15,8 +15,8 @@ import {
 
 import { classNames } from "../../../libs/frontend/utils";
 
-export default function MpeBalance(props) {
-  const { data, mutate, error, isLoading } = useSWR(props?.alias ? `/api/project/${props.alias}/mpe` : null);
+export default function OteBalance(props) {
+  const { data, mutate, error, isLoading } = useSWR(props?.alias ? `/api/project/${props.alias}/ote` : null);
 
   const [transactions, setTransactions] = useState([]);
 
@@ -31,11 +31,13 @@ export default function MpeBalance(props) {
           {
             id: transaction.id,
             item: transaction.payload6,
-            icon: Square3Stack3DIcon,
+            icon: TruckIcon,
             href: '#',
-            amount: `${(+transaction.payload9).toLocaleString()}`,
+            amount: `${(+transaction.payload7).toLocaleString()}`,
             currency: 'KRW',
             user: `${transaction.relatedRequest.payload2}`,
+            startDate: `${transaction.payload8}`,
+            endDate: `${transaction.payload9}`,
             date: `${format(parseISO(transaction.completedAt ? transaction.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,
             datetime: transaction.completedAt,
           }
@@ -47,9 +49,11 @@ export default function MpeBalance(props) {
             item: transaction.payload6,
             icon: ArrowPathRoundedSquareIcon,
             href: '#',
-            amount: `${(+transaction.payload9).toLocaleString()}`,
+            amount: `${(+transaction.payload7).toLocaleString()}`,
             currency: 'KRW',
             user: `${transaction.payload2}`,
+            startDate: "",
+            endDate: "",
             date: `${format(parseISO(transaction.completedAt ? transaction.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,
             datetime: transaction.completedAt,
           }
@@ -76,7 +80,7 @@ export default function MpeBalance(props) {
                   <span className="flex flex-1 space-x-2 truncate">
                     <transaction.icon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                     <span className="flex flex-col truncate text-sm text-gray-500">
-                      <span className="truncate">{transaction.item}</span>
+                      <span className="truncate">{transaction.item} ({transaction.startDate} ~ {transaction.endDate})</span>
                       <span>
                         <span className="font-medium text-gray-900">{transaction.amount}</span>{' '}
                         {transaction.currency}
@@ -159,7 +163,7 @@ export default function MpeBalance(props) {
                               aria-hidden="true"
                             />
                             <p className="truncate text-gray-500 group-hover:text-gray-900">
-                              {transaction.item}
+                              {transaction.item} ({transaction.startDate} ~ {transaction.endDate})
                             </p>
                           </a>
                         </div>
