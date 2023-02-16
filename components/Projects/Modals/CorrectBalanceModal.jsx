@@ -63,7 +63,7 @@ export default function CorrectBalanceModal({ props }) {
           setIsNotify(true);
           return;
         default:
-          console.log("ERROR", data.error);
+          console.log("ERROR", correctBalanceData.error);
       }
     }
   }, [correctBalanceData]);
@@ -79,8 +79,8 @@ export default function CorrectBalanceModal({ props }) {
       return;
     }
 
-    console.log(validForm);
-    // correctBalance(validForm);
+    console.log({...validForm, category: selectedCategory});
+    correctBalance({...validForm, category: selectedCategory});
   }
   const onInvalid = (errors) => {
     console.log(errors);

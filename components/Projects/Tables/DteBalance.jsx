@@ -4,6 +4,7 @@ import useSWR from "swr";
 import { format, parseISO } from "date-fns";
 
 import {
+  ArrowPathRoundedSquareIcon,
   BuildingLibraryIcon,
   BanknotesIcon,
   CreditCardIcon,
@@ -25,6 +26,7 @@ export default function DteBalance(props) {
       let transactions = [];
       // console.log(data.transactions)
       data.transactions?.map((transaction) => {
+        if(transaction.relatedRequest)
         transactions.push(
           {
             id: transaction.id,
@@ -33,11 +35,27 @@ export default function DteBalance(props) {
             href: '#',
             amount: `${(+transaction.payload7).toLocaleString()}`,
             currency: 'KRW',
-            user: transaction.relatedRequest.payload2,
+            user: `${transaction.relatedRequest.payload2}`,
             startDate: `${transaction.payload8}`,
             endDate: `${transaction.payload9}`,
             date: `${format(parseISO(transaction.completedAt ? transaction.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,
-            datetime: transaction.relatedRequest.completedAt,
+            datetime: transaction.completedAt,
+          }
+        )
+        else 
+        transactions.push(
+          {
+            id: transaction.id,
+            item: transaction.payload6,
+            icon: ArrowPathRoundedSquareIcon,
+            href: '#',
+            amount: `${(+transaction.payload7).toLocaleString()}`,
+            currency: 'KRW',
+            user: `${transaction.payload2}`,
+            startDate: `${transaction.payload8}`,
+            endDate: `${transaction.payload9}`,
+            date: `${format(parseISO(transaction.completedAt ? transaction.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,
+            datetime: transaction.completedAt,
           }
         )
       })

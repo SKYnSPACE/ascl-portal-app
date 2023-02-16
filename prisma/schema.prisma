@@ -305,8 +305,8 @@ model Action{
   createdAt      DateTime  @default(now())
   updatedAt	     DateTime  @updatedAt
 
-  relatedRequest Request   @relation(fields:[requestId], references:[id], onDelete: Cascade)
-  requestId      Int       @unique
+  relatedRequest Request?   @relation(fields:[requestId], references:[id], onDelete: Cascade)
+  requestId      Int?       @unique
   @@index([requestId])
 
   kind        Int

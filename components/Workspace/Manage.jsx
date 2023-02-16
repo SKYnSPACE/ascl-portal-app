@@ -162,7 +162,7 @@ function parseRequests(requests) {
           title: `${request.payload4}`,
           category: `${request.payload5}`,
           destination: `${request.payload6}`,
-          amount: `${(+request.payload7).toLocaleString()}`,
+          amount: `${request.relatedAction?.payload7 ? (+request.relatedAction.payload7).toLocaleString() : (+request.payload7).toLocaleString()}`,
           startDate: `${request.payload8}`,
           endDate: `${request.payload9}`,
           href: '#',
@@ -252,10 +252,8 @@ export default function Manage() {
                     <span className="flex flex-col grow truncate text-sm text-gray-500">
                       <span className="truncate text-gray-900">{request.title}</span>
                       <span>
-                        {request.relatedAction?.payload7 ?
-                          <span className="font-medium text-gray-900">{(+request.relatedAction.payload7).toLocaleString()}</span> :
-                          <span className="font-medium text-gray-900">{request.amount}</span>
-                        }{' '}
+                        <span className="font-medium text-gray-900">{request.amount}</span>
+                        {' '}
                         {request.currency}</span>
                       <span className="truncate">{request.name} &gt; {request.requestFor}</span>
                       <time dateTime={request.datetime} className="flex justify-between">{request.date}
@@ -402,10 +400,8 @@ export default function Manage() {
                     <td className="hidden md:block whitespace-nowrap px-2 py-4 text-right text-sm text-gray-500">
 
                       <span>
-                        {request.relatedAction?.payload7 ?
-                          <span className="font-medium text-gray-900">{(+request.relatedAction.payload7).toLocaleString()}</span> :
-                          <span className="font-medium text-gray-900">{request.amount}</span>
-                        }{' '}
+                        <span className="font-medium text-gray-900">{request.amount}</span>
+                        {' '}
                         {request.currency}</span>
                       {/*                         
                       <span className="font-medium text-gray-900">{request.amount}</span>
