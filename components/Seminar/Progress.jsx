@@ -6,6 +6,7 @@ import { format, parseISO } from "date-fns";
 
 import { ChatBubbleLeftEllipsisIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import LoadingSpinner from '../LoadingSpinner';
+import ProgressDetailsModal from './Modals/ProgressDetailsModal';
 
 const stats = [
   { name: 'Total Presentations', stat: '4' },
@@ -17,45 +18,6 @@ const steps = [
   { id: 1, before: 'No submission', after: 'Draft submitted', href: '#', status: 'complete' },
   { id: 2, before: 'Needs reviewing', after: 'Peer review completed', href: '#', status: 'current' },
   { id: 3, before: 'Under revision', after: 'Ready to present', href: '#', status: 'upcoming' },
-]
-
-const presentations = [
-  {
-    speaker: {
-      name: 'Seongheon Lee',
-      title: 'Dynamic modeling and control of mechanical systmes using machine learning approaches and their applications to a quadrotor UAV.',
-      avatar:
-        'https://avatars.githubusercontent.com/u/21105393?v=4',
-    },
-    currentStage: 4,
-  },
-  {
-    speaker: {
-      name: 'Seongheon Lee',
-      title: 'Current development stage of the ASCL Portal.',
-      avatar:
-        'https://avatars.githubusercontent.com/u/21105393?v=4',
-    },
-    currentStage: 3,
-  },
-  {
-    speaker: {
-      name: 'Junwoo Park',
-      title: 'Latest development status report on ASCL Navigation system which outperforms DJI, PX4, and even VectorNav VN-300.',
-      avatar:
-        'https://avatars.githubusercontent.com/u/25346867?v=4',
-    },
-    currentStage: 2,
-  },
-  {
-    speaker: {
-      name: 'Kyungwoo Hong',
-      title: 'TBD',
-      avatar:
-        'https://avatars.githubusercontent.com/u/25144685?v=4',
-    },
-    currentStage: 1,
-  },
 ]
 
 function getInitials(name) {
@@ -72,13 +34,17 @@ export default function Progress() {
   const [presentations, setPresentations] = useState([]);
   const [stats, setStats] = useState([]);
 
+  const [selectedSeminar, setSelectedSeminar] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   useEffect(() => {
     if (data?.presenters) {
       let presentations = ([]);
       data?.presenters.map((presenter) => {
         presentations.push({
           speaker: { id: presenter.id, name: presenter.name, title: presenter.presentedSeminars[0]?.title, avatar: presenter.avatar }, currentStage: presenter.presentedSeminars[0]?.currentStage,
-          waiver: presenter.presentedSeminars[0]?.waiver, skipReview: presenter.presentedSeminars[0]?.skipReview, skipRevision: presenter.presentedSeminars[0]?.skipRevision
+          waiver: presenter.presentedSeminars[0]?.waiver, skipReview: presenter.presentedSeminars[0]?.skipReview, skipRevision: presenter.presentedSeminars[0]?.skipRevision,
+          alias: presenter.presentedSeminars[0]?.alias
         })
       });
       setPresentations(presentations);
@@ -148,7 +114,13 @@ export default function Progress() {
           <ul role="list" className="divide-y divide-gray-200">
             {presentations.map((presentation) => (
               <li key={presentation.speaker.id}>
-                <a href={presentation.href} className="block hover:bg-gray-50">
+                <a href={presentation.href} className="block hover:bg-gray-50 hover:cursor-pointer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSelectedSeminar(presentation.alias);
+                    setIsModalOpen(true);
+                  }}
+                >
                   <div className="flex items-center px-4 py-4 sm:px-6">
                     <div className="flex min-w-0 flex-1 items-center">
                       <div className="flex-shrink-0">
@@ -247,6 +219,9 @@ export default function Progress() {
             ))}
           </ul>
         </div>}
+
+      <ProgressDetailsModal props={{ isModalOpen, setIsModalOpen, selectedSeminar }} />
+
     </div>
   )
 }

@@ -13,7 +13,7 @@ async function handler(
     const { query:{alias},
     session: { user } } = req;
 
-    console.log(alias)
+    // console.log(alias)
 
     if(!alias) {
       return res.json({ok:false});

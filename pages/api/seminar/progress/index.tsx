@@ -54,6 +54,7 @@ async function handler(
             semesterId: +currentSemester.id,
           },
           select: {
+            alias: true,
             title: true,
             abstract: true,
             category: true,
@@ -61,7 +62,7 @@ async function handler(
             waiver: true,
             skipReview: true,
             skipRevision: true,
-            reviews: true,
+            // reviews: true,
             currentStage: true,
           }
         },
