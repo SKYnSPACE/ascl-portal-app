@@ -85,7 +85,7 @@ async function handler(
           where: { id: selectedProject.id },
           data: {
             cpeBalance: selectedProject.cpeBalance - (+variance),
-            cpeExeRate: +(100 * (1 - (selectedProject.cpeBalance - (+variance)) / selectedProject.cpePlanned) || 0).toFixed(0),
+            cpeExeRate: +(100 * (1 - (selectedProject.cpeBalance - (+variance)) / selectedProject.cpePlanned) || 100).toFixed(0),
           },
         })
         break;
@@ -94,7 +94,7 @@ async function handler(
           where: { id: selectedProject.id },
           data: {
             dteBalance: selectedProject.dteBalance - (+variance),
-            dteExeRate: +(100 * (1 - (selectedProject.dteBalance - (+variance)) / selectedProject.dtePlanned) || 0).toFixed(0),
+            dteExeRate: +(100 * (1 - (selectedProject.dteBalance - (+variance)) / selectedProject.dtePlanned) || 100).toFixed(0),
           },
         })
         break;
@@ -103,7 +103,7 @@ async function handler(
           where: { id: selectedProject.id },
           data: {
             oteBalance: selectedProject.oteBalance - (+variance),
-            oteExeRate: +(100 * (1 - (selectedProject.oteBalance - (+variance)) / selectedProject.otePlanned) || 0).toFixed(0),
+            oteExeRate: +(100 * (1 - (selectedProject.oteBalance - (+variance)) / selectedProject.otePlanned) || 100).toFixed(0),
           },
         })
         break;
@@ -112,7 +112,7 @@ async function handler(
           where: { id: selectedProject.id },
           data: {
             meBalance: selectedProject.meBalance - (+variance),
-            meExeRate: +(100 * (1 - (selectedProject.meBalance - (+variance)) / selectedProject.mePlanned) || 0).toFixed(0),
+            meExeRate: +(100 * (1 - (selectedProject.meBalance - (+variance)) / selectedProject.mePlanned) || 100).toFixed(0),
           },
         })
         break;
@@ -121,7 +121,7 @@ async function handler(
           where: { id: selectedProject.id },
           data: {
             aeBalance: selectedProject.aeBalance - (+variance),
-            aeExeRate: +(100 * (1 - (selectedProject.aeBalance - (+variance)) / selectedProject.aePlanned) || 0).toFixed(0),
+            aeExeRate: +(100 * (1 - (selectedProject.aeBalance - (+variance)) / selectedProject.aePlanned) || 100).toFixed(0),
           },
         })
         break;

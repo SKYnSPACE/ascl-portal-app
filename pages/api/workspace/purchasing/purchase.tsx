@@ -69,7 +69,7 @@ async function handler(
             where: { id: projectToUse.id },
             data: {
               mpeBalance: projectToUse.mpeBalance - (+totalPrice),
-              mpeExeRate: +(100*(1-(projectToUse.mpeBalance - (+totalPrice))/projectToUse.mpePlanned) || 0).toFixed(0),
+              mpeExeRate: +(100*(1-(projectToUse.mpeBalance - (+totalPrice))/projectToUse.mpePlanned) || 100).toFixed(0),
             },
           })
           break;
@@ -78,7 +78,7 @@ async function handler(
             where: { id: projectToUse.id },
             data: {
               cpeBalance: projectToUse.cpeBalance - (+totalPrice),
-              cpeExeRate: +(100*(1-(projectToUse.cpeBalance - (+totalPrice))/projectToUse.cpePlanned) || 0).toFixed(0),
+              cpeExeRate: +(100*(1-(projectToUse.cpeBalance - (+totalPrice))/projectToUse.cpePlanned) || 100).toFixed(0),
             },
           })
           break;
@@ -87,7 +87,7 @@ async function handler(
             where: { id: projectToUse.id },
             data: {
               meBalance: projectToUse.meBalance - (+totalPrice),
-              meExeRate: +(100*(1-(projectToUse.meBalance - (+totalPrice))/projectToUse.mePlanned) || 0).toFixed(0),
+              meExeRate: +(100*(1-(projectToUse.meBalance - (+totalPrice))/projectToUse.mePlanned) || 100).toFixed(0),
             },
           })
           break;
@@ -96,7 +96,7 @@ async function handler(
             where: { id: projectToUse.id },
             data: {
               aeBalance: projectToUse.aeBalance - (+totalPrice),
-              aeExeRate: +(100*(1-(projectToUse.aeBalance - (+totalPrice))/projectToUse.aePlanned) || 0).toFixed(0),
+              aeExeRate: +(100*(1-(projectToUse.aeBalance - (+totalPrice))/projectToUse.aePlanned) || 100).toFixed(0),
             },
           })
           break;

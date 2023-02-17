@@ -185,59 +185,59 @@ export default function Summary() {
 
                   <dl className="mt-5 grid grid-cols-2 border divide-y divide-gray-200 xl:grid-cols-6 md:grid-cols-4 md:divide-y-0 md:divide-x overflow-hidden rounded-lg bg-white shadow ">
 
-                    <div className="px-4 py-5 sm:p-6">
+                    <div className="px-4 py-5 sm:p-5">
                       <dt className="text-base font-semibold text-gray-900">재료비</dt>
                       <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
-                        <div className="flex items-baseline text-2xl font-semibold text-sky-600">
+                        <div className="flex items-baseline text-xl font-semibold text-sky-600">
                           {/* {`${(100*(1-project?.mpeBalance/project?.mpePlanned) || 0).toFixed(0)} %`} */}
                           {`${(project?.mpeExeRate || 0)} %`}
                           <span className="ml-2 text-sm font-medium text-gray-500">집행</span>
                         </div>
                       </dd>
                     </div>
-                    <div className="px-4 py-5 sm:p-6">
+                    <div className="px-4 py-5 sm:p-5">
                       <dt className="text-base font-semibold text-gray-900">전산처리비</dt>
                       <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
-                        <div className="flex items-baseline text-2xl font-semibold text-sky-600">
+                        <div className="flex items-baseline text-xl font-semibold text-sky-600">
                           {/* {`${(100*(1-project?.cpeBalance/project?.cpePlanned) || 0).toFixed(0)} %`} */}
                           {`${(project?.cpeExeRate || 0)} %`}
                           <span className="ml-2 text-sm font-medium text-gray-500">집행</span>
                         </div>
                       </dd>
                     </div>
-                    <div className="px-4 py-5 sm:p-6">
+                    <div className="px-4 py-5 sm:p-5">
                       <dt className="text-base font-semibold text-gray-900">국내출장비</dt>
                       <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
-                        <div className="flex items-baseline text-2xl font-semibold text-sky-600">
+                        <div className="flex items-baseline text-xl font-semibold text-sky-600">
                           {`${(project?.dteExeRate || 0)} %`}
                           <span className="ml-2 text-sm font-medium text-gray-500">집행</span>
                         </div>
                       </dd>
                     </div>
-                    <div className="px-4 py-5 sm:p-6">
+                    <div className="px-4 py-5 sm:p-5">
                       <dt className="text-base font-semibold text-gray-900">해외출장비</dt>
                       <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
-                        <div className="flex items-baseline text-2xl font-semibold text-sky-600">
+                        <div className="flex items-baseline text-xl font-semibold text-sky-600">
                           {/* {`${(100*(1-project?.oteBalance/project?.otePlanned) || 0).toFixed(0)} %`} */}
                           {`${(project?.oteExeRate || 0)} %`}
                           <span className="ml-2 text-sm font-medium text-gray-500">집행</span>
                         </div>
                       </dd>
                     </div>
-                    <div className="px-4 py-5 sm:p-6">
+                    <div className="px-4 py-5 sm:p-5">
                       <dt className="text-base font-semibold text-gray-900">회의비</dt>
                       <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
-                        <div className="flex items-baseline text-2xl font-semibold text-sky-600">
+                        <div className="flex items-baseline text-xl font-semibold text-sky-600">
                           {/* {`${(100*(1-project?.meBalance/project?.mePlanned) || 0).toFixed(0)} %`} */}
                           {`${(project?.meExeRate || 0)} %`}
                           <span className="ml-2 text-sm font-medium text-gray-500">집행</span>
                         </div>
                       </dd>
                     </div>
-                    <div className="px-4 py-5 sm:p-6">
+                    <div className="px-4 py-5 sm:p-5">
                       <dt className="text-base font-semibold text-gray-900">수용비</dt>
                       <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
-                        <div className="flex items-baseline text-2xl font-semibold text-sky-600">
+                        <div className="flex items-baseline text-xl font-semibold text-sky-600">
                           {/* {`${(100*(1-project?.aeBalance/project?.aePlanned) || 0).toFixed(0)} %`} */}
                           {`${(project?.aeExeRate || 0)} %`}
                           <span className="ml-2 text-sm font-medium text-gray-500">집행</span>
@@ -254,27 +254,27 @@ export default function Summary() {
                   <dl className="rounded-lg bg-white shadow-lg grid grid-cols-2 sm:grid sm:grid-cols-6">
                     <div className="flex flex-col border-b border-gray-100 p-6 text-center sm:border-0 sm:border-r">
                       <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">재료비</dt>
-                      <dd className="order-1 text-2xl font-bold tracking-tight text-sky-600">{project.mpePlanned}</dd>
+                      <dd className="order-1 text-xl font-bold tracking-tight text-sky-600">{project.mpePlanned}</dd>
                     </div>
                     <div className="flex flex-col border-t border-b border-gray-100 p-6 text-center sm:border-0 sm:border-l sm:border-r">
                       <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">전산비</dt>
-                      <dd className="order-1 text-2xl font-bold tracking-tight text-sky-600">24/7</dd>
+                      <dd className="order-1 text-xl font-bold tracking-tight text-sky-600">24/7</dd>
                     </div>
                     <div className="flex flex-col border-t border-gray-100 p-6 text-center sm:border-0 sm:border-l">
                       <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">출장(내)</dt>
-                      <dd className="order-1 text-2xl font-bold tracking-tight text-sky-600">100k</dd>
+                      <dd className="order-1 text-xl font-bold tracking-tight text-sky-600">100k</dd>
                     </div>
                     <div className="flex flex-col border-t border-gray-100 p-6 text-center sm:border-0 sm:border-l">
                       <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">출장(외)</dt>
-                      <dd className="order-1 text-2xl font-bold tracking-tight text-sky-600">100k</dd>
+                      <dd className="order-1 text-xl font-bold tracking-tight text-sky-600">100k</dd>
                     </div>
                     <div className="flex flex-col border-t border-gray-100 p-6 text-center sm:border-0 sm:border-l">
                       <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">회의비</dt>
-                      <dd className="order-1 text-2xl font-bold tracking-tight text-sky-600">100k</dd>
+                      <dd className="order-1 text-xl font-bold tracking-tight text-sky-600">100k</dd>
                     </div>
                     <div className="flex flex-col border-t border-gray-100 p-6 text-center sm:border-0 sm:border-l">
                       <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">수용비</dt>
-                      <dd className="order-1 text-2xl font-bold tracking-tight text-sky-600">100k</dd>
+                      <dd className="order-1 text-xl font-bold tracking-tight text-sky-600">100k</dd>
                     </div>
                   </dl>
                 </div> */}

@@ -74,12 +74,12 @@ async function handler(
         aeBalance: (previousData?.aeBalance || 0) + (aePlanned - (previousData?.aePlanned || 0)),
       };
       const newExeRates = {
-        mpeExeRate: +(100*(1-newBalances?.mpeBalance/mpePlanned) || 0).toFixed(0),
-        cpeExeRate: +(100*(1-newBalances?.cpeBalance/cpePlanned) || 0).toFixed(0),
-        dteExeRate: +(100*(1-newBalances?.dteBalance/dtePlanned) || 0).toFixed(0),
-        oteExeRate: +(100*(1-newBalances?.oteBalance/otePlanned) || 0).toFixed(0),
-        meExeRate:  +(100*(1-newBalances?.meBalance/mePlanned) || 0).toFixed(0),
-        aeExeRate:  +(100*(1-newBalances?.aeBalance/aePlanned) || 0).toFixed(0),
+        mpeExeRate: +(100*(1-newBalances?.mpeBalance/mpePlanned) || 100).toFixed(0),
+        cpeExeRate: +(100*(1-newBalances?.cpeBalance/cpePlanned) || 100).toFixed(0),
+        dteExeRate: +(100*(1-newBalances?.dteBalance/dtePlanned) || 100).toFixed(0),
+        oteExeRate: +(100*(1-newBalances?.oteBalance/otePlanned) || 100).toFixed(0),
+        meExeRate:  +(100*(1-newBalances?.meBalance/mePlanned) || 100).toFixed(0),
+        aeExeRate:  +(100*(1-newBalances?.aeBalance/aePlanned) || 100).toFixed(0),
       }
 
       const updatedData = await client.project.update({

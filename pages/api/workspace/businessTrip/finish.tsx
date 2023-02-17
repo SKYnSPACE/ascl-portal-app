@@ -69,7 +69,7 @@ async function handler(
             where: { id: projectToUse.id },
             data: {
               dteBalance: projectToUse.dteBalance - (+totalExpense),
-              dteExeRate: +(100*(1-(projectToUse.dteBalance - (+totalExpense))/projectToUse.dtePlanned) || 0).toFixed(0),
+              dteExeRate: +(100*(1-(projectToUse.dteBalance - (+totalExpense))/projectToUse.dtePlanned) || 100).toFixed(0),
             },
           })
           break;
@@ -78,7 +78,7 @@ async function handler(
             where: { id: projectToUse.id },
             data: {
               oteBalance: projectToUse.oteBalance - (+totalExpense),
-              oteExeRate: +(100*(1-(projectToUse.oteBalance - (+totalExpense))/projectToUse.otePlanned) || 0).toFixed(0),
+              oteExeRate: +(100*(1-(projectToUse.oteBalance - (+totalExpense))/projectToUse.otePlanned) || 100).toFixed(0),
             },
           })
           break;
