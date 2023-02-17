@@ -201,7 +201,8 @@ export default function Home() {
   const [stats, setStats] = useState([
     { label: 'Requests waiting', value: 0, href: '/workspace/requests' },
     { label: 'Actions required', value: 0, href: '#' },
-    { label: 'Vacation days left', value: 0, href: '#' },]);
+    { label: 'Vacation days left', value: 0, href: '#' },
+  ]);
 
   const [recentRequests, setRecentRequests] = useState([]);
 
@@ -220,7 +221,8 @@ export default function Home() {
     let stats = [];
 
     if (user?.requests) {
-      stats.push({ label: 'Requests waiting', value: user.requests.length, href: '/workspace/requests' })
+      stats.push({ label: 'Workspace Requests', value: user.requests.filter(request => +request.kind == 30)?.length, href: '/workspace/requests' })
+      stats.push({ label: 'Review Requests', value: user.requests.filter(request => +request.kind == 90)?.length, href: '/seminar/review' })
 
       let recentRequests = [];
 
@@ -266,7 +268,7 @@ export default function Home() {
 
     stats.push(
       { label: 'Actions required', value: 0, href: '#' },
-      { label: 'Vacation days left', value: 0, href: '#' },
+      // { label: 'Vacation days left', value: 0, href: '#' },
     )
     setStats(stats)
   }, [user]);
