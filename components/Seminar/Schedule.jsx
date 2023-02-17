@@ -127,6 +127,7 @@ function TimeSlots({ day, className, setSelectedSeminar, setIsModalOpen }) {
         <li
           key={timeSlot?.id}
           aria-label={`${timeSlot?.seminar?.presentedBy?.name} talking about ${timeSlot?.seminar?.title} at ${timeSlot.startsAt} - ${timeSlot.endsAt} KST`}
+          className="group"
         >
           {timeSlotIndex > 0 && (
             <div className="mx-auto mb-8 h-px w-48 bg-indigo-500/10" />
@@ -135,7 +136,7 @@ function TimeSlots({ day, className, setSelectedSeminar, setIsModalOpen }) {
             "text-lg font-semibold tracking-tight")}>
             {timeSlot?.isBreak ? "Break Time" : timeSlot?.seminar?.presentedBy?.name ? timeSlot?.seminar?.presentedBy?.name : "EMPTY"}
           </h4>
-          <a href='#' className="block hover:cursor-pointer"
+          <a href='#' className="block hover:cursor-pointer hover:bg-yellow-100"
             onClick={(e) => {
               e.preventDefault();
               setSelectedSeminar(timeSlot?.seminar?.alias);
