@@ -28,6 +28,22 @@ function getInitials(name) {
   return initials.join('');
 }
 
+const Semester = {
+  spring: 1,
+  summer: 2,
+  fall: 3,
+  winter: 4,
+}
+
+function semesterAliasToString(semester){
+  if(!semester) return null;
+  const year = semester.toString().slice(0,4);
+  const season = semester.toString().slice(-2);
+  const seasonString = Object.keys(Semester).find(key => Semester[key] === +season)
+  // console.log(year + ' ' + Object.keys(Semester).find(key => Semester[key] === +season))
+  return year + ' ' + '-' + ' ' + seasonString?.charAt(0).toUpperCase() + seasonString?.slice(1);
+}
+
 
 export default function Progress() {
   const { data, error, isLoading, mutate } = useSWR(`/api/seminar/progress`);
@@ -77,7 +93,7 @@ export default function Progress() {
       <div className="relative z-10 pb-4">
         <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-4xl lg:pr-24">
           <h3 className="font-display text-xl text-center font-medium tracking-tighter text-sky-600 sm:text-xl">
-            2022 - Winter
+          {semesterAliasToString(data?.currentSemester?.alias)}
           </h3>
           <h2 className="font-display text-3xl text-center font-medium tracking-tighter text-gray-800 sm:text-3xl">
             Lab. Seminar Progress

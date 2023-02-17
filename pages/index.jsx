@@ -165,6 +165,29 @@ function getInitials(name) {
   return initials.join('');
 }
 
+function getCategory(kind){
+  switch(+kind){
+    case 30:
+      return 'purchase'
+    case 35:
+      return 'business-trip'
+    case 90:
+      return 'seminar'
+
+  }
+}
+
+function getHref(kind){
+  switch(+kind){
+    case 30:
+      return '/workspace/requests'
+    case 35:
+      return '/workspace/requests'
+    case 90:
+      return '/seminar/review'
+  }
+}
+
 export default function Home() {
   const localDatabase = useContext(LocalDatabase);
   // const user = useContext(LocalDatabase).user;
@@ -180,15 +203,65 @@ export default function Home() {
     { label: 'Actions required', value: 0, href: '#' },
     { label: 'Vacation days left', value: 0, href: '#' },]);
 
-  
+  const [recentRequests, setRecentRequests] = useState([]);
+
+  const fetchAvatar = async (userId) => {
+    const res = await fetch(`/api/users/${userId}`).then((response) => {
+      return response.json();
+    }).then((data) => {
+      if (data.ok && data.selectedUser)
+        return data.selectedUser.avatar;
+    });
+  }
+
   // const closeAnnouncementModal = () => { setIsAnnouncementModalOpen(false) }
 
-  useEffect(()=>{
+  useEffect(() => {
     let stats = [];
 
-    if(user?.requests)
-    {
-      stats.push({ label: 'Requests waiting', value:user.requests.length, href: '/workspace/requests' })
+    if (user?.requests) {
+      stats.push({ label: 'Requests waiting', value: user.requests.length, href: '/workspace/requests' })
+
+      let recentRequests = [];
+
+      user?.requests?.map(async (request) => {
+        const requesterId = +request.payload1;
+        
+          const res = await fetch(`/api/users/${requesterId}`).then((response) => {
+            return response.json();
+          }).then((data) => {
+            if (data.ok && data.selectedUser){
+              recentRequests.push({
+                id: +request.id,
+                name: request.payload2,
+                tag: getCategory(request.kind) + '-' + request.payload6,
+                // imageUrl:
+                //   'https://avatars.githubusercontent.com/u/25346867?v=4',
+                href: getHref(request.kind),
+                imageUrl: data.selectedUser.avatar,
+              },
+              )
+              setRecentRequests(recentRequests);
+            }
+          });
+        })
+
+
+      //   recentRequests.push({
+      //     id: +request.id,
+      //     name: 'Junwoo Park',
+      //     tag: 'seminar-02-221221-001',
+      //     imageUrl:
+      //       'https://avatars.githubusercontent.com/u/25346867?v=4',
+      //     href: '#',
+      //     etc: fetchAvatar(+request.payload1),
+      //   },
+      //   )
+      // })
+
+      
+
+      // console.log(recentRequests)
     }
 
     stats.push(
@@ -196,7 +269,11 @@ export default function Home() {
       { label: 'Vacation days left', value: 0, href: '#' },
     )
     setStats(stats)
-  },[user]);
+  }, [user]);
+
+  useEffect(() => {
+    console.log(recentRequests)
+  }, [recentRequests])
 
   return (
     <>
@@ -248,8 +325,8 @@ export default function Home() {
                         <div key={stat.label} className="px-6 py-5 text-center text-sm font-medium">
                           <a href={stat.href} className="">
                             <span className="text-gray-900">{stat.value}</span>
-                          {' '}
-                          <span className="text-gray-600">{stat.label}</span>
+                            {' '}
+                            <span className="text-gray-600">{stat.label}</span>
                           </a>
                         </div>
                       ))}
@@ -271,7 +348,7 @@ export default function Home() {
                           actionIdx === 1 ? 'sm:rounded-tr-lg' : '',
                           actionIdx === actions.length - 2 ? 'sm:rounded-bl-lg' : '',
                           actionIdx === actions.length - 1 ? 'rounded-bl-lg rounded-br-lg sm:rounded-bl-none' : '',
-                          action.onDev? 'bg-gray-100':'bg-white',
+                          action.onDev ? 'bg-gray-100' : 'bg-white',
                           'relative group p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-cyan-500'
                         )}
                       >
@@ -289,11 +366,11 @@ export default function Home() {
                         <div className="mt-8">
                           <h3 className="text-lg font-medium">
                             <a href={action.href} className={classNames(
-                              action.onDev?'cursor-not-allowed':'',
+                              action.onDev ? 'cursor-not-allowed' : '',
                               "focus:outline-none"
                             )} onClick={(evt) => {
                               evt.preventDefault();
-                              if(action.onDev) return;
+                              if (action.onDev) return;
                               setIsModalOpen(action.id);
                             }}>
                               {/* Extend touch target to entire panel */}
@@ -333,14 +410,14 @@ export default function Home() {
                       <h2 className="text-base font-medium text-gray-900" id="announcements-title">
                         Announcements
                       </h2>
-                      <div className="mt-6 flow-root">
+
+                      {/* <div className="mt-6 flow-root">
                         <ul role="list" className="-my-5 divide-y divide-gray-200">
                           {announcements.map((announcement) => (
                             <li key={announcement.id} className="py-5">
                               <div className="relative focus-within:ring-2 focus-within:ring-cyan-500">
                                 <h3 className="text-sm font-semibold text-gray-800">
                                   <a href={announcement.href} className="hover:underline focus:outline-none">
-                                    {/* Extend touch target to entire panel */}
                                     <span className="absolute inset-0" aria-hidden="true" />
                                     {announcement.title}
                                   </a>
@@ -350,7 +427,8 @@ export default function Home() {
                             </li>
                           ))}
                         </ul>
-                      </div>
+                      </div> */}
+
                       <div className="mt-6">
                         <a
                           href="#"
@@ -359,6 +437,7 @@ export default function Home() {
                           View all
                         </a>
                       </div>
+                      
                     </div>
                   </div>
                 </section>
@@ -373,10 +452,19 @@ export default function Home() {
                       <div className="mt-6 flow-root">
                         <ul role="list" className="-my-5 divide-y divide-gray-200">
                           {recentRequests.map((person) => (
-                            <li key={person.tag} className="py-4">
+                            <li key={person.id} className="py-4">
                               <div className="flex items-center space-x-4">
                                 <div className="flex-shrink-0">
-                                  <img className="h-8 w-8 rounded-full" src={person.imageUrl} alt="" />
+                                  {/* <img className="h-8 w-8 rounded-full" src={person.imageUrl} alt="" /> */}
+
+                                  <div className="h-8 w-8 rounded-full flex justify-center items-center bg-gray-400 text-lg text-white">
+                              {person?.imageUrl ? <img className="rounded-full" src={person?.imageUrl} alt="" />
+                                : <span>{getInitials(person?.name)}</span>}
+                            </div>
+
+
+
+
                                 </div>
                                 <div className="min-w-0 flex-1">
                                   <p className="truncate text-sm font-medium text-gray-900">{person.name}</p>
@@ -395,14 +483,14 @@ export default function Home() {
                           ))}
                         </ul>
                       </div>
-                      <div className="mt-6">
+                      {/* <div className="mt-6">
                         <a
                           href="#"
                           className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
                         >
                           View all
                         </a>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </section>
@@ -418,7 +506,7 @@ export default function Home() {
           <BusinessTripModal props={{ action: actions[4], isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage }} />
           <SteppingoutModal props={{ action: actions[5], isModalOpen, setIsModalOpen }} />
 
-        
+
           <Notification props={{ message, isNotify, setIsNotify }} />
 
         </main>
