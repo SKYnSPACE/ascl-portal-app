@@ -25,6 +25,7 @@ async function handler(
         seminar:{
           select:{
           title: true,
+          alias: true,
           presentedBy:{
             select:{
               name: true,

@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { format, parseISO } from "date-fns";
 
 import { Tab } from '@headlessui/react'
+import ProgressDetailsModal from './Modals/ProgressDetailsModal';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -27,9 +28,9 @@ const Semester = {
   winter: 4,
 }
 
-function semesterAliasToString(semester){
-  if(!semester) return null;
-  const year = semester.toString().slice(0,4);
+function semesterAliasToString(semester) {
+  if (!semester) return null;
+  const year = semester.toString().slice(0, 4);
   const season = semester.toString().slice(-2);
   const seasonString = Object.keys(Semester).find(key => Semester[key] === +season)
   // console.log(year + ' ' + Object.keys(Semester).find(key => Semester[key] === +season))
@@ -37,7 +38,7 @@ function semesterAliasToString(semester){
 }
 
 
-function ScheduleTabbed({schedule}) {
+function ScheduleTabbed({ schedule }) {
   let [tabOrientation, setTabOrientation] = useState('horizontal')
 
   useEffect(() => {
@@ -113,7 +114,7 @@ function DaySummary({ day }) {
   )
 }
 
-function TimeSlots({ day, className }) {
+function TimeSlots({ day, className, setSelectedSeminar, setIsModalOpen }) {
   return (
     <ol
       role="list"
@@ -130,15 +131,21 @@ function TimeSlots({ day, className }) {
           {timeSlotIndex > 0 && (
             <div className="mx-auto mb-8 h-px w-48 bg-indigo-500/10" />
           )}
-          <h4 className={classNames( timeSlot?.isBreak ? "text-sky-600" :"text-slate-900",
+          <h4 className={classNames(timeSlot?.isBreak ? "text-sky-600" : "text-slate-900",
             "text-lg font-semibold tracking-tight")}>
             {timeSlot?.isBreak ? "Break Time" : timeSlot?.seminar?.presentedBy?.name ? timeSlot?.seminar?.presentedBy?.name : "EMPTY"}
           </h4>
-          
-            <p className="mt-1 tracking-tight text-slate-700">
-            {timeSlot?.isBreak ? timeSlot?.note : timeSlot?.seminar?.title ? timeSlot?.seminar?.title : "--------"}
+          <a href='#' className="block hover:cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault();
+              setSelectedSeminar(timeSlot?.seminar?.alias);
+              setIsModalOpen(true);
+            }}
+          >
+            <p className="mt-1 tracking-tight text-slate-700 ">
+              {timeSlot?.isBreak ? timeSlot?.note : timeSlot?.seminar?.title ? timeSlot?.seminar?.title : "--------"}
             </p>
-          
+          </a>
           <p className="mt-1 font-mono text-sm text-slate-500">
             <time dateTime={`${day.isoDate}T${timeSlot.startsAt}-08:00`}>
               {timeSlot.startsAt}
@@ -155,13 +162,13 @@ function TimeSlots({ day, className }) {
   )
 }
 
-function ScheduleStatic({schedule}) {
+function ScheduleStatic({ schedule, setSelectedSeminar, setIsModalOpen }) {
   return (
     <div className="hidden lg:grid lg:grid-cols-3 lg:gap-x-8">
       {schedule?.map((day) => (
         <section key={day.isoDate}>
           <DaySummary day={day} />
-          <TimeSlots day={day} className="mt-4" />
+          <TimeSlots day={day} setSelectedSeminar={setSelectedSeminar} setIsModalOpen={setIsModalOpen} className="mt-4" />
         </section>
       ))}
     </div>
@@ -171,6 +178,9 @@ function ScheduleStatic({schedule}) {
 export function Schedule() {
   const { data: currentSlotsData, error: getCurrentSlotsError, isLoading: getCurrentSlotsLoading, mutate } = useSWR('/api/slot/current');
   const [schedule, setScehdule] = useState([]);
+
+  const [selectedSeminar, setSelectedSeminar] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (currentSlotsData?.slots) {
@@ -210,8 +220,8 @@ export function Schedule() {
 
         {schedule.length != 0 ?
           <div className="relative">
-            <ScheduleTabbed schedule={schedule} />
-            <ScheduleStatic schedule={schedule} />
+            <ScheduleTabbed schedule={schedule} setSelectedSeminar={setSelectedSeminar} setIsModalOpen={setIsModalOpen}/>
+            <ScheduleStatic schedule={schedule} setSelectedSeminar={setSelectedSeminar} setIsModalOpen={setIsModalOpen}/>
           </div>
           :
           <div className="relative">
@@ -226,6 +236,8 @@ export function Schedule() {
           </div>
         }
       </div>
+
+      <ProgressDetailsModal props={{ isModalOpen, setIsModalOpen, selectedSeminar }} />
     </section>
   )
 }
