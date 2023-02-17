@@ -99,7 +99,7 @@ async function handler(
       stageCounts.map((item) => {
         progresses.push({ stage: item.currentStage, count: item._count.currentStage })
       })
-      console.log(progresses)
+      // console.log(progresses)
     }
 
     // console.log(reviews)
