@@ -277,8 +277,8 @@ export default function BusinessTripModal({ props }) {
                 {...register("details", {
                   required: "Details field is empty.",
                   maxLength: {
-                    message: "Maximum length of the details is 1000.",
-                    value: 1000
+                    message: "Maximum length of the details is 500.",
+                    value: 500
                   }
                 })}
                 type="text"
@@ -289,6 +289,7 @@ export default function BusinessTripModal({ props }) {
                 className="my-1 shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full border-gray-300 rounded-md text-sm"
                 placeholder="Detailed information regarding the Business Trip. Purpose of this trip? Anything to note? etc.?"
               />
+              <p className="text-gray-500 text-xs text-right">({watch("details")?.length}/500)</p>
             </div>
 
             <div className="w-full">

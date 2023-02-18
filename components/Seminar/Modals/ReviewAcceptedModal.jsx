@@ -22,7 +22,7 @@ export default function ReviewAcceptedModal({ props }) {
 
   const [postReview, { loading: postReviewLoading, data: postReviewData, error: postReviewError }] = useMutation("/api/seminar/review");
 
-  const { register, control, handleSubmit, reset } = useForm({
+  const { register, control, watch, handleSubmit, reset } = useForm({
     defaultValues: {
 
       clarity: 1,
@@ -184,7 +184,9 @@ export default function ReviewAcceptedModal({ props }) {
                   </div>
 
                   <div className="py-2 sm:grid sm:grid-cols-4 sm:gap-2 sm:px-4 sm:py-3">
-                    <dt className="text-sm font-medium text-gray-500">Comments</dt>
+                    <dt className="text-sm font-medium text-gray-500">Comments
+                    <p>({watch("comments")?.length}/500)</p>
+                    </dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:col-span-3 sm:mt-0">
 
                       <div className="mt-1 sm:col-span-3 sm:mt-0">
@@ -226,7 +228,7 @@ export default function ReviewAcceptedModal({ props }) {
                             <p className="mx-1 text-sm text-gray-500">Creativity</p>
                             <RadioGroupStars name="creativity" control={control} items={[1, 2, 3, 4, 5]} />
                             <span className="absolute hidden group-hover:flex -left-20 -top-2 -translate-y-full w-48 px-2 py-1 bg-gray-700 rounded-lg text-center text-white text-sm after:content-[''] after:absolute after:left-1/2 after:top-[100%] after:-translate-x-1/2 after:border-8 after:border-x-transparent after:border-b-transparent after:border-t-gray-700">
-                              Does the content of the presentation contain original or creativeideas?
+                              Does the content of the presentation contain original or creative ideas?
                             </span>
                           </div>
                           <div className="group relative">

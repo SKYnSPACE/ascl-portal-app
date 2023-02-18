@@ -52,13 +52,21 @@ async function handler(
         alias: alias.toString(),
       },
       include: {
-        reviews: true,
+        reviews: {
+          include: {
+            writtenBy: {
+              select: {
+                name: true,
+              }
+            },
+          },
+        },
         presentedBy: true,
       }
     });
 
     const ratings = await client.review.aggregate({
-      where:{
+      where: {
         semesterId: + currentSemester.id,
         seminarId: + currentSeminar.id,
       },
@@ -87,15 +95,15 @@ async function handler(
       });
     }
 
-    else { 
-    const currentSeminarWithoutFiles = exclude(currentSeminar, ['draftFile', 'finalFile'])
+    else {
+      const currentSeminarWithoutFiles = exclude(currentSeminar, ['draftFile', 'finalFile'])
 
-    return res.json({
-      ok: true,
-      currentSeminar: currentSeminarWithoutFiles,
-      ratings,
-    });
-   }
+      return res.json({
+        ok: true,
+        currentSeminar: currentSeminarWithoutFiles,
+        ratings,
+      });
+    }
 
 
 

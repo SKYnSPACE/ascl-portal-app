@@ -38,7 +38,7 @@ function semesterAliasToString(semester) {
 }
 
 
-function ScheduleTabbed({ schedule }) {
+function ScheduleTabbed({ schedule, setSelectedSeminar, setIsModalOpen }) {
   let [tabOrientation, setTabOrientation] = useState('horizontal')
 
   useEffect(() => {
@@ -93,7 +93,7 @@ function ScheduleTabbed({ schedule }) {
             key={day.isoDate}
             className="[&:not(:focus-visible)]:focus:outline-none"
           >
-            <TimeSlots day={day} />
+            <TimeSlots day={day} setSelectedSeminar={setSelectedSeminar} setIsModalOpen={setIsModalOpen} />
           </Tab.Panel>
         ))}
       </Tab.Panels>
