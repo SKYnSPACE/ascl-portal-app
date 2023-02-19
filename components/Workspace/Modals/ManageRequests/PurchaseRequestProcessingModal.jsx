@@ -209,7 +209,7 @@ export default function PurchaseRequestProcessingModal({ props }) {
                   </div>
                   <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
                     <dt className="text-sm font-medium text-gray-500">Inspection(검수서류)</dt>
-                    {data?.relatedAction?.status == 1 ?
+                    {data?.relatedAction?.status >= 1 ?
                     <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0 flex itemc-center justify-between">구입사실 및 검사확인서
 
                       <a href={`/exports/${data?.relatedAction?.payload3}-${data?.relatedAction?.id}.docx`}
