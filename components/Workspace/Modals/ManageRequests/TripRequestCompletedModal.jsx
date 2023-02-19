@@ -80,7 +80,7 @@ export default function TripRequestCompletedModal({ props }) {
       if (data.relatedAction.status == 2) {
         feed.push({
           id: 2,
-          content: `Completed business trip: ${data.relatedAction.payload11} / ${(+data.relatedAction.payload9).toLocaleString()} KRW`,
+          content: `Completed business trip: ${data.relatedAction.payload11} / ${(+data.relatedAction.payload7).toLocaleString()} KRW`,
           user: `${selectedRequest.name}`,
           href: '#',
           date: `${format(parseISO(data.relatedAction.completedAt ? data.relatedAction.completedAt : '1990-02-26'), "LLL dd, yyyy")}`,
