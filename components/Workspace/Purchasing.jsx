@@ -421,7 +421,15 @@ export default function Purchasing() {
                                       setIsModalOpen({ kind: +action.kind, status: action.status });
                                     }}>
                                     Proceed
-                                  </a> : <></>}
+                                  </a> : 
+                                  action.status == 'processing' ?
+                                  <a href={`/exports/${action.projectAlias}-${action.id}.docx`}
+                                  className="font-medium text-sky-600 hover:text-sky-500"
+                                  download={`구입사실 및 검사(수령)확인서-${action.item}-자동생성.docx`}>
+                                  Inspection
+                                </a>
+                                  :
+                                  <></>}
                               </td>
                             </tr>
                           ))

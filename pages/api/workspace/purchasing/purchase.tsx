@@ -19,7 +19,11 @@ import withHandler, { ResponseType } from "../../../../libs/backend/withHandler"
 import client from "../../../../libs/backend/client";
 import { withApiSession } from "../../../../libs/backend/withSession";
 
-import { postMail } from "../../../../libs/backend/postMail";
+import PizZip from "pizzip";
+import Docxtemplater from 'docxtemplater';
+import fs from 'fs';
+import { mkdir, stat } from "fs/promises";
+import path from 'path';
 
 const PayMethods = {
   C: "카드",
@@ -58,9 +62,13 @@ async function handler(
 
 //TODO: user.id !== relatedRequest.user.id(payload1) --> Not allowed!
 
+
+
       const projectToUse = await client.project.findUnique({
         where: { alias: selectedAction.projectAlias }
       })
+
+      // console.log(projectToUse.mpePlanned == 0 ? 100 : 100*(1-(projectToUse.mpeBalance - (+totalPrice))/projectToUse.mpePlanned) || 100);
 
       let updatedProject = null;
       switch (selectedAction.category) {
@@ -69,7 +77,7 @@ async function handler(
             where: { id: projectToUse.id },
             data: {
               mpeBalance: projectToUse.mpeBalance - (+totalPrice),
-              mpeExeRate: +(100*(1-(projectToUse.mpeBalance - (+totalPrice))/projectToUse.mpePlanned) || 100).toFixed(0),
+              mpeExeRate: projectToUse.mpePlanned == 0 ? 100 : +(100*(1-(projectToUse.mpeBalance - (+totalPrice))/projectToUse.mpePlanned) || 100).toFixed(0),
             },
           })
           break;
@@ -78,7 +86,7 @@ async function handler(
             where: { id: projectToUse.id },
             data: {
               cpeBalance: projectToUse.cpeBalance - (+totalPrice),
-              cpeExeRate: +(100*(1-(projectToUse.cpeBalance - (+totalPrice))/projectToUse.cpePlanned) || 100).toFixed(0),
+              cpeExeRate: projectToUse.cpePlanned == 0 ? 100 : +(100*(1-(projectToUse.cpeBalance - (+totalPrice))/projectToUse.cpePlanned) || 100).toFixed(0),
             },
           })
           break;
@@ -87,7 +95,7 @@ async function handler(
             where: { id: projectToUse.id },
             data: {
               meBalance: projectToUse.meBalance - (+totalPrice),
-              meExeRate: +(100*(1-(projectToUse.meBalance - (+totalPrice))/projectToUse.mePlanned) || 100).toFixed(0),
+              meExeRate: projectToUse.mePlanned == 0 ? 100 : +(100*(1-(projectToUse.meBalance - (+totalPrice))/projectToUse.mePlanned) || 100).toFixed(0),
             },
           })
           break;
@@ -96,7 +104,7 @@ async function handler(
             where: { id: projectToUse.id },
             data: {
               aeBalance: projectToUse.aeBalance - (+totalPrice),
-              aeExeRate: +(100*(1-(projectToUse.aeBalance - (+totalPrice))/projectToUse.aePlanned) || 100).toFixed(0),
+              aeExeRate: projectToUse.aePlanned == 0 ? 100 : +(100*(1-(projectToUse.aeBalance - (+totalPrice))/projectToUse.aePlanned) || 100).toFixed(0),
             },
           })
           break;
@@ -112,6 +120,47 @@ async function handler(
           due: dueDate,
         },
       })
+
+
+
+      const content = fs.readFileSync(
+      path.join(process.env.ROOT_DIR || process.cwd(),
+      `/public/documents`,`InspectionSheet.docx`),
+      "binary"
+      );
+      const zip = new PizZip(content);
+      const doc = new Docxtemplater (zip, {paragraphLoop:true, linebreaks:true,});
+      let today = new Date();
+      doc.render({
+        year:today.getFullYear()?.toString(),
+        month:(today.getMonth() + 1).toString(),
+        day:today.getDate()?.toString(),
+        purchasedAt: purchasedFrom?.toString(),
+        totalPrice: totalPrice?.toLocaleString(),
+        projectTitle: projectToUse?.title?.toString(),
+      });
+      const buf = doc.getZip().generate({
+        type: "nodebuffer",
+        compression: "DEFLATE",
+      });
+
+
+      const uploadDir = path.join(process.env.ROOT_DIR || process.cwd(),`/public/exports`);
+      
+      try {
+        await stat(uploadDir);
+      } catch (e: any) {
+        if (e.code === "ENOENT") {
+          await mkdir(uploadDir, { recursive: true });
+        } else {
+          console.error(e);
+          return;
+        }
+      }
+
+      fs.writeFileSync(path.join(process.env.ROOT_DIR || process.cwd(),
+      `/public/exports`,`${selectedAction.projectAlias}-${selectedAction.id}.docx`), buf);
+
 
       return res.json({
         ok: true,

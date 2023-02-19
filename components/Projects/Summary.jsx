@@ -168,7 +168,7 @@ export default function Summary() {
 
 
                   <div className="mt-6 grid grid-cols-4 gap-6">
-                    <div className="col-span-4 sm:col-span-2 whitespace-pre-wrap">
+                    <div className="col-span-4 sm:col-span-4 whitespace-pre-wrap">
                       <p>{project.note}</p>
                     </div>
 

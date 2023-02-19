@@ -37,8 +37,8 @@ const Categories = {
 
 export default function PurchaseRequestProcessingModal({ props }) {
   const { modal, isModalOpen, setIsModalOpen, isNotify, setIsNotify, message, setMessage, selectedRequest } = { ...props };
-  const { data, mutate, error, isLoading } = useSWR(selectedRequest?.relatedAction?.id ? `/api/action/${selectedRequest.relatedAction.id}`:null);
-  
+  const { data, mutate, error, isLoading } = useSWR(selectedRequest?.relatedAction?.id ? `/api/action/${selectedRequest.relatedAction.id}` : null);
+
   const [completeRequest, { loading: completeRequestLoading, data: completeRequestData, error: completeRequestError }] = useMutation("/api/workspace/purchasing/complete");
 
   const [feed, setFeed] = useState([
@@ -100,14 +100,14 @@ export default function PurchaseRequestProcessingModal({ props }) {
   }, [data]);
 
   useEffect(() => {
-    if (completeRequestData?.ok){
+    if (completeRequestData?.ok) {
       setMessage(
         { type: 'success', title: 'Successfully Completed!', details: 'Wait for the page reload.', }
       )
       setIsNotify(true);
       setIsModalOpen(false);
     }
-    if (completeRequestData?.error){
+    if (completeRequestData?.error) {
       switch (completeRequestData.error?.code) {
         case 'P1017':
           console.log("Connection Lost.")
@@ -125,7 +125,7 @@ export default function PurchaseRequestProcessingModal({ props }) {
           return;
         default:
           setMessage(
-            { type: 'fail',  title: `${completeRequestData.error.code}`, details: `${completeRequestData.error.message}`, }
+            { type: 'fail', title: `${completeRequestData.error.code}`, details: `${completeRequestData.error.message}`, }
           )
           setIsNotify(true);
           return;
@@ -206,6 +206,17 @@ export default function PurchaseRequestProcessingModal({ props }) {
                   <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
                     <dt className="text-sm font-medium text-gray-500">Due(처리기한)</dt>
                     <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{selectedRequest?.date}</dd>
+                  </div>
+                  <div className="py-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-4">
+                    <dt className="text-sm font-medium text-gray-500">Inspection(검수서류)</dt>
+                    <dd className="mt-0 text-sm text-gray-900 sm:col-span-2 sm:mt-0 flex itemc-center justify-between">구입사실 및 검사확인서
+
+                      <a href={`/exports/${data.relatedAction.payload3}-${data.relatedAction.id}.docx`}
+                        className="font-medium text-sky-600 hover:text-sky-500"
+                        download={`구입사실 및 검사(수령)확인서-${selectedRequest?.name}-자동생성.docx`}>
+                        Download
+                      </a>
+                    </dd>
                   </div>
 
                 </dl>
