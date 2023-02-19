@@ -163,7 +163,7 @@ export default function ProgressDetailsModal({ props }) {
                               <div className="w-full bg-gray-200 rounded h-2.5  mr-2">
                                 <div className="bg-sky-600 h-2.5 rounded " style={{ width: `${20 * data?.ratings?._avg?.rating1}%`, }}></div>
                               </div>
-                              <span className="text-sm font-medium text-gray-500 ">{data?.ratings?._avg?.rating1}</span>
+                              <span className="text-sm font-medium text-gray-500 ">{data?.ratings?._avg?.rating1?.toFixed(1)}</span>
                             </dd>
                           </dl>
                           <dl>
@@ -177,7 +177,7 @@ export default function ProgressDetailsModal({ props }) {
                               <div className="w-full bg-gray-200 rounded h-2.5  mr-2">
                                 <div className="bg-sky-600 h-2.5 rounded " style={{ width: `${20 * data?.ratings?._avg?.rating2}%`, }}></div>
                               </div>
-                              <span className="text-sm font-medium text-gray-500 ">{data?.ratings?._avg?.rating2}</span>
+                              <span className="text-sm font-medium text-gray-500 ">{data?.ratings?._avg?.rating2?.toFixed(1)}</span>
                             </dd>
                           </dl>
                           <dl>
@@ -191,7 +191,7 @@ export default function ProgressDetailsModal({ props }) {
                               <div className="w-full bg-gray-200 rounded h-2.5  mr-2">
                                 <div className="bg-sky-600 h-2.5 rounded " style={{ width: `${20 * data?.ratings?._avg?.rating3}%`, }}></div>
                               </div>
-                              <span className="text-sm font-medium text-gray-500 ">{data?.ratings?._avg?.rating3}</span>
+                              <span className="text-sm font-medium text-gray-500 ">{data?.ratings?._avg?.rating3?.toFixed(1)}</span>
                             </dd>
                           </dl>
                           <dl>
@@ -205,7 +205,7 @@ export default function ProgressDetailsModal({ props }) {
                               <div className="w-full bg-gray-200 rounded h-2.5  mr-2">
                                 <div className="bg-sky-600 h-2.5 rounded " style={{ width: `${20 * data?.ratings?._avg?.rating4}%`, }}></div>
                               </div>
-                              <span className="text-sm font-medium text-gray-500 ">{data?.ratings?._avg?.rating4}</span>
+                              <span className="text-sm font-medium text-gray-500 ">{data?.ratings?._avg?.rating4?.toFixed(1)}</span>
                             </dd>
                           </dl>
                           <dl>
@@ -219,7 +219,7 @@ export default function ProgressDetailsModal({ props }) {
                               <div className="w-full bg-gray-200 rounded h-2.5  mr-2">
                                 <div className="bg-sky-600 h-2.5 rounded " style={{ width: `${20 * data?.ratings?._avg?.rating5}%`, }}></div>
                               </div>
-                              <span className="text-sm font-medium text-gray-500 ">{data?.ratings?._avg?.rating5}</span>
+                              <span className="text-sm font-medium text-gray-500 ">{data?.ratings?._avg?.rating5?.toFixed(1)}</span>
                             </dd>
                           </dl>
 
