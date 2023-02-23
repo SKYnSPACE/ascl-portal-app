@@ -35,6 +35,7 @@ export default function EditSlotModal({ props }) {
       slotId: null,
     },
   });
+  const noteLength = watch("note")?.length;
 
   const { data: currentSemesterData, error: getCurrentSemesterError, isLoading: getCurrentSemesterLoading } = useSWR('/api/semester/current');
   const { data: currentSlotsData, error: getCurrentSlotsError, isLoading: getCurrentSlotsLoading, mutate } = useSWR('/api/slot/current');
@@ -238,21 +239,23 @@ export default function EditSlotModal({ props }) {
             </div>
 
             <div className="w-full mt-2">
-              <label htmlFor="note" className="text-sm">
-                Note (optional)
+              <label htmlFor="note" className="text-sm flex">
+                Note (optional) {noteLength > 180 ? <span className="flex-1 text-right text-red-500">[{noteLength}/180]</span> : <span className="flex-1 text-right">[{noteLength}/180]</span>}
               </label>
               <input
                 {...register("note", {
                   maxLength: {
-                    message: "The Note must be less than 50 chars.",
-                    value: 50,
+                    message: "The Note must be less than 180 chars.",
+                    value: 180,
                   },
                 })}
                 type="text"
                 name="note"
                 id="note"
                 placeholder="Side note here (e.g. Lunch menu)"
-                className="my-1 shadow-sm focus:ring-cyan-500 focus:border-cyan-500 block w-full border-gray-300 rounded-md"
+                
+                className={classNames(noteLength > 180? "bg-red-100 border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-300 focus:border-sky-500 focus:ring-sky-500",
+                "block w-full my-1 shadow-sm rounded-md")}
               />
             </div>
 
