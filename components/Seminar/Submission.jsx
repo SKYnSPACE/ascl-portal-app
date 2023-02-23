@@ -107,6 +107,10 @@ export default function Submission() {
   const { data: seminarData, error: seminarDataError, isLoading: seminarDataIsLoading, mutate: mutateSeminarData } = useSWR(`/api/seminar`);
 
   const { register, setValue, watch, handleSubmit } = useForm();
+  const titleLength = watch("title")?.length;
+  const abstractLength = watch("abstract")?.length;
+  const tagsLength = watch("tags")?.length;
+
   const [saveSubmission, { loading: submissionLoading, data: submissionData, error: submissionError }] = useMutation("/api/seminar/save");
   const [saveDraft, { loading: saveDraftLoading, data: saveDraftData, error: saveDraftError }] = useMutation("/api/seminar/saveDraft");
   const [saveFinal, { loading: saveFinalLoading, data: saveFinalData, error: saveFinalError }] = useMutation("/api/seminar/saveFinal");
@@ -468,7 +472,7 @@ export default function Submission() {
                     {waiver ? <></>:<>
                     <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                       <label htmlFor="title" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                        Title
+                        Title {titleLength > 180 ? <span className="text-red-500">({titleLength}/180)</span> : <span>({titleLength}/180)</span>}
                       </label>
                       <div className="mt-1 sm:col-span-2 sm:mt-0">
                         <div className="flex max-w-xl rounded-md shadow-sm">
@@ -479,8 +483,8 @@ export default function Submission() {
                             {...register("title", {
                               required: "Title is required.",
                               maxLength: {
-                                message: "Maximum length of the title is 100.",
-                                value: 100
+                                message: "Maximum length of the title is 180.",
+                                value: 180
                               }
                             })
                             }
@@ -489,7 +493,9 @@ export default function Submission() {
                             type="text"
                             required
                             disabled={seminarData?.mySeminarSubmission?.currentStage >= 3}
-                            className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 focus:border-sky-500 focus:ring-sky-500 sm:text-sm disabled:bg-gray-100"
+                            className={classNames(titleLength > 180? "bg-red-100 border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-300 focus:border-sky-500 focus:ring-sky-500",
+                              "block w-full min-w-0 flex-1 rounded-none rounded-r-md sm:text-sm disabled:bg-gray-100")}
+                            defaultValue={''}
                           />
                         </div>
                       </div>
@@ -497,7 +503,7 @@ export default function Submission() {
 
                     <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                       <label htmlFor="abstract" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                        Abstract <span>({watch("abstract")?.length}/500)</span>
+                      Abstract {abstractLength > 500 ? <span className="text-red-500">({abstractLength}/500)</span> : <span>({abstractLength}/500)</span>}
 
                       </label>
                       <div className="mt-1 sm:col-span-2 sm:mt-0">
@@ -515,7 +521,8 @@ export default function Submission() {
                           rows={7}
                           required
                           disabled={seminarData?.mySeminarSubmission?.currentStage >= 3}
-                          className="block w-full max-w-xl rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm disabled:bg-gray-100"
+                          className={classNames(abstractLength > 500? "bg-red-100 border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-300 focus:border-sky-500 focus:ring-sky-500",
+                          "block w-full min-w-0 flex-1 rounded-none rounded-r-md sm:text-sm disabled:bg-gray-100")}
                           defaultValue={''}
                         />
                         <p className="mt-2 text-sm text-gray-500">Write a few sentences about the presentation.</p>
@@ -545,22 +552,23 @@ export default function Submission() {
 
                     <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                       <label htmlFor="tags" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                        Tags
+                      Tags {tagsLength > 180 ? <span className="text-red-500">({tagsLength}/180)</span> : <span>({tagsLength}/180)</span>}
                       </label>
                       <div className="mt-1 sm:col-span-2 sm:mt-0">
                         <input
                           {...register("tags", {
                             // required: "Title is required.",
                             maxLength: {
-                              message: "Maximum length of the tags is 70.",
-                              value: 70
+                              message: "Maximum length of the tags is 180.",
+                              value: 180
                             }
                           })}
                           id="tags"
                           name="tags"
                           type="text"
                           disabled={seminarData?.mySeminarSubmission?.currentStage >= 3}
-                          className="block w-full max-w-xl rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 sm:text-sm disabled:bg-gray-100"
+                          className={classNames(tagsLength > 180? "bg-red-100 border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-300 focus:border-sky-500 focus:ring-sky-500",
+                          "block w-full min-w-0 flex-1 rounded-none rounded-r-md sm:text-sm disabled:bg-gray-100")}
                         />
                         <p className="mt-2 text-sm text-gray-500">ONLY USE lowercase UNLESS IT IS AN ACRONYM. Use comma(,) to separate tags.</p>
 
