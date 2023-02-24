@@ -129,7 +129,7 @@ export default function ProgressDetailsModal({ props }) {
                               <div className="ml-4 flex-shrink-0">
                                 <a href={`/uploads/seminar/${data?.currentSeminar?.finalFile}`}
                                   className="font-medium text-sky-600 hover:text-sky-500"
-                                  download={`${data?.currentSeminar?.alias}-draft.${data?.currentSeminar?.finalFile?.split(".").pop()}`}>
+                                  download={`${data?.currentSeminar?.alias}-final.${data?.currentSeminar?.finalFile?.split(".").pop()}`}>
                                   Download
                                 </a>
                               </div>
