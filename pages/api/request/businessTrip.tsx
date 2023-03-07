@@ -128,7 +128,7 @@ async function handler(
       <b>유형(Category): </b> ${Categories[category].toString()} <br />
       <b>목적지(Destination):</b> ${destination.toString()} <br />
       <b>예상비용(Expense):</b> ${expense ? expense.toString() : 'Unknown'}</p>
-      <b>출장기간:</b> ${startDate.toString()} ~ ${startDate.toString()}<br />
+      <b>출장기간:</b> ${startDate.toString()} ~ ${endDate.toString()}<br />
       <b>상세(Details):</b> ${details.toString()}</p>
       `,
       false);
